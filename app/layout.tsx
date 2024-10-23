@@ -1,7 +1,9 @@
+
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import React from 'react';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,6 +21,8 @@ export const metadata: Metadata = {
   description: "Ministry of Health - eCHIS Integrated CHS Supervision Tool",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,8 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-         <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          {children}
+        </AntdRegistry>
       </body>
-    </html>
+    </html >
   );
 }
