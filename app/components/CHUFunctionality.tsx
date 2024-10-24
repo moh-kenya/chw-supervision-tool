@@ -4,7 +4,7 @@ import { Form, InputNumber, Card, Row, Col, Radio } from 'antd';
 import { FormItem } from "react-hook-form-antd";
 import { Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { AppContext } from '../page';
+import { AppContext } from '../new-supervision/page';
 import { useForm } from 'react-hook-form';
 
 const { Title } = Typography;
@@ -80,8 +80,7 @@ const CHUFunctionality = (props) => {
           <Radio value={'no'}>No, No CHU assessed</Radio>
         </RadioGroup>
       </FormItem>
-      {/* Comment/Remarks */}
-      <FormItem label="Comment/Remarks" control={control}
+      <FormItem required label="Comment/Remarks" control={control}
         name='conducted_assessment_last_12_months_remarks'>
         <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks for if you have conducted CHU functionality assessment in the last 12 months?' />
       </FormItem>
@@ -91,30 +90,30 @@ const CHUFunctionality = (props) => {
 
           <Row gutter={[16, 16]}>
             <Col>
-              <FormItem label="Enter total No of assessed CHUs" control={control}
+              <FormItem required label="Enter total No of assessed CHUs" control={control}
                 name='total_chus_assessed'>
-                <InputNumber min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
+                <InputNumber required min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
               </FormItem>
             </Col>
             <Col>
               <FormItem
-                name='fully_functional_chus'
+                required name='fully_functional_chus'
                 label="Enter No of fully-functional CHUs" control={control}>
-                <InputNumber min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
+                <InputNumber required min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
               </FormItem>
             </Col>
             <Col>
               <FormItem
-                name='semi_functional_chus'
+                required name='semi_functional_chus'
                 label="Enter No of Semi-functional CHUs" control={control}>
-                <InputNumber min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
+                <InputNumber required min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
               </FormItem>
             </Col>
             <Col>
               <FormItem
-                name='non_functional_chus'
+                required name='non_functional_chus'
                 label="Enter No of Non-functional CHUs" control={control}>
-                <InputNumber min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
+                <InputNumber required min={0} style={{ width: '100%' }} size="large" placeholder='Enter No.' />
               </FormItem>
             </Col>
           </Row>
@@ -163,7 +162,7 @@ const CHUFunctionality = (props) => {
 
 
               <FormItem
-                name='sentitized_latest_key_cch'
+                required name='sentitized_latest_key_cch'
                 control={control} label="Have you been sensitized on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)">
                 <RadioGroup>
                   <Radio value={'yes'}>Yes</Radio>
@@ -172,7 +171,7 @@ const CHUFunctionality = (props) => {
               </FormItem>
 
               <FormItem
-                name='sentitized_latest_key_cch_chas'
+                required name='sentitized_latest_key_cch_chas'
                 control={control} label="Have you sensitized your CHAs on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)">
                 <RadioGroup>
                   <Radio value={'yes'}>Yes</Radio>
@@ -190,8 +189,6 @@ const CHUFunctionality = (props) => {
                 <Radio value={'no'}>No</Radio>
               </RadioGroup>
             </FormItem>}
-
-          {/* Comment */}
           <FormItem
             name='comments_awp'
             control={control} label="Comment">
