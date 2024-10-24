@@ -9,7 +9,7 @@ import {
 import SupervisionTeam from './components/SupervisionTeam';
 // import LocationDetails from './components/LocationDetails';
 import CHUFunctionality from './components/CHUFunctionality';
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { Button, message, Steps, theme } from 'antd';
 import WorkplanPolicies from './components/WorkplanPolicies';
 import Infrastructure from './components/Infrastructure';
@@ -29,15 +29,15 @@ export const AppContext = createContext([]);
 export default function Home() {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [globalState, setGlobalState] = useState([]);
-  const steps = [
+  const [globalState, setGlobalState] = useState({});
+  const [modules, setModules] = useState([
     {
       title: 'Supervision Team',
-      content: <SupervisionTeam />,
+      content: <SupervisionTeam setGlobalState={setGlobalState} />,
     },
     {
       title: 'Leadership & Governance',
-      content: <CHUFunctionality />
+      content: <CHUFunctionality setGlobalState={setGlobalState} />
     },
     {
       title: 'Workforce',
@@ -91,8 +91,7 @@ export default function Home() {
     //   title: 'Reproductive and Maternal Newborn Health',
     //   content: <WorkplanPolicies />
     // }
-  ];
-
+  ])
   const next = () => {
     setCurrent(current + 1);
   };
@@ -104,7 +103,7 @@ export default function Home() {
     setCurrent(value);
   };
 
-  const items = steps.map((item) => ({ key: item.title, title: item.title }));
+  const items = modules.map((item) => ({ key: item.title, title: item.title }));
   const items2 = [{
     key: "hometopav-1",
     label: `Home`,
@@ -114,7 +113,7 @@ export default function Home() {
   }, {
     key: "hometopav-3",
     label: `Account`,
-  }];
+  }]
 
   const contentStyle: React.CSSProperties = {
     lineHeight: '260px',
@@ -126,7 +125,7 @@ export default function Home() {
     padding: "0 16px"
   };
   return (
-    <AppContext.Provider value={{ globalState, setGlobalState }}>
+    <AppContext.Provider value={{ globalState, setGlobalState, modules, setModules }}>
       <div>
         <Header
           style={{
@@ -157,10 +156,10 @@ export default function Home() {
         </div>
         <div style={{ padding: '20px 48px', marginBottom: 80 }}>
           <Steps current={current} items={items} onChange={onChange} />
-          <div style={contentStyle}>{steps[current].content}</div>
+          <div style={contentStyle}>{modules[current]?.content}</div>
           <div style={{ marginTop: 24 }}>
 
-            {current === steps.length - 1 && (
+            {current === modules.length - 1 && (
               <Button type="primary" onClick={() => message.success('Processing complete!')}>
                 Done
               </Button>
@@ -170,7 +169,7 @@ export default function Home() {
                 Previous
               </Button>
             )}
-            {current < steps.length - 1 && (
+            {current < modules.length - 1 && (
               <Button type="primary" onClick={() => next()}>
                 Next
               </Button>

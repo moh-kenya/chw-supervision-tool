@@ -4,22 +4,86 @@ import { useForm, useFieldArray } from "react-hook-form";
 import dayjs from 'dayjs';
 import { Typography } from 'antd';
 import { FormItem } from "react-hook-form-antd";
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { AppContext } from '../page';
+import CHUFunctionality from './CHUFunctionality';
+import WorkplanPolicies from './WorkplanPolicies';
+import ServiceDelivery from './ServiceDelivery';
+import PandemicPreparedness from './PandemicPreparedness';
 
 const { Title } = Typography;
-const SupervisionTeam = () => {
-    const { control, watch } = useForm({
+const SupervisionTeam = (props) => {
+    const store = useContext(AppContext);
+
+    const { control, watch, getValues, reset } = useForm({
     });
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'teamMembers', // name for the array
     });
-
-    // Watch the "number" input to generate fields dynamically
     const numberOfMembers = watch('number_in_supervision_team', 0);
     const whoAreRespondents = watch('whoAreRespondents');
     const chuCode = watch('chu_code');
+    useEffect(() => {
+        return () => {
+            props.setGlobalState((store) => {
+                store["superVisionTeam"] = getValues();
+                return store;
+            })
+        };
+    }, [getValues, props]);
+    useEffect(() => {
+        reset(store.globalState.superVisionTeam)
+    }, [])
+    useEffect(() => {
+        // This runs when the component is mounted or updated
+        if (whoAreRespondents !== undefined && whoAreRespondents.length > 0) {
+            let modules = store?.modules || [];
+            if (!["CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", "CQIC", "SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"].some(value => whoAreRespondents?.includes(value))) {
+                modules = modules.filter((item: { title: string; }) => item.title !== 'Leadership & Governance' && item.title !== 'Service Delivery' && item.title != 'Pandemic Preparedness')
+            }
+            else {
+
+                const isPresent = modules.some(existingItem => existingItem.title === 'Leadership & Governance');
+                if (!isPresent) {
+                    const leadershipItem = {
+                        title: 'Leadership & Governance',
+                        content: <CHUFunctionality setGlobalState={props.setGlobalState} />
+                    };
+                    const serviceDelivery = {
+                        title: 'Service Delivery',
+                        content: <ServiceDelivery setGlobalState={props.setGlobalState} />
+                    };
+                    const pandemicPreparedness = {
+                        title: 'Pandemic Preparedness',
+                        content: <PandemicPreparedness setGlobalState={props.setGlobalState} />
+                    };
+
+                    modules.splice(0, 0, leadershipItem);
+                    modules.splice(9, 0, serviceDelivery);
+                    modules.splice(10, 0, pandemicPreparedness);
+                }
+            }
+            if (!["CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", "CQIC"].some(value => whoAreRespondents?.includes(value))) {
+                modules = modules.filter((item: { title: string; }) => item.title !== 'Workforce')
+            }
+            else {
+                const isPresent = modules.some(existingItem => existingItem.title === 'Workforce');
+                if (!isPresent) {
+                    const workForceItem = {
+                        title: 'Workforce',
+                        content: <WorkplanPolicies setGlobalState={props.setGlobalState} />
+                    };
+
+                    modules.splice(0, 1, workForceItem);
+                }
+            }
+            store?.setModules(modules);
+        }
+    }, [whoAreRespondents]);
+
+    // Watch the "number" input to generate fields dynamically
+
     const respondentoptions = [
         {
             value: "CEC",
@@ -149,22 +213,23 @@ const SupervisionTeam = () => {
                     minDate={dayjs()}
                     maxDate={dayjs()} />
             </FormItem>
-
-            <FormItem label="Who are your respondents?" control={control} name='whoAreRespondents'>
-                <Select
-                    mode="multiple"
-                    size={"large"}
-                    placeholder="Please select"
-                    style={{ width: '100%' }}
-                    options={respondentoptions}
-                    maxCount={fields.length}
-                />
-            </FormItem>
+            {fields?.length > 0 &&
+                <FormItem label="Who are your respondents?" control={control} name='whoAreRespondents'>
+                    <Select
+                        mode="multiple"
+                        size={"large"}
+                        placeholder="Please select"
+                        style={{ width: '100%' }}
+                        options={respondentoptions}
+                        maxCount={fields.length}
+                    />
+                </FormItem>
+            }
             {whoAreRespondents?.length > 0 &&
                 <>
                     {
                         whoAreRespondents.map((field, index) => (
-                            <>
+                            <div key={index}>
                                 <Title level={5}>{whoAreRespondents[index]}</Title>
                                 <FormItem label={`How long have you served in your current position/station?`} control={control} name='how_long_served_in_position' key={index}>
                                     <Select
@@ -192,7 +257,7 @@ const SupervisionTeam = () => {
                                         <Input />
                                     </FormItem>
                                 }
-                            </>))
+                            </div>))
                     }
                 </>
             }

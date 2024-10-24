@@ -1,13 +1,30 @@
 "use client"
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Form, InputNumber, Checkbox, Card, Row, Col } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { AppContext } from '../page';
+import { useForm } from 'react-hook-form';
 
 const { Title } = Typography;
 
-const CHUFunctionality = () => {
+const CHUFunctionality = (props) => {
+  const store = useContext(AppContext);
+  const [respondents, setRespondents] = useState([]);
+  const { getValues } = useForm({
+  });
+  useEffect(() => {
+    return () => {
+      props.setGlobalState((store) => {
+        store["chuFunctionality"] = getValues();
+        return store;
+      })
+    };
+  }, []);
+  useEffect(() => {
+    setRespondents(store?.globalState?.superVisionTeam?.whoAreRespondents || [])
+  }, [store]);
   return (
     <Form layout="vertical">
       <Title level={2}>Leadership & Governance</Title>
@@ -76,11 +93,12 @@ const CHUFunctionality = () => {
         <TextArea rows={3} />
       </FormItem>
       <Title level={4}>Annual WorkPlan & Performance  </Title>
-      {/* Annual WorkPlan & Performance */}
-      <FormItem label="Are Community Health services integrated in the current county annual workplan? (Confirm with the AWP)">
-        <Checkbox>Yes</Checkbox>
-        <Checkbox>No</Checkbox>
-      </FormItem>
+      {["CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", "CQIC"].some(value => respondents?.includes(value)) &&
+        <FormItem label="Are Community Health services integrated in the current county annual workplan? (Confirm with the AWP)">
+          <Checkbox>Yes</Checkbox>
+          <Checkbox>No</Checkbox>
+        </FormItem>
+      }
 
       <FormItem label="Are Community Health services integrated in the current sub-county annual workplan? (Confirm with the AWP)">
         <Checkbox>Yes</Checkbox>
