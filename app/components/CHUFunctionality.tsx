@@ -11,6 +11,9 @@ const { Title } = Typography;
 
 const CHUFunctionality = (props) => {
   const store = useContext(AppContext);
+  const { globalState } = store;
+  const { superVisionTeam } = globalState;
+  const { whoAreRespondents } = superVisionTeam;
   const [respondents, setRespondents] = useState([]);
   const { getValues } = useForm({
   });
@@ -23,8 +26,8 @@ const CHUFunctionality = (props) => {
     };
   }, []);
   useEffect(() => {
-    setRespondents(store?.globalState?.superVisionTeam?.whoAreRespondents || [])
-  }, [store]);
+    setRespondents(whoAreRespondents)
+  }, [whoAreRespondents]);
   return (
     <Form layout="vertical">
       <Title level={2}>Leadership & Governance</Title>

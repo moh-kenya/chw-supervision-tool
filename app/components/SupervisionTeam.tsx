@@ -193,12 +193,12 @@ const SupervisionTeam = (props) => {
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={8}>
                                 <FormItem label={`Organisation of member ${index + 1}`} control={control} name={`organisation_member_${index}`} required>
-                                    <Input placeholder={`Please enter the Organisation of member ${index + 1}`} />
+                                    <Input size="large" placeholder={`Please enter the Organisation of member ${index + 1}`} />
                                 </FormItem>
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={8}>
                                 <FormItem label={`Designation of member ${index + 1}`} control={control} name={`designation_member_${index}`} required>
-                                    <Input placeholder={`Please enter the Designation of member ${index + 1}`} />
+                                    <Input size="large" placeholder={`Please enter the Designation of member ${index + 1}`} />
                                 </FormItem>
                             </Col>
 
@@ -241,20 +241,20 @@ const SupervisionTeam = (props) => {
                                 </FormItem >
                                 {["SCMOH", "SCCHSFP", "SCDSC", "SCHRIO", "CHA", "CHC Member", "CHP"].includes(whoAreRespondents[index]) ||
                                     <FormItem label="County" control={control} name='county'>
-                                        <Input />
+                                        <Input size="large" placeholder='Please enter county' />
                                     </FormItem>}
                                 {["SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"].includes(whoAreRespondents[index]) &&
                                     <FormItem label="Sub County" control={control} name='subcounty'>
-                                        <Input />
+                                        <Input size="large" placeholder='Please enter  sub-county' />
                                     </FormItem>}
                                 {["CHA", "CHC Member", "CHP"].includes(whoAreRespondents[index]) &&
                                     <FormItem label="CHU Name & MCHUR Code" control={control} name='chu_code'>
-                                        <Input />
+                                        <Input size="large" placeholder='Please enter CHU Name & MCHUR Code' />
                                     </FormItem>
                                 }
                                 {chuCode &&
-                                    <FormItem label="Link Facility Name & MFR Code" control={control} name='link_facility_code'>
-                                        <Input />
+                                    <FormItem label="Link Facility Name & KHMFR Code" control={control} name='link_facility_code'>
+                                        <Input size="large" placeholder='Please enter Link Facility Name & KHMFR Code' />
                                     </FormItem>
                                 }
                             </div>))
