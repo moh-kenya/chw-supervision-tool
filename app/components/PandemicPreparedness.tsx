@@ -11,7 +11,7 @@ const RadioGroup = Group;
 const PandemicPreparedness = () => {
   return (
     <Form layout="vertical">
-      <Title level={2}>Service Delivery</Title>
+      <Title level={2}>Pandemic Preparedness</Title>
       <FormItem required label="Presence of a functional pandemic preparedness and response team (verify with minutes)">
         <RadioGroup>
           <Radio value={'yes'}>Yes</Radio>
