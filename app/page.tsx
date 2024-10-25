@@ -3,14 +3,19 @@
 import React, { useState, createContext } from 'react';
 import NavBar from './components/NavBar';
 import { Alert } from 'antd';
+import { Client } from 'appwrite';
 
+export const client = new Client();
+
+client
+  .setEndpoint('https://backend-moh.karimkkanji.com/v1')
+  .setProject('671b69380019aff6cad1');
 
 export const AppContext = createContext([]);
 
 export default function Home() {
 
   const [globalState, setGlobalState] = useState({});
-
 
   return (
     <AppContext.Provider value={{ globalState, setGlobalState }}>

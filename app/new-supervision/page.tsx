@@ -1,15 +1,8 @@
 "use client"
-import { Menu, Layout } from 'antd';
-import MenuItem from 'antd/es/menu/MenuItem';
-import {
-  HomeOutlined,
-  UserOutlined,
-  PlusCircleOutlined
-} from '@ant-design/icons';
+
 import SupervisionTeam from '../components/SupervisionTeam';
-// import LocationDetails from './components/LocationDetails';
 import CHUFunctionality from '../components/CHUFunctionality';
-import React, { useState, createContext, useContext, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 import { Button, message, Steps, theme } from 'antd';
 import WorkplanPolicies from '../components/WorkplanPolicies';
 import Infrastructure from '../components/Infrastructure';
@@ -21,13 +14,14 @@ import Finance from '../components/Finance';
 import Partnership from '../components/Partnership';
 import ServiceDelivery from '../components/ServiceDelivery';
 import PandemicPreparedness from '../components/PandemicPreparedness';
-import Image from 'next/image';
 import NavBar from '../components/NavBar';
-const { Header } = Layout;
 
 export const AppContext = createContext([]);
 
+
 export default function Home() {
+
+
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [globalState, setGlobalState] = useState({});

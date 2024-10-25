@@ -11,12 +11,17 @@ import Image from 'next/image';
 import { Logo } from './Logo';
 import { useEffect, useState } from 'react';
 const { Header } = Layout;
+import { Account } from 'appwrite';
+import { client } from '../page';
 const NavBar = () => {
-    const [width, setWidth] = useState(window.innerWidth);
+    const [width, setWidth] = useState(window && window.innerWidth);
+    const account = new Account(client);
     useEffect(() => {
-        const handleResize = () => setWidth(window.innerWidth);
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+        if (window !== undefined) {
+            const handleResize = () => setWidth(window.innerWidth);
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+        }
     }, []);
     const router = useRouter();
     const items2 = [{
@@ -30,7 +35,13 @@ const NavBar = () => {
     }, {
         key: "hometopav-3",
         label: `Account`,
-    }]
+    },
+    {
+        key: "hometopav-4",
+        label: `Logout`,
+        onClick: () => account.deleteSessions().then(() => { router.push('/login'); })
+    }
+    ]
     const NavigateToPage = (key: string) => {
         switch (key) {
             case "1": router.push("/"); break;
@@ -38,6 +49,18 @@ const NavBar = () => {
             default: return;
         }
     }
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                await account.get();
+            } catch (error) {
+                console.log(error)
+                router.push('/login'); // If not authenticated, redirect to login
+            }
+        };
+        checkAuth();
+    }, []);
     return (
         <>
             <Header
