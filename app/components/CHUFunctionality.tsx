@@ -13,7 +13,6 @@ const RadioGroup = Group;
 
 const CHUFunctionality = (props) => {
   const store = useContext(AppContext);
-  console.log(store)
   const { globalState } = store || {};
   const { superVisionTeam, chuFunctionality } = globalState || {};
   const { whoAreRespondents } = superVisionTeam || {};

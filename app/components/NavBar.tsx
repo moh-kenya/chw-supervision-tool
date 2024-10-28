@@ -56,6 +56,7 @@ const NavBar = () => {
             try {
                 await account.get();
             } catch (error) {
+                console.log(error)
                 router.push('/'); // If not authenticated, redirect to login
             }
         };
