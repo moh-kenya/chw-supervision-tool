@@ -10,7 +10,6 @@ import { AppContext } from '../providers';
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const store = useContext(AppContext);
-  console.log(store)
   const { modules } = store || {};
 
   const next = () => {

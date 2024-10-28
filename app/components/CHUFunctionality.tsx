@@ -13,9 +13,10 @@ const RadioGroup = Group;
 
 const CHUFunctionality = (props) => {
   const store = useContext(AppContext);
-  const { globalState } = store;
-  const { superVisionTeam, chuFunctionality } = globalState;
-  const { whoAreRespondents } = superVisionTeam;
+  console.log(store)
+  const { globalState } = store || {};
+  const { superVisionTeam, chuFunctionality } = globalState || {};
+  const { whoAreRespondents } = superVisionTeam || {};
   const [respondents, setRespondents] = useState([]);
   const { getValues, watch, reset, control } = useForm({
   });
