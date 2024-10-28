@@ -2,15 +2,15 @@
 import React, { useContext, useState } from 'react';
 import { Button, message, Steps } from 'antd';
 import NavBar from '../components/NavBar';
-import { AppContext, Providers } from '../providers';
+import { AppContext } from '../providers';
 
 
 
 
 export default function Home() {
-
   const [current, setCurrent] = useState(0);
   const store = useContext(AppContext);
+  console.log(store)
   const { modules } = store || {};
 
   const next = () => {
@@ -27,7 +27,7 @@ export default function Home() {
   const items = modules?.map((item) => ({ key: item.title, title: item.title }));
 
   return (
-    <Providers>
+    <>
       <NavBar />
       <div style={{ padding: '20px 48px', marginBottom: 80 }}>
         <Steps current={current} items={items} onChange={onChange} />
@@ -51,6 +51,6 @@ export default function Home() {
           )}
         </div>
       </div>
-    </Providers>
+    </>
   );
 }
