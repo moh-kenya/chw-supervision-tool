@@ -28,7 +28,7 @@ const NavBar = () => {
     const items2 = [{
         key: "hometopav-1",
         label: `Home`,
-        onClick: () => { router.push('/'); }
+        onClick: () => { router.push('/dashboard'); }
     }, {
         key: "hometopav-2",
         label: `New Supervision`,
@@ -40,12 +40,12 @@ const NavBar = () => {
     {
         key: "hometopav-4",
         label: `Logout`,
-        onClick: () => account.deleteSessions().then(() => { router.push('/login'); })
+        onClick: () => account.deleteSessions().then(() => { router.push('/'); })
     }
     ]
     const NavigateToPage = (key: string) => {
         switch (key) {
-            case "1": router.push("/"); break;
+            case "1": router.push("/dashboard"); break;
             case "2": router.push("/new-supervision"); break;
             default: return;
         }
@@ -57,7 +57,7 @@ const NavBar = () => {
                 await account.get();
             } catch (error) {
                 console.log(error)
-                router.push('/login'); // If not authenticated, redirect to login
+                router.push('/'); // If not authenticated, redirect to login
             }
         };
         checkAuth();
