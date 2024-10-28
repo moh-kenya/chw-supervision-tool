@@ -12,12 +12,13 @@ import { Logo } from './Logo';
 import { useEffect, useState } from 'react';
 const { Header } = Layout;
 import { Account } from 'appwrite';
-import { client } from '../page';
+import { client } from '../backend';
 const NavBar = () => {
-    const [width, setWidth] = useState(window && window.innerWidth);
+    const [width, setWidth] = useState(0);
     const account = new Account(client);
     useEffect(() => {
         if (window !== undefined) {
+            setWidth(window && window.innerWidth);
             const handleResize = () => setWidth(window.innerWidth);
             window.addEventListener("resize", handleResize);
             return () => window.removeEventListener("resize", handleResize);
@@ -60,6 +61,7 @@ const NavBar = () => {
             }
         };
         checkAuth();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <>

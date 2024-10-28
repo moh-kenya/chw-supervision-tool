@@ -5,11 +5,11 @@ import dayjs from "dayjs";
 import { Typography } from "antd";
 import { FormItem } from "react-hook-form-antd";
 import { useContext, useEffect } from "react";
-import { AppContext } from "../new-supervision/page";
 import CHUFunctionality from "./CHUFunctionality";
 import WorkplanPolicies from "./WorkplanPolicies";
 import ServiceDelivery from "./ServiceDelivery";
 import PandemicPreparedness from "./PandemicPreparedness";
+import { AppContext } from "../providers";
 
 const { Title } = Typography;
 const SupervisionTeam = (props) => {
@@ -32,11 +32,12 @@ const SupervisionTeam = (props) => {
         };
     }, [getValues, props]);
     useEffect(() => {
-        reset(store.globalState.superVisionTeam);
+        reset(store?.globalState?.superVisionTeam);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     useEffect(() => {
         // This runs when the component is mounted or updated
-        if (whoAreRespondents !== undefined && whoAreRespondents.length > 0) {
+        if (whoAreRespondents !== undefined && whoAreRespondents?.length > 0) {
             let modules = store?.modules || [];
             if (
                 ![
@@ -108,6 +109,7 @@ const SupervisionTeam = (props) => {
             }
             store?.setModules(modules);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [whoAreRespondents]);
 
     // Watch the "number" input to generate fields dynamically
@@ -191,7 +193,7 @@ const SupervisionTeam = (props) => {
 
     // Dynamically update field array when the number input changes
     useEffect(() => {
-        const currentCount = fields.length;
+        const currentCount = fields?.length;
         if (numberOfMembers > currentCount) {
             for (let i = currentCount; i < numberOfMembers; i++) {
                 append({ name: "", designation: "", organization: "" });
@@ -201,7 +203,7 @@ const SupervisionTeam = (props) => {
                 remove(i);
             }
         }
-    }, [numberOfMembers, append, remove, fields.length]);
+    }, [numberOfMembers, append, remove, fields?.length]);
     return (
         <Form layout="vertical">
             <Title level={3}>Supervision Team</Title>
@@ -209,7 +211,6 @@ const SupervisionTeam = (props) => {
                 required label="Number of members in the supervision team"
                 control={control}
                 name="number_in_supervision_team"
-                required
             >
                 <InputNumber
                     size="large"
@@ -221,20 +222,19 @@ const SupervisionTeam = (props) => {
                 />
             </FormItem>
 
-            {fields.length > 0 && (
+            {fields?.length > 0 && (
                 <>
                     <Title level={5}>
                         Enter the following details of the Supervision Team
                     </Title>
 
-                    {fields.map((field, index) => (
+                    {fields?.map((field, index) => (
                         <Row key={index} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                             <Col xs={24} sm={24} md={8} lg={8}>
                                 <FormItem
                                     required label={`Full Names of member ${index + 1}`}
                                     control={control}
                                     name={`name_member_${index}`}
-                                    required
                                 >
                                     <Input
                                         size="large"
@@ -247,7 +247,6 @@ const SupervisionTeam = (props) => {
                                     required label={`Organisation of member ${index + 1}`}
                                     control={control}
                                     name={`organisation_member_${index}`}
-                                    required
                                 >
                                     <Input
                                         size="large"
@@ -261,7 +260,6 @@ const SupervisionTeam = (props) => {
                                     required label={`Designation of member ${index + 1}`}
                                     control={control}
                                     name={`designation_member_${index}`}
-                                    required
                                 >
                                     <Input
                                         size="large"
@@ -279,7 +277,6 @@ const SupervisionTeam = (props) => {
                 required label="Date of Supervision Visit"
                 control={control}
                 name="date"
-                required
             >
                 <DatePicker
                     size="large"
@@ -301,13 +298,13 @@ const SupervisionTeam = (props) => {
                         placeholder="Please select"
                         style={{ width: "100%" }}
                         options={respondentoptions}
-                        maxCount={fields.length}
+                        maxCount={fields?.length}
                     />
                 </FormItem>
             )}
             {whoAreRespondents?.length > 0 && (
                 <>
-                    {whoAreRespondents.map((field, index) => (
+                    {whoAreRespondents?.map((field, index) => (
                         <div key={index}>
                             <Title level={5}>{whoAreRespondents[index]}</Title>
                             <FormItem

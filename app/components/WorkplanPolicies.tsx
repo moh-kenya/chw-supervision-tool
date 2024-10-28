@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { Form, Input, Checkbox, InputNumber, Radio } from 'antd';
+import { Form, Input, InputNumber, Radio } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import { Typography } from 'antd';
 

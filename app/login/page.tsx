@@ -4,10 +4,10 @@ import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { CoatOfArms } from '../components/Logo';
 import { FormItem } from "react-hook-form-antd";
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { client } from '../page';
 import { Account } from 'appwrite';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { client } from '../backend';
 
 const { Title, Text } = Typography;
 

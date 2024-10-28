@@ -4,8 +4,8 @@ import { Form, InputNumber, Card, Row, Col, Radio } from 'antd';
 import { FormItem } from "react-hook-form-antd";
 import { Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { AppContext } from '../new-supervision/page';
 import { useForm } from 'react-hook-form';
+import { AppContext } from '../providers';
 
 const { Title } = Typography;
 const { Group } = Radio
@@ -27,12 +27,14 @@ const CHUFunctionality = (props) => {
         return store;
       })
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     setRespondents(whoAreRespondents)
   }, [whoAreRespondents]);
   useEffect(() => {
     reset(chuFunctionality)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   return (
     <Form layout="vertical">
