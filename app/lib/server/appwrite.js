@@ -40,6 +40,7 @@ export async function getLoggedInUser() {
     const { account } = await createSessionClient();
     return await account.get();
   } catch (error) {
+    console.log(error);
     return null;
   }
 }

@@ -14,10 +14,10 @@ const { Header } = Layout;
 
 const NavBar = () => {
     const [width, setWidth] = useState(0);
-    const [error, setError] = useState(null);
+    // const [error, setError] = useState(null);
 
     const handleLogout = async () => {
-        setError(null);
+        // setError(null);
         try {
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
@@ -31,11 +31,12 @@ const NavBar = () => {
                 router.push('/login');
             } else {
                 const data = await response.json();
-                setError(data.message || 'An error occurred during logout');
+                console.error(data.message || 'An error occurred during logout');
+                // setError(data.message || 'An error occurred during logout');
             }
         } catch (error) {
             console.error(error);
-            setError('An unexpected error occurred during logout');
+            // setError('An unexpected error occurred during logout');
         } finally {
 
         }
