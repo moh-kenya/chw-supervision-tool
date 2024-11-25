@@ -11,11 +11,36 @@ import Image from 'next/image';
 import { Logo } from './Logo';
 import { useEffect, useState } from 'react';
 const { Header } = Layout;
-import { Account } from 'appwrite';
-import { client } from '../backend';
+
 const NavBar = () => {
     const [width, setWidth] = useState(0);
-    const account = new Account(client);
+    const [error, setError] = useState(null);
+
+    const handleLogout = async () => {
+        setError(null);
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                // Redirect to login page after logout
+                router.push('/login');
+            } else {
+                const data = await response.json();
+                setError(data.message || 'An error occurred during logout');
+            }
+        } catch (error) {
+            console.error(error);
+            setError('An unexpected error occurred during logout');
+        } finally {
+
+        }
+    };
+
     useEffect(() => {
         if (window !== undefined) {
             setWidth(window && window.innerWidth);
@@ -40,7 +65,7 @@ const NavBar = () => {
     {
         key: "hometopav-4",
         label: `Logout`,
-        onClick: () => account.deleteSessions().then(() => { router.push('/'); })
+        onClick: () => handleLogout()
     }
     ]
     const NavigateToPage = (key: string) => {
@@ -51,18 +76,18 @@ const NavBar = () => {
         }
     }
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                await account.get();
-            } catch (error) {
-                console.log(error)
-                router.push('/'); // If not authenticated, redirect to login
-            }
-        };
-        checkAuth();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     const checkAuth = async () => {
+    //         try {
+    //             await account.get();
+    //         } catch (error) {
+    //             console.log(error)
+    //             router.push('/'); // If not authenticated, redirect to login
+    //         }
+    //     };
+    //     checkAuth();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
     return (
         <>
             <Header
