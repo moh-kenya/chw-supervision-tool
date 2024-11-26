@@ -12,12 +12,12 @@ import { Logo } from './Logo';
 import { useEffect, useState } from 'react';
 const { Header } = Layout;
 
-const NavBar = () => {
+
+const NavBar = ({ setNotifs }) => {
     const [width, setWidth] = useState(0);
-    // const [error, setError] = useState(null);
+
 
     const handleLogout = async () => {
-        // setError(null);
         try {
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
@@ -27,16 +27,27 @@ const NavBar = () => {
             });
 
             if (response.ok) {
-                // Redirect to login page after logout
-                router.push('/login');
+                setNotifs({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'You are being logged out momentarily!',
+                    toggle: true
+                })
+                setTimeout(() => {
+                    router.push('/login');
+                }, 2000);
+
             } else {
                 const data = await response.json();
-                console.error(data.message || 'An error occurred during logout');
-                // setError(data.message || 'An error occurred during logout');
+                setNotifs({
+                    type: 'error',
+                    title: 'Unable to log out',
+                    message: data.message || 'An error occurred during logout',
+                    toggle: true
+                })
             }
         } catch (error) {
             console.error(error);
-            // setError('An unexpected error occurred during logout');
         } finally {
 
         }

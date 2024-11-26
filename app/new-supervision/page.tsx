@@ -3,11 +3,20 @@ import React, { useContext, useState } from 'react';
 import { Button, message, Steps } from 'antd';
 import NavBar from '../components/NavBar';
 import { AppContext } from '../providers';
+import { NotifsTypes } from '../login/page';
+import Notifications from '../components/utils/Notifications';
 
 
 
 
 export default function Home() {
+
+  const [notifs, setNotifs] = useState<NotifsTypes>({
+    type: 'success',
+    title: 'Success',
+    message: 'You are being logged in momentarily!',
+    toggle: false
+  })
   const [current, setCurrent] = useState(0);
   const store = useContext(AppContext);
   const { modules } = store || {};
@@ -27,7 +36,8 @@ export default function Home() {
 
   return (
     <>
-      <NavBar />
+      <Notifications {...notifs} />
+      <NavBar setNotifs={setNotifs} />
       <div style={{ padding: '20px 48px', marginBottom: 80 }}>
         <Steps current={current} items={items} onChange={onChange} />
         <div>{modules?.[current]?.content}</div>

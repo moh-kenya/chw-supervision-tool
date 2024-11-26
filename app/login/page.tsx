@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
-import { Button, Form, Input, Typography, Image, Alert, Spin } from "antd";
+import React, { useState } from "react";
+import { Button, Form, Input, Typography, Image, Spin, notification, message } from "antd";
 import { MailOutlined, LockOutlined, LoadingOutlined } from "@ant-design/icons";
 import { CoatOfArms } from '../components/Logo';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { FormItem } from "react-hook-form-antd";
+import Notifications from "../components/utils/Notifications";
 
 
 const { Title, Text } = Typography;
@@ -14,22 +15,30 @@ type FormValues = {
     emailOrPhone: string
     password: string
 }
+type NotificationType = 'success' | 'info' | 'warning' | 'error';
+export type NotifsTypes = {
+    type: NotificationType;
+    title: string;
+    message: string;
+    toggle: boolean;
+}
+
 
 export default function LoginPage() {
-    const [showError, setShowError] = useState(false);
+
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState({
-        title: "Incorrect Credentials",
-        description: "The credentials provided do not match. Please check your email or password",
-    });
-    const [showSuccess, setShowSuccess] = useState(false);
     const { control, handleSubmit } = useForm();
     const router = useRouter();
+    const [notifs, setNotifs] = useState<NotifsTypes>({
+        type: 'success',
+        title: 'Success',
+        message: 'You are being logged in momentarily!',
+        toggle: false
+    })
 
     const onSubmit: SubmitHandler<FormValues> = async (values) => {
         try {
             setLoading(true);
-            setShowError(false);
 
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
@@ -45,54 +54,42 @@ export default function LoginPage() {
             const data = await response.json();
 
             if (response.status === 200) {
-                setShowSuccess(true);
+                setNotifs({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'You are being logged in momentarily!',
+                    toggle: true
+                })
                 router.push("/dashboard");
+
             } else {
-                setShowSuccess(false);
-                setLoading(false);
-                setErrorMessage({
+                setNotifs({
+                    type: 'error',
                     title: "Login Failed",
-                    description: data.message || "An error occurred during login.",
-                });
-                setShowError(true);
+                    message: data.message || "An error occurred during login.",
+                    toggle: true
+                })
+                setLoading(false);
             }
         } catch (error) {
-            console.log(error)
-            setShowSuccess(false);
-            setLoading(false);
-            setErrorMessage({
+            console.error(error)
+            setNotifs({
+                type: 'error',
                 title: "An unexpected error occurred",
-                description: "Please try again later.",
-            });
-            setShowError(true);
+                message: "Please try again later",
+                toggle: true
+            })
+            setLoading(false);
         }
     };
 
     return (
         <>
+            <Notifications {...notifs} />
             <div style={styles.container}>
                 <div style={styles.formContainer}>
                     <Image alt="logo" height={100} width={105} src={CoatOfArms} preview={false} />
                     <Title level={3}>CHS Integrated Supervision Tool Login</Title>
-
-                    {showError && (
-                        <Alert
-                            message={errorMessage.title}
-                            description={errorMessage.description}
-                            type="error"
-                            closable
-                            style={{ marginBottom: 10 }}
-                            onClose={() => setShowError(false)}
-                        />
-                    )}
-                    {showSuccess && (
-                        <Alert
-                            message="Success!"
-                            description="Logging you in momentarily!"
-                            type="success"
-                            style={{ marginBottom: 10 }}
-                        />
-                    )}
 
                     <Text>Hey, Enter your details to get signed in to your account</Text>
                     <Form
