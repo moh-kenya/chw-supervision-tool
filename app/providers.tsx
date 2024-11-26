@@ -12,6 +12,7 @@ import Finance from './components/Finance';
 import Partnership from './components/Partnership';
 import ServiceDelivery from './components/ServiceDelivery';
 import PandemicPreparedness from './components/PandemicPreparedness';
+import ReviewAndSubmit from './components/ReviewAndSubmit';
 
 // Define a specific type for globalState if known, otherwise replace it with a placeholder.
 interface GlobalStateType {
@@ -52,43 +53,47 @@ export function Providers({ children }: ProvidersProps) {
         },
         {
             title: 'Workforce',
-            content: <WorkplanPolicies />
+            content: <WorkplanPolicies setGlobalState={setGlobalState} />
         },
         {
             title: 'Infrastructure',
-            content: <Infrastructure />
+            content: <Infrastructure setGlobalState={setGlobalState} />
         },
         {
             title: 'Monitoring & Evaluation',
-            content: <MonitoringAndEvaluation />
+            content: <MonitoringAndEvaluation setGlobalState={setGlobalState} />
         },
         {
             title: 'Commodities',
-            content: <Commodities />
+            content: <Commodities setGlobalState={setGlobalState} />
         },
         {
             title: 'Transport',
-            content: <Transport />
+            content: <Transport setGlobalState={setGlobalState} />
         },
         {
             title: 'Referral',
-            content: <Referral />
+            content: <Referral setGlobalState={setGlobalState} />
         },
         {
             title: 'Finance',
-            content: <Finance />
+            content: <Finance setGlobalState={setGlobalState} />
         },
         {
             title: 'Partnership',
-            content: <Partnership />
+            content: <Partnership setGlobalState={setGlobalState} />
         },
         {
             title: 'Service Delivery',
-            content: <ServiceDelivery />
+            content: <ServiceDelivery setGlobalState={setGlobalState} />
         },
         {
             title: 'Pandemic Preparedness',
-            content: <PandemicPreparedness />
+            content: <PandemicPreparedness setGlobalState={setGlobalState} />
+        },
+        {
+            title: 'Review & Submit',
+            content: <ReviewAndSubmit setGlobalState={setGlobalState} />
         },
     ]);
 

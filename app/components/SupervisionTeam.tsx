@@ -10,9 +10,11 @@ import WorkplanPolicies from "./WorkplanPolicies";
 import ServiceDelivery from "./ServiceDelivery";
 import PandemicPreparedness from "./PandemicPreparedness";
 import { AppContext } from "../providers";
+import { kenyaCounties, kenyaSubcounties } from "./utils/commonData";
 
 const { Title } = Typography;
 const SupervisionTeam = (props) => {
+    const disabled = props.disabled || false;
     const store = useContext(AppContext);
 
     const { control, watch, getValues, reset } = useForm({});
@@ -211,6 +213,7 @@ const SupervisionTeam = (props) => {
                 required label="Number of members in the supervision team"
                 control={control}
                 name="number_in_supervision_team"
+                disabled={disabled}
             >
                 <InputNumber
                     size="large"
@@ -232,6 +235,7 @@ const SupervisionTeam = (props) => {
                         <Row key={index} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
                             <Col xs={24} sm={24} md={8} lg={8}>
                                 <FormItem
+                                    disabled={disabled}
                                     required label={`Full Names of member ${index + 1}`}
                                     control={control}
                                     name={`name_member_${index}`}
@@ -244,6 +248,7 @@ const SupervisionTeam = (props) => {
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={8}>
                                 <FormItem
+                                    disabled={disabled}
                                     required label={`Organisation of member ${index + 1}`}
                                     control={control}
                                     name={`organisation_member_${index}`}
@@ -257,6 +262,7 @@ const SupervisionTeam = (props) => {
                             </Col>
                             <Col xs={24} sm={24} md={8} lg={8}>
                                 <FormItem
+                                    disabled={disabled}
                                     required label={`Designation of member ${index + 1}`}
                                     control={control}
                                     name={`designation_member_${index}`}
@@ -274,6 +280,7 @@ const SupervisionTeam = (props) => {
             )}
             <Title level={3}>Supervision Site Details</Title>
             <FormItem
+                disabled={disabled}
                 required label="Date of Supervision Visit"
                 control={control}
                 name="date"
@@ -288,6 +295,7 @@ const SupervisionTeam = (props) => {
             </FormItem>
             {fields?.length > 0 && (
                 <FormItem
+                    disabled={disabled}
                     required label="Who are your respondents?"
                     control={control}
                     name="whoAreRespondents"
@@ -308,9 +316,10 @@ const SupervisionTeam = (props) => {
                         <div key={index}>
                             <Title level={5}>{whoAreRespondents[index]}</Title>
                             <FormItem
+                                disabled={disabled}
                                 required label={`How long have you served in your current position/station?`}
                                 control={control}
-                                name="how_long_served_in_position"
+                                name={`how_long_served_in_position_${whoAreRespondents[index]}`}
                                 key={index}
                             >
                                 <Select
@@ -329,24 +338,44 @@ const SupervisionTeam = (props) => {
                                 "CHC Member",
                                 "CHP",
                             ].includes(whoAreRespondents[index]) || (
-                                    <FormItem required label="County" control={control} name="county">
-                                        <Input size="large" placeholder="Please enter county" />
+                                    <FormItem disabled={disabled} required label="County" control={control} name={`county_${whoAreRespondents[index]}`}>
+                                        <Select
+                                            size={"large"}
+                                            placeholder="Please select county"
+                                            style={{ width: "100%" }}
+                                            options={kenyaCounties}
+                                        />
                                     </FormItem>
                                 )}
                             {["SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"].includes(
                                 whoAreRespondents[index]
-                            ) && (
-                                    <FormItem required label="Sub County" control={control} name="subcounty">
-                                        <Input size="large" placeholder="Please enter  sub-county" />
-                                    </FormItem>
+                            ) && (<>
+                                <FormItem disabled={disabled} required label="County" control={control} name={`county_${whoAreRespondents[index]}`}>
+                                    <Select
+                                        size={"large"}
+                                        placeholder="Please select county"
+                                        style={{ width: "100%" }}
+                                        options={kenyaCounties}
+                                    />
+                                </FormItem>
+                                <FormItem disabled={disabled} required label="Sub County" control={control} name={`subcounty_${whoAreRespondents[index]}`}>
+                                    <Select
+                                        size={"large"}
+                                        placeholder="Please select sub county"
+                                        style={{ width: "100%" }}
+                                        options={kenyaSubcounties[watch(`county_${whoAreRespondents[index]}`)]}
+                                    />
+                                </FormItem>
+                            </>
                                 )}
                             {["CHA", "CHC Member", "CHP"].includes(
                                 whoAreRespondents[index]
                             ) && (
                                     <FormItem
+                                        disabled={disabled}
                                         required label="CHU Name & MCHUR Code"
                                         control={control}
-                                        name="chu_code"
+                                        name={`chu_code_${whoAreRespondents[index]}`}
                                     >
                                         <Input
                                             size="large"
@@ -356,9 +385,10 @@ const SupervisionTeam = (props) => {
                                 )}
                             {chuCode && (
                                 <FormItem
+                                    disabled={disabled}
                                     required label="Link Facility Name & KHMFR Code"
                                     control={control}
-                                    name="link_facility_code"
+                                    name={`link_facility_code_${whoAreRespondents[index]}`}
                                 >
                                     <Input
                                         size="large"
@@ -373,5 +403,7 @@ const SupervisionTeam = (props) => {
         </Form>
     );
 };
+
+
 
 export default SupervisionTeam;
