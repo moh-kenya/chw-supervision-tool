@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, Form, Input, Typography, Image, Spin, notification, message } from "antd";
+import { Button, Form, Input, Typography, Image, Spin } from "antd";
 import { MailOutlined, LockOutlined, LoadingOutlined } from "@ant-design/icons";
 import { CoatOfArms } from '../components/Logo';
 import { useForm, SubmitHandler } from "react-hook-form";

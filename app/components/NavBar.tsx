@@ -11,9 +11,11 @@ import Image from 'next/image';
 import { Logo } from './Logo';
 import { useEffect, useState } from 'react';
 const { Header } = Layout;
+import { v4 as uuidv4 } from 'uuid';
 
 
-const NavBar = ({ setNotifs }) => {
+const NavBar = ({ setNotifs, id }) => {
+    const router = useRouter()
     const [width, setWidth] = useState(0);
 
 
@@ -61,7 +63,6 @@ const NavBar = ({ setNotifs }) => {
             return () => window.removeEventListener("resize", handleResize);
         }
     }, []);
-    const router = useRouter();
     const items2 = [{
         key: "hometopav-1",
         label: `Home`,
@@ -69,7 +70,7 @@ const NavBar = ({ setNotifs }) => {
     }, {
         key: "hometopav-2",
         label: `New Supervision`,
-        onClick: () => { router.push('/new-supervision'); }
+        onClick: () => { router.push(`/new-supervision/${id || uuidv4()}`); }
     }, {
         key: "hometopav-3",
         label: `Account`,

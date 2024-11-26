@@ -1,10 +1,6 @@
 "use client"
-import { useContext, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useContext } from "react";
 import { AppContext } from "../providers";
-import { FormItem } from "react-hook-form-antd";
-
-import { Form, Radio, Input } from 'antd';
 import { Typography } from 'antd';
 import SupervisionTeam from "./SupervisionTeam";
 import CHUFunctionality from './CHUFunctionality';
@@ -20,14 +16,12 @@ import ServiceDelivery from './ServiceDelivery';
 import PandemicPreparedness from './PandemicPreparedness';
 
 const { Title } = Typography;
-const { Group } = Radio
-const RadioGroup = Group;
 
 const ReviewAndSubmit = (props) => {
   const { setGlobalState } = props;
   const store = useContext(AppContext);
   return (
-    <Form layout="vertical">
+    <>
       <Title level={2}>Review and Submit</Title>
       {store?.globalState?.superVisionTeam && <SupervisionTeam setGlobalState={setGlobalState} disabled={true} />}
       {store?.globalState?.chuFunctionality && <CHUFunctionality setGlobalState={setGlobalState} disabled={true} />}
@@ -41,7 +35,7 @@ const ReviewAndSubmit = (props) => {
       {store?.globalState?.partnership && <Partnership setGlobalState={setGlobalState} disabled={true} />}
       {store?.globalState?.serviceDelivery && <ServiceDelivery setGlobalState={setGlobalState} disabled={true} />}
       {store?.globalState?.pandemicPreparedness && <PandemicPreparedness setGlobalState={setGlobalState} disabled={true} />}
-    </Form>
+    </>
   );
 };
 
