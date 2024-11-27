@@ -5,10 +5,6 @@ import NavBar from '../../components/NavBar';
 import { AppContext } from '../../providers';
 import { NotifsTypes } from '../../login/page';
 import Notifications from '../../components/utils/Notifications';
-
-
-
-
 export default function Home({ params }: {
   params: any
 }) {
