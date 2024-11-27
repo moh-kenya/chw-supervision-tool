@@ -101,3 +101,5 @@ export default function Home({ params }: {
     </>
   );
 }
+export const runtime = 'edge';
+
