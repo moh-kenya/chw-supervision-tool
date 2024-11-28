@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from 'next/navigation'
-import { Menu, Layout } from 'antd';
+import { Menu, Layout, Modal, message } from 'antd';
 import MenuItem from 'antd/es/menu/MenuItem';
 import {
     HomeOutlined,
@@ -9,14 +9,16 @@ import {
 } from '@ant-design/icons';
 import Image from 'next/image';
 import { Logo } from './Logo';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 const { Header } = Layout;
 import { v4 as uuidv4 } from 'uuid';
 
 
 const NavBar = ({ setNotifs, id }) => {
+    const ReachableContext = createContext<string | null>(null);
     const router = useRouter()
     const [width, setWidth] = useState(0);
+    const [modal, contextHolder] = Modal.useModal();
 
 
     const handleLogout = async () => {
@@ -63,6 +65,15 @@ const NavBar = ({ setNotifs, id }) => {
             return () => window.removeEventListener("resize", handleResize);
         }
     }, []);
+
+    const config = {
+        title: 'Are you sure you want to logout?',
+        content: 'Please confirm that you want to log out. If yes, Please click okay',
+        okText: 'Yes, Logout',
+        cancelText: 'No, Keep me logged in',
+        onOk: () => handleLogout(),
+        onCancel: () => message.info('Logout cancelled!')
+    };
     const items2 = [{
         key: "hometopav-1",
         label: `Home`,
@@ -78,7 +89,9 @@ const NavBar = ({ setNotifs, id }) => {
     {
         key: "hometopav-4",
         label: `Logout`,
-        onClick: () => handleLogout()
+        onClick: () => {
+            modal.confirm(config)
+        }
     }
     ]
     const NavigateToPage = (key: string) => {
@@ -130,6 +143,7 @@ const NavBar = ({ setNotifs, id }) => {
                     <MenuItem key="3"><UserOutlined className='menu-icons' /></MenuItem>
                 </Menu>
             </div>
+            {contextHolder}
         </>)
 }
 export default NavBar;
