@@ -14,8 +14,7 @@ const { Header } = Layout;
 import { v4 as uuidv4 } from 'uuid';
 
 
-const NavBar = ({ setNotifs, id }) => {
-    const ReachableContext = createContext<string | null>(null);
+const NavBar = ({ setNotifs, id }: any) => {
     const router = useRouter()
     const [width, setWidth] = useState(0);
     const [modal, contextHolder] = Modal.useModal();
@@ -107,19 +106,6 @@ const NavBar = ({ setNotifs, id }) => {
             default: return;
         }
     }
-
-    // useEffect(() => {
-    //     const checkAuth = async () => {
-    //         try {
-    //             await account.get();
-    //         } catch (error) {
-    //             console.log(error)
-    //             router.push('/'); // If not authenticated, redirect to login
-    //         }
-    //     };
-    //     checkAuth();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
     return (
         <>
             <Header
