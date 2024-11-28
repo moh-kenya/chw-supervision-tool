@@ -20,7 +20,7 @@ export async function POST(request) {
       path: "/",
       httpOnly: true,
       sameSite: "strict",
-      secure: true, // Set to `true` in production environments for security
+      secure: false, // Set to `true` in production environments for security
     });
 
     // Redirect the user to the dashboard
