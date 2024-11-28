@@ -37,9 +37,11 @@ export default function Home({ params }: {
         ...store?.globalState,
         createdDate: store?.globalState.createdDate || new Date(),
         updatedDate: new Date(),
+        status: 'Draft'
       };
       dataRetrieved[id] = data;
       localStorage.setItem("chw-supervision", JSON.stringify(dataRetrieved));
+      message.info('New Supervision started and has been added to local drafts!')
     } else {
       store?.setGlobalState((stored) => {
         const toStore = {

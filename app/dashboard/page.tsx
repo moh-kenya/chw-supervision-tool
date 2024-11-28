@@ -1,11 +1,12 @@
 
 'use client';
 import NavBar from '../components/NavBar';
-import { Alert, Space, Table, Tag } from 'antd';
+import { Alert, message, Modal, Space, Table, Tag } from 'antd';
 import Notifications from '../components/utils/Notifications';
 import { useEffect, useState } from 'react';
 import { NotifsTypes } from '../login/page';
 import type { TableProps } from 'antd';
+import { useRouter } from "next/navigation";
 
 interface DataType {
   key: string;
@@ -16,9 +17,15 @@ interface DataType {
 }
 
 export default function Home() {
-
-  const [drafts, setDrafts] = useState({});
+  const router = useRouter();
+  const [drafts, setDrafts] = useState<any>({});
   const [keys, setKeys] = useState([]);
+  const [modalData, setModalData] = useState<any>({
+    title: '',
+    message: '',
+    action: () => { },
+    isOpen: false
+  })
 
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -58,25 +65,57 @@ export default function Home() {
     {
       title: 'Status',
       key: 'tags',
-      render: () => (
-        <Tag color={'blue'}>
-          Draft
+      render: (text) => (
+        <Tag color={drafts[text].status === 'Draft' ? 'blue' : 'green'}>
+          {drafts[text].status}
         </Tag>
       ),
     },
     {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (text) => (
         <Space size="middle">
-          <a>Resume</a>
-          <a>Submit Draft</a>
-          <a>Delete Draft</a>
+          <a onClick={() => { handleResume(text) }}>Resume</a>
+          <a onClick={() => { handleSubmit(text) }}>Submit Draft</a>
+          <a onClick={() => { handleDelete(text) }}>Delete Draft</a>
         </Space>
       ),
     },
   ];
 
+  const handleResume = (id: string) => {
+    setModalData({
+
+      message: 'This will load the saved data on this device to allow you to proceeed with supervision',
+      action: () => router.push(`/new-supervision/i${id}`),
+      isOpen: true
+    })
+  }
+  const handleSubmit = (id: string) => {
+    setModalData({
+      title: 'Are you sure you want to submit this supervision?',
+      message: 'This will submit the data and will not be modifiable after submission. Make sure the form is filled to your satisfaction before submitting.',
+      action: () => message.success(`Successfully Submitted supervision with id: ${id}`),
+      isOpen: true
+    })
+  }
+  const handleDelete = (id: string) => {
+    setModalData({
+      title: 'Are you sure you want to delete this supervision draft?',
+      message: 'This action is not reversable and will delete this supervision. Please take caution when clicking Okay.',
+      action: () => message.success(`Successfully deleted supervision draft with id: ${id}`),
+      isOpen: true
+    })
+  }
+  const handleCancel = () => {
+    setModalData({
+      title: '',
+      message: '',
+      action: () => { },
+      isOpen: false
+    });
+  };
   return (
     <>
       <Notifications {...notifs} />
@@ -91,6 +130,9 @@ export default function Home() {
           /> :
           <Table columns={columns} dataSource={keys} />}
       </div>
+      <Modal title={modalData.title} open={modalData.isOpen} onOk={modalData.action} onCancel={handleCancel}>
+        <p>{modalData.message}</p>
+      </Modal>
     </>
   );
 }
