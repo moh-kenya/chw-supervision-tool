@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import { AppContext } from "../providers";
 import { FormItem } from "react-hook-form-antd";
 
-import { Form, Input, InputNumber, Radio } from 'antd';
+import { Card, Col, Form, Input, InputNumber, Radio, Row, Spin } from 'antd';
 import { Typography } from 'antd';
+import { LoadingOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 const { Group } = Radio
@@ -16,7 +17,7 @@ const WorkplanPolicies = (props) => {
 
   const store = useContext(AppContext);
 
-  const { control, getValues, reset } = useForm({});
+  const { control, getValues, reset, watch } = useForm({});
 
   useEffect(() => {
     return () => {
@@ -33,9 +34,16 @@ const WorkplanPolicies = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Workforce</Title>
-      <FormItem disabled={disabled} control={control} name="expected_no_of_chas" required label="Expected No of CHAs/CHOs is">
+      <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
+        <Col>
+          <Card title="Expected No of CHAs/CHOs is" style={{ width: 300, height: 200 }}>
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
+          </Card>
+        </Col>
+      </Row>
+      {/* <FormItem disabled={disabled} control={control} name="expected_no_of_chas" required label="Expected No of CHAs/CHOs is">
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
-      </FormItem>
+      </FormItem> */}
 
       <FormItem disabled={disabled} control={control} name="how_many_chas" required label="How many CHAs/CHOs do you have?">
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
@@ -62,13 +70,25 @@ const WorkplanPolicies = (props) => {
       </FormItem>
 
       {/* CHPs Section */}
-      <FormItem disabled={disabled} control={control} name="expected_no_of_chps" required label="Expected No of CHPs is">
+      <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
+        <Col>
+          <Card title="Expected No of CHPs is" style={{ width: 300, height: 200 }}>
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
+          </Card>
+        </Col>
+        <Col>
+          <Card title="Number of existing CHPs" style={{ width: 300, height: 200 }}>
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
+          </Card>
+        </Col>
+      </Row>
+      {/* <FormItem disabled={disabled} control={control} name="expected_no_of_chps" required label="Expected No of CHPs is">
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
       </FormItem>
 
       <FormItem disabled={disabled} control={control} name="number_of_existing_chps" required label="Number of existing CHPs">
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
-      </FormItem>
+      </FormItem> */}
 
       <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_4" label="Comment">
         <Input.TextArea rows={3} size='large' placeholder='Please enter comment' />
@@ -80,10 +100,11 @@ const WorkplanPolicies = (props) => {
           <Radio value={'no'}>No</Radio>
         </RadioGroup>
       </FormItem>
-
-      <FormItem disabled={disabled} control={control} name="months_in_arrears" required label="How many months in arrears?">
-        <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
-      </FormItem>
+      {watch('stipends_payment_upto_date') === 'no' &&
+        <FormItem disabled={disabled} control={control} name="months_in_arrears" required label="How many months in arrears?">
+          <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
+        </FormItem>
+      }
 
       <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_4" required label="Comments">
         <Input.TextArea rows={3} size='large' placeholder='Please enter comments or remarks' />

@@ -6,6 +6,7 @@ import { FormItem } from "react-hook-form-antd";
 
 import { Form, Radio } from 'antd';
 import { Typography } from 'antd';
+import TextArea from "antd/es/input/TextArea";
 
 const { Title } = Typography;
 const { Group } = Radio
@@ -44,6 +45,10 @@ const PandemicPreparedness = (props) => {
           <Radio value={'no'}>No</Radio>
         </RadioGroup>
       </FormItem>
+      <FormItem disabled={disabled} control={control}
+        name="presence_of_functional_pandemic_preparedness_comment" required label="Comment/Remarks">
+        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+      </FormItem>
       <FormItem
         disabled={disabled}
         control={control}
@@ -54,6 +59,10 @@ const PandemicPreparedness = (props) => {
           <Radio value={'no'}>No</Radio>
         </RadioGroup>
       </FormItem>
+      <FormItem disabled={disabled} control={control}
+        name="existence_of_pandemic_preparedness_comment" required label="Comment/Remarks">
+        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+      </FormItem>
       <FormItem
         disabled={disabled}
         name="dedicated_budget" control={control} required label="Dedicated budget for pandemic response (verify)">
@@ -62,11 +71,17 @@ const PandemicPreparedness = (props) => {
           <Radio value={'no'}>No</Radio>
         </RadioGroup>
       </FormItem>
+      <FormItem disabled={disabled} control={control} name="dedicated_budget_comment" required label="Comment/Remarks">
+        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+      </FormItem>
       <FormItem disabled={disabled} name="pandemic_preparedness" control={control} required label="Pandemic Preparedness Stakeholder Co-ordination mechanism in place (verify with minutes)">
         <RadioGroup>
           <Radio value={'yes'}>Yes</Radio>
           <Radio value={'no'}>No</Radio>
         </RadioGroup>
+      </FormItem>
+      <FormItem disabled={disabled} control={control} name="pandemic_preparedness_comment" required label="Comment/Remarks">
+        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
       </FormItem>
     </Form>
   );

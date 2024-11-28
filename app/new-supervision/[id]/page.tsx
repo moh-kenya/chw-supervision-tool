@@ -54,7 +54,7 @@ export default function Home({ params }: {
       })
 
     }
-  }, [id, current]);
+  }, [id, current, store]);
 
   const retrieveData = (id: string) => {
     const storedData = localStorage.getItem(id);

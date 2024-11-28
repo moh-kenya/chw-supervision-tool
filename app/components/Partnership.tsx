@@ -47,7 +47,12 @@ const Partnership = (props) => {
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="comments_partnership" required label="Comment/Remarks">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_partnership"
+        required
+        label="Comment/Remarks">
         <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
       </FormItem>
     </Form>

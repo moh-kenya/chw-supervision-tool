@@ -115,67 +115,100 @@ const SupervisionTeam = (props) => {
     }, [whoAreRespondents]);
 
     // Watch the "number" input to generate fields dynamically
-
+    const levelOptions = [
+        {
+            value: "County",
+            label: "County",
+        },
+        {
+            value: "Sub-County",
+            label: "Sub-County",
+        },
+        {
+            value: "CHU",
+            label: "CHU",
+        },
+    ];
     const respondentoptions = [
         {
             value: "CEC",
             label: "CEC",
+            level: "County"
         },
         {
             value: "COH",
             label: "COH",
+            level: "County"
         },
         {
             value: "CDH",
             label: "CDH",
+            level: "County"
         },
         {
             value: "CCHSFP",
             label: "CCHSFP",
+            level: "County"
         },
         {
             value: "CDSC",
             label: "CDSC",
+            level: "County"
         },
         {
             value: "CHRIO",
             label: "CHRIO",
+            level: "County"
         },
         {
             value: "CPHCC",
             label: "CPHCC",
+            level: "County"
         },
         {
             value: "CQIC",
             label: "CQIC",
+            level: "County"
         },
         {
             value: "SCMOH",
             label: "SCMOH",
+            level: "Sub-County"
         },
         {
             value: "SCCHSFP",
             label: "SCCHSFP",
+            level: "Sub-County"
         },
         {
             value: "SCDSC",
             label: "SCDSC",
+            level: "Sub-County"
         },
         {
             value: "SCHRIO",
             label: "SCHRIO",
+            level: "Sub-County"
         },
         {
             value: "CHA",
             label: "CHA",
+            level: "CHU"
         },
         {
             value: "CHC Member",
             label: "CHC Member",
+            level: "CHU"
         },
         {
             value: "CHP",
             label: "CHP",
+            level: "CHU"
+        },
+        {
+            value: "Others",
+            label: "Others",
+            level: "All"
         },
     ];
     const durationOptions = [
@@ -210,10 +243,12 @@ const SupervisionTeam = (props) => {
         <Form layout="vertical">
             <Title level={3}>Supervision Team</Title>
             <FormItem
-                required label="Number of members in the supervision team"
+                style={{ marginBottom: 10 }}
+                required label="How many members are in the supervision team?"
                 control={control}
                 name="number_in_supervision_team"
                 disabled={disabled}
+                help="(Team should be between 3-10 people. Exclude the non-technical people)"
             >
                 <InputNumber
                     size="large"
@@ -239,6 +274,7 @@ const SupervisionTeam = (props) => {
                                     required label={`Full Names of member ${index + 1}`}
                                     control={control}
                                     name={`name_member_${index}`}
+                                    help={"(Enter 3 names)"}
                                 >
                                     <Input
                                         size="large"
@@ -278,41 +314,72 @@ const SupervisionTeam = (props) => {
                     ))}
                 </>
             )}
-            <Title level={3}>Supervision Site Details</Title>
-            <FormItem
-                disabled={disabled}
-                required label="Date of Supervision Visit"
-                control={control}
-                name="date"
-            >
-                <DatePicker
-                    size="large"
-                    style={{ width: "50%" }}
-                    format={"DD/MM/YYYY"}
-                    minDate={dayjs()}
-                    maxDate={dayjs()}
-                />
-            </FormItem>
+            {fields?.length > 0 &&
+                <>
+                    <Title level={3}>Supervision Site Details</Title>
+                    <FormItem
+                        disabled={disabled}
+                        required label="Date of Supervision Visit"
+                        control={control}
+                        name="date"
+                    >
+                        <DatePicker
+                            size="large"
+                            style={{ width: "50%" }}
+                            format={"DD/MM/YYYY"}
+                            minDate={dayjs()}
+                            maxDate={dayjs()}
+                        />
+                    </FormItem></>}
             {fields?.length > 0 && (
-                <FormItem
-                    disabled={disabled}
-                    required label="Who are your respondents?"
-                    control={control}
-                    name="whoAreRespondents"
-                >
-                    <Select
-                        mode="multiple"
-                        size={"large"}
-                        placeholder="Please select"
-                        style={{ width: "100%" }}
-                        options={respondentoptions}
-                        maxCount={fields?.length}
-                    />
-                </FormItem>
+                <>
+                    <FormItem
+                        disabled={disabled}
+                        required label="Which level are you supervising?"
+                        control={control}
+                        name="whichLevelAreYouSupervising"
+                    >
+                        <Select
+                            size={"large"}
+                            placeholder="Please select the level you are supervising"
+                            style={{ width: "100%" }}
+                            options={levelOptions}
+                            maxCount={fields?.length}
+                        />
+                    </FormItem>
+                    {watch(`whichLevelAreYouSupervising`) !== undefined &&
+                        <FormItem
+                            disabled={disabled}
+                            required label="Who are your respondents?"
+                            control={control}
+                            name="whoAreRespondents"
+                        >
+                            <Select
+                                mode="multiple"
+                                size={"large"}
+                                placeholder="Please select"
+                                style={{ width: "100%" }}
+                                options={respondentoptions.filter((options) => options.level === watch(`whichLevelAreYouSupervising`) || watch(`whichLevelAreYouSupervising`) !== 'All')}
+                                maxCount={fields?.length}
+                            />
+                        </FormItem>}
+                    {watch(`whoAreRespondents`)?.includes('Others') &&
+                        <FormItem
+                            disabled={disabled}
+                            required label="Specify"
+                            control={control}
+                            name="whoAreRespondentsOthers"
+                        >
+                            <Input
+                                size="large"
+                                placeholder={`Please specify your respondents`}
+                            />
+                        </FormItem>}
+                </>
             )}
             {whoAreRespondents?.length > 0 && (
                 <>
-                    {whoAreRespondents?.map((field, index) => (
+                    {whoAreRespondents?.map((field: any, index: number) => (
                         <div key={index}>
                             <Title level={5}>{whoAreRespondents[index]}</Title>
                             <FormItem

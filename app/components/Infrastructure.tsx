@@ -18,7 +18,7 @@ const Infrastructure = (props) => {
   const disabled = props.disabled || false;
   const store = useContext(AppContext);
 
-  const { control, getValues, reset } = useForm({});
+  const { control, getValues, reset, watch } = useForm({});
 
   useEffect(() => {
     return () => {
@@ -60,12 +60,14 @@ const Infrastructure = (props) => {
       </FormItem>
 
       {/* Inventory Document for CH Office */}
-      <FormItem disabled={disabled} control={control} name="have_inventory_document" required label="Do you have an inventory document for CH office?">
-        <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
-        </RadioGroup>
-      </FormItem>
+      {watch('have_designated_office') === 'yes' &&
+        <FormItem disabled={disabled} control={control} name="have_inventory_document" required label="Do you have an inventory document for CH office?">
+          <RadioGroup>
+            <Radio value={'yes'}>Yes</Radio>
+            <Radio value={'no'}>No</Radio>
+          </RadioGroup>
+        </FormItem>
+      }
 
       {/* Up-to-date Inventory of CHS Equipment */}
       <FormItem disabled={disabled} control={control} name="upto_date_inventory_chs_equipment" required label="Do you have an up-to-date inventory of all the CHS equipment? (e.g., CHP kits, Mobile phones etc—confirm with the inventory document)">

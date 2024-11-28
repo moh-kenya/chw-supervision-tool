@@ -1,11 +1,12 @@
 "use client"
 import React, { useContext, useEffect, useState } from 'react';
-import { Form, InputNumber, Card, Row, Col, Radio } from 'antd';
+import { Form, InputNumber, Card, Row, Col, Radio, Spin } from 'antd';
 import { FormItem } from "react-hook-form-antd";
 import { Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useForm } from 'react-hook-form';
 import { AppContext } from '../providers';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Group } = Radio
@@ -15,11 +16,20 @@ const CHUFunctionality = (props) => {
   const disabled = props.disabled;
   const store = useContext(AppContext);
   const { globalState } = store || {};
+  const [percentage, setPercentage] = useState(0)
   const { superVisionTeam, chuFunctionality } = globalState || {};
   const { whoAreRespondents } = superVisionTeam || {};
   const [respondents, setRespondents] = useState([]);
   const { getValues, watch, reset, control } = useForm({
   });
+  useEffect(() => {
+    const established = Number(watch('no_established_chus'));
+    const expected = Number(watch('expected_no_of_chus'));
+    const getPercentage = established / expected * 100;
+    if (!isNaN(getPercentage)) {
+      setPercentage(getPercentage);
+    }
+  }, [watch])
   const allvalues = watch();
   useEffect(() => {
     return () => {
@@ -40,21 +50,18 @@ const CHUFunctionality = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Leadership & Governance</Title>
-      <Title level={5}>Community Health Units structures in place</Title>
+      <Title level={4}>Community Health Units structures in place</Title>
+      <FormItem disabled={disabled} label="Expected No of CHUs:" control={control} name='expected_no_of_chus'>
+        <InputNumber required min={0} size={'large'} style={{ width: "50%" }} placeholder='Please enter No. of expected CHUs' />
+      </FormItem>
+      <FormItem disabled={disabled} label="No. of CHUs established:" control={control} name='no_established_chus'>
+        <InputNumber required min={0} size={'large'} style={{ width: "50%" }} placeholder='Please enter No. of CHUs established' />
+      </FormItem>
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
-          <Card title="Expected No of CHUs:" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>45</p>
-          </Card>
-        </Col>
-        <Col>
-          <Card title="No. of CHUs established:" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>45</p>
-          </Card>
-        </Col>
-        <Col>
-          <Card title="% establishment of CHU" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>45</p>
+          <Card title="Percentage of establishment of CHU is:">
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+              {percentage}%</p>
           </Card>
         </Col>
       </Row>
@@ -65,14 +72,15 @@ const CHUFunctionality = (props) => {
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
           <Card title="No of CHUs registered in MCHUL" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>45</p>
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
           </Card>
         </Col>
       </Row>
       <FormItem disabled={disabled} label="Comments/Remarks" control={control} name="number_of_chu_remarks">
         <TextArea rows={4} size={'large'} placeholder='Please enter comments or remarks' />
       </FormItem>
-      <Title level={5}>Functionality of CHUs </Title>
+      <Title level={4}>Functionality of CHUs </Title>
+      <Title level={5}>Functionality Assessment of CHUs done:</Title>
       <FormItem
         control={control}
         disabled={disabled}

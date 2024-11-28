@@ -6,6 +6,7 @@ import { FormItem } from "react-hook-form-antd";
 import { Form, Radio } from 'antd';
 import { Typography } from 'antd';
 import { AppContext } from "../providers";
+import TextArea from 'antd/es/input/TextArea';
 
 const { Title } = Typography;
 const { Group } = Radio
@@ -15,7 +16,7 @@ const MonitoringAndEvaluation = (props) => {
   const disabled = props.disabled || false;
   const store = useContext(AppContext);
 
-  const { control, getValues, reset } = useForm({});
+  const { control, getValues, reset, watch } = useForm({});
 
   useEffect(() => {
     return () => {
@@ -39,12 +40,20 @@ const MonitoringAndEvaluation = (props) => {
             <Radio value={'no'}>No</Radio>
           </RadioGroup>
         </FormItem>
-
-        <FormItem disabled={disabled} control={control} name="post_cda_plan_implemented" required label="Was the post-cDQA action plan implemented? (Verify with action plan document & supporting activities minutes/reports)">
-          <RadioGroup>
-            <Radio value={'yes'}>Yes</Radio>
-            <Radio value={'no'}>No</Radio>
-          </RadioGroup>
+        {watch('integrated_dqa_conducted') === 'yes' &&
+          <FormItem disabled={disabled} control={control} name="post_cda_plan_implemented" required label="Was the post-cDQA action plan implemented? (Verify with action plan document & supporting activities minutes/reports)">
+            <RadioGroup>
+              <Radio value={'yes'}>Yes</Radio>
+              <Radio value={'no'}>No</Radio>
+            </RadioGroup>
+          </FormItem>}
+        <FormItem
+          disabled={disabled}
+          required
+          label="Comment/Remarks"
+          control={control}
+          name='post_cda_plan_implemented_comments'>
+          <TextArea rows={3} size={'large'} placeholder='Comment/Remarks' />
         </FormItem>
       </Form>
     </>
