@@ -1,7 +1,7 @@
 
 'use client';
 import NavBar from '../components/NavBar';
-import { Alert, message, Modal, Space, Table, Tag } from 'antd';
+import { Alert, message, Modal, Space, Table, Tag, Typography } from 'antd';
 import Notifications from '../components/utils/Notifications';
 import { useEffect, useState } from 'react';
 import { NotifsTypes } from '../login/page';
@@ -16,10 +16,12 @@ interface DataType {
   tags: string[];
 }
 
+const { Title } = Typography;
+
 export default function Home() {
   const router = useRouter();
   const [drafts, setDrafts] = useState<any>({});
-  const [keys, setKeys] = useState([]);
+  const [keys, setKeys] = useState<any>([]);
   const [modalData, setModalData] = useState<any>({
     title: '',
     message: '',
@@ -121,6 +123,7 @@ export default function Home() {
       <Notifications {...notifs} />
       <NavBar setNotifs={setNotifs} id={""} />
       <div style={{ padding: '20px 48px', marginBottom: 80 }}>
+        <Title level={3} style={{ marginBottom: 20 }}>Supervision Submissions</Title>
         {Object.keys(drafts).length <= 0 ?
           <Alert
             message="No Drafts or Submitted data available."

@@ -26,6 +26,12 @@ body {
   margin-right: 36px;
   margin-left: 28px;
 }
+.user-menu-icons {
+  font-size: 15px !important;
+  margin-top: 12px;
+  margin-right: 10px;
+  margin-left: 15px;
+}
 /* :where(.css-dev-only-do-not-override-ni1kz0).ant-menu-dark, :where(.css-dev-only-do-not-override-ni1kz0).ant-menu-dark>.ant-menu{
   background-color: #433878 !important;
 } */

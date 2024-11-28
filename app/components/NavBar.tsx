@@ -82,12 +82,18 @@ const NavBar = ({ setNotifs, id }) => {
         key: "hometopav-2",
         label: `New Supervision`,
         onClick: () => { router.push(`/new-supervision/${id || uuidv4()}`); }
-    }, {
+    },
+    {
         key: "hometopav-3",
-        label: `Account`,
+        label: `Users`,
+        onClick: () => { router.push('/users'); }
     },
     {
         key: "hometopav-4",
+        label: `Account`,
+    },
+    {
+        key: "hometopav-5",
         label: `Logout`,
         onClick: () => {
             modal.confirm(config)
