@@ -104,6 +104,7 @@ export default function LoginPage() {
                         >
                             <Input
                                 prefix={<MailOutlined />}
+                                size="large"
                                 placeholder="Enter Email"
                             />
                         </FormItem>
@@ -114,6 +115,7 @@ export default function LoginPage() {
                             rules={[{ required: true, message: 'Please input your password!' }]}
                         >
                             <Input.Password
+                                size="large"
                                 prefix={<LockOutlined />}
                                 placeholder="Password"
                             />

@@ -131,7 +131,7 @@ export default function Home() {
             type="info"
             showIcon
           /> :
-          <Table columns={columns} dataSource={keys} />}
+          <Table columns={columns} loading={Object.keys(keys).length <= 0} dataSource={keys} scroll={{ x: "max-content" }} />}
       </div>
       <Modal title={modalData.title} open={modalData.isOpen} onOk={modalData.action} onCancel={handleCancel}>
         <p>{modalData.message}</p>

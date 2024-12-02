@@ -123,7 +123,7 @@ export default function Home() {
             <NavBar setNotifs={setNotifs} id={""} />
             <div style={{ padding: '20px 48px', marginBottom: 80 }}>
                 <Title level={2} style={{ marginBottom: 20 }}>User Management</Title>
-                <Table columns={columns} dataSource={data} loading={Object.keys(data).length <= 0} />
+                <Table columns={columns} dataSource={data} loading={Object.keys(data).length <= 0} scroll={{ x: "max-content" }} />
             </div>
             <Modal title={modalData.title} open={modalData.isOpen} onOk={modalData.action} onCancel={handleCancel}>
                 <p>{modalData.message}</p>
