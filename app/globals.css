@@ -1,4 +1,4 @@
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
   .navbar {
     position: fixed;
     bottom: 0;
@@ -6,7 +6,7 @@
     z-index: 1000;
   }
 }
-@media only screen and (min-width: 601px) {
+@media only screen and (min-width: 800px) {
   .navbar {
     display: none;
   }
@@ -49,4 +49,5 @@ body {
 }
 .ant-layout-header {
   background-color: #433878 !important;
+  width: auto !important;
 }

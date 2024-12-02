@@ -102,7 +102,7 @@ const NavBar = ({ setNotifs, id }: any) => {
     const NavigateToPage = (key: string) => {
         switch (key) {
             case "1": router.push("/dashboard"); break;
-            case "2": router.push("/new-supervision"); break;
+            case "2": router.push(`/new-supervision/${id || uuidv4()}`); break;
             default: return;
         }
     }
