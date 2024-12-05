@@ -48,10 +48,6 @@ const SupervisionTeam = (props) => {
                     "CHRIO",
                     "CPHCC",
                     "CQIC",
-                    "SCMOH",
-                    "SCCHSFP",
-                    "SCDSC",
-                    "SCHRIO",
                 ].some((value) => whoAreRespondents?.includes(value))
             ) {
                 modules = modules.filter(
@@ -328,9 +324,6 @@ const SupervisionTeam = (props) => {
                                 "SCCHSFP",
                                 "SCDSC",
                                 "SCHRIO",
-                                "CHA",
-                                "CHC Member",
-                                "CHP",
                             ].includes(whoAreRespondents[index]) || (
                                     <FormItem required label="County" control={control} name="county">
                                         <Input size="large" placeholder="Please enter county" />
