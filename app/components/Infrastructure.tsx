@@ -14,7 +14,7 @@ const Infrastructure = () => {
     <Form layout="vertical">
       <Title level={2}>Infrastructure</Title>
       {/* Designated Office */}
-      <FormItem required label="Do you have an office space for CHU at the linked facility?">
+      <FormItem required label="Do all your link facilities have office space for community health?">
         <RadioGroup>
           <Radio value={'yes'}>Yes</Radio>
           <Radio value={'no'}>No</Radio>
