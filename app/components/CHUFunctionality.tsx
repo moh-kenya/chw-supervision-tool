@@ -121,7 +121,7 @@ const CHUFunctionality = (props) => {
 
       {respondents?.length > 0 &&
         <>
-          <Title level={4}>Annual WorkPlan & Performance  </Title>
+          <Title level={4}>WorkPlan & Performance  </Title>
           {["CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", "CQIC"].some(value => respondents?.includes(value)) &&
             <FormItem
               name='chs_integrated_cawp'
