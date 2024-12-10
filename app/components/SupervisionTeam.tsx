@@ -12,6 +12,7 @@ import ServiceDelivery from "./ServiceDelivery";
 import PandemicPreparedness from "./PandemicPreparedness";
 
 const { Title } = Typography;
+
 const SupervisionTeam = (props) => {
     const store = useContext(AppContext);
 
@@ -23,6 +24,7 @@ const SupervisionTeam = (props) => {
     const numberOfMembers = watch("number_in_supervision_team", 0);
     const whoAreRespondents = watch("whoAreRespondents");
     const chuCode = watch("chu_code");
+
     useEffect(() => {
         return () => {
             props.setGlobalState((store) => {
@@ -31,9 +33,11 @@ const SupervisionTeam = (props) => {
             });
         };
     }, [getValues, props]);
+
     useEffect(() => {
         reset(store.globalState.superVisionTeam);
     }, []);
+
     useEffect(() => {
         // This runs when the component is mounted or updated
         if (whoAreRespondents !== undefined && whoAreRespondents.length > 0) {
@@ -106,83 +110,37 @@ const SupervisionTeam = (props) => {
         }
     }, [whoAreRespondents]);
 
-    // Watch the "number" input to generate fields dynamically
-
+    //  input to generate fields dynamically
     const respondentoptions = [
-        {
-            value: "CEC",
-            label: "CEC",
-        },
-        {
-            value: "COH",
-            label: "COH",
-        },
-        {
-            value: "CDH",
-            label: "CDH",
-        },
-        {
-            value: "CCHSFP",
-            label: "CCHSFP",
-        },
-        {
-            value: "CDSC",
-            label: "CDSC",
-        },
-        {
-            value: "CHRIO",
-            label: "CHRIO",
-        },
-        {
-            value: "CPHCC",
-            label: "CPHCC",
-        },
-        {
-            value: "CQIC",
-            label: "CQIC",
-        },
-        {
-            value: "SCMOH",
-            label: "SCMOH",
-        },
-        {
-            value: "SCCHSFP",
-            label: "SCCHSFP",
-        },
-        {
-            value: "SCDSC",
-            label: "SCDSC",
-        },
-        {
-            value: "SCHRIO",
-            label: "SCHRIO",
-        },
-        {
-            value: "CHA",
-            label: "CHA",
-        },
-        {
-            value: "CHC Member",
-            label: "CHC Member",
-        },
-        {
-            value: "CHP",
-            label: "CHP",
-        },
+        { value: "CEC", label: "CEC" },
+        { value: "COH", label: "COH" },
+        { value: "CDH", label: "CDH" },
+        { value: "CCHSFP", label: "CCHSFP" },
+        { value: "CDSC", label: "CDSC" },
+        { value: "CHRIO", label: "CHRIO" },
+        { value: "CPHCC", label: "CPHCC" },
+        { value: "CQIC", label: "CQIC" },
+        { value: "SCMOH", label: "SCMOH" },
+        { value: "SCCHSFP", label: "SCCHSFP" },
+        { value: "SCDSC", label: "SCDSC" },
+        { value: "SCHRIO", label: "SCHRIO" },
+        { value: "CHA", label: "CHA" },
+        { value: "CHC Member", label: "CHC Member" },
+        { value: "CHP", label: "CHP" },
     ];
+
     const durationOptions = [
-        {
-            value: "<1",
-            label: "Less than a year",
-        },
-        {
-            value: "1-3",
-            label: "1 to 3 years",
-        },
-        {
-            value: "3>",
-            label: "More than 3 years",
-        },
+        { value: "<1", label: "Less than a year" },
+        { value: "1-3", label: "1 to 3 years" },
+        { value: "3>", label: "More than 3 years" },
+    ];
+
+    const counties = [
+        "Nairobi", "Mombasa", "Kisumu", "Nakuru", "Eldoret", "Machakos", 
+        "Nyeri", "Meru", "Kilifi", "Kwale", "Kirinyaga", "Migori", 
+        "Siaya", "Bungoma", "Kakamega", "Busia", "Homabay", "Turkana",
+        "Garissa", "Mandera", "Isiolo", "Kitui", "Embu", "Tharaka Nithi",
+        "Narok", "Kajiado", "Uasin Gishu", "Trans Nzoia", "Vihiga", "Nandi"
     ];
 
     // Dynamically update field array when the number input changes
@@ -198,6 +156,7 @@ const SupervisionTeam = (props) => {
             }
         }
     }, [numberOfMembers, append, remove, fields.length]);
+
     return (
         <Form layout="vertical">
             <Title level={3}>Supervision Team</Title>
@@ -247,8 +206,7 @@ const SupervisionTeam = (props) => {
                                 >
                                     <Input
                                         size="large"
-                                        placeholder={`Please enter the Organisation of member ${index + 1
-                                            }`}
+                                        placeholder={`Please enter the Organisation of member ${index + 1}`}
                                     />
                                 </FormItem>
                             </Col>
@@ -261,8 +219,7 @@ const SupervisionTeam = (props) => {
                                 >
                                     <Input
                                         size="large"
-                                        placeholder={`Please enter the Designation of member ${index + 1
-                                            }`}
+                                        placeholder={`Please enter the Designation of member ${index + 1}`}
                                     />
                                 </FormItem>
                             </Col>
@@ -285,87 +242,32 @@ const SupervisionTeam = (props) => {
                     maxDate={dayjs()}
                 />
             </FormItem>
+
             {fields?.length > 0 && (
                 <FormItem
-                    required label="Who are your respondents?"
+                    required label="Who are the respondents?"
                     control={control}
                     name="whoAreRespondents"
+                    required
                 >
                     <Select
                         mode="multiple"
-                        size={"large"}
-                        placeholder="Please select"
-                        style={{ width: "100%" }}
                         options={respondentoptions}
-                        maxCount={fields.length}
+                        style={{ width: "100%" }}
+                        placeholder="Select respondents"
                     />
                 </FormItem>
             )}
-            {whoAreRespondents?.length > 0 && (
-                <>
-                    {whoAreRespondents.map((field, index) => (
-                        <div key={index}>
-                            <Title level={5}>{whoAreRespondents[index]}</Title>
-                            <FormItem
-                                required label={`How long have you served in your current position/station?`}
-                                control={control}
-                                name="how_long_served_in_position"
-                                key={index}
-                            >
-                                <Select
-                                    size={"large"}
-                                    placeholder="Please select"
-                                    style={{ width: "100%" }}
-                                    options={durationOptions}
-                                />
-                            </FormItem>
-                            {[
-                                "SCMOH",
-                                "SCCHSFP",
-                                "SCDSC",
-                                "SCHRIO",
-                            ].includes(whoAreRespondents[index]) || (
-                                    <FormItem required label="County" control={control} name="county">
-                                        <Input size="large" placeholder="Please enter county" />
-                                    </FormItem>
-                                )}
-                            {["SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"].includes(
-                                whoAreRespondents[index]
-                            ) && (
-                                    <FormItem required label="Sub County" control={control} name="subcounty">
-                                        <Input size="large" placeholder="Please enter  sub-county" />
-                                    </FormItem>
-                                )}
-                            {["CHA", "CHC Member", "CHP"].includes(
-                                whoAreRespondents[index]
-                            ) && (
-                                    <FormItem
-                                        required label="CHU Name & MCHUR Code"
-                                        control={control}
-                                        name="chu_code"
-                                    >
-                                        <Input
-                                            size="large"
-                                            placeholder="Please enter CHU Name & MCHUR Code"
-                                        />
-                                    </FormItem>
-                                )}
-                            {chuCode && (
-                                <FormItem
-                                    required label="Link Facility Name & KHMFR Code"
-                                    control={control}
-                                    name="link_facility_code"
-                                >
-                                    <Input
-                                        size="large"
-                                        placeholder="Please enter Link Facility Name & KHMFR Code"
-                                    />
-                                </FormItem>
-                            )}
-                        </div>
+
+            <FormItem required label="County" control={control} name="county">
+                <Select size="large" placeholder="Select a county">
+                    {counties.map((county) => (
+                        <Select.Option key={county} value={county}>
+                            {county}
+                        </Select.Option>
                     ))}
-                </>
-            )}
+                </Select>
+            </FormItem>
         </Form>
     );
 };
