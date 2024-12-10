@@ -37,7 +37,7 @@ const CHUFunctionality = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Leadership & Governance</Title>
-      <Title level={5}>Community Health Units structures in place</Title>
+      <Title level={5}>Operationalizing CHUs</Title>
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
           <Card title="Expected No of CHUs:" style={{ width: 300, height: 200 }}>
