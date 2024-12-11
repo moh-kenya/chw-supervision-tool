@@ -1,277 +1,248 @@
-import { Form, Input, DatePicker, InputNumber, Row, Col, Select } from "antd";
+import React, { useState, useEffect } from "react";
+import { useContext } from "react";
+import { Form, Input, DatePicker, InputNumber, Row, Col, Select, Typography } from "antd";
 import { useForm, useFieldArray } from "react-hook-form";
 import dayjs from "dayjs";
-import { Typography } from "antd";
 import { FormItem } from "react-hook-form-antd";
-import { useContext, useEffect } from "react";
-import { AppContext } from "../new-supervision/page";
+import { AppContext } from "../new-supervision/page"; // where global state is stored
+import { counties, subCounties } from "./utils/commonData"; // Importing counties and sub-counties data
 import CHUFunctionality from "./CHUFunctionality";
 import WorkplanPolicies from "./WorkplanPolicies";
 import ServiceDelivery from "./ServiceDelivery";
 import PandemicPreparedness from "./PandemicPreparedness";
 
+
 const { Title } = Typography;
+
 const SupervisionTeam = (props) => {
-    const store = useContext(AppContext);
+  const store = useContext(AppContext);
 
-    const { control, watch, getValues, reset } = useForm({});
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "teamMembers", // name for the array
-    });
-    const numberOfMembers = watch("number_in_supervision_team", 0);
-    const whoAreRespondents = watch("whoAreRespondents");
-    const chuCode = watch("chu_code");
-    
-    // this array holds all counties
-    const counties = [
-        { value: "Nairobi", label: "Nairobi" },
-        { value: "Mombasa", label: "Mombasa" },
-        { value: "Kisumu", label: "Kisumu" },
-        { value: "Kakamega", label: "Kakamega" },
-        { value: "Kiambu", label: "Kiambu" },
-        { value: "Nakuru", label: "Nakuru" },
-        { value: "Machakos", label: "Machakos" },
-        { value: "Nyeri", label: "Nyeri" },
-        { value: "Murang'a", label: "Murang'a" },
-        { value: "Bomet", label: "Bomet" },
-        { value: "Elgeyo Marakwet", label: "Elgeyo Marakwet" },
-        { value: "Embu", label: "Embu" },
-        { value: "Garissa", label: "Garissa" },
-        { value: "Homa Bay", label: "Homa Bay" },
-        { value: "Isiolo", label: "Isiolo" },
-        { value: "Kajiado", label: "Kajiado" },
-        { value: "Kakamega", label: "Kakamega" },
-        { value: "Kericho", label: "Kericho" },
-        { value: "Kiambu", label: "Kiambu" },
-        { value: "Kilifi", label: "Kilifi" },
-        { value: "Kirinyaga", label: "Kirinyaga" },
-        { value: "Kisii", label: "Kisii" },
-        { value: "Kitui", label: "Kitui" },
-        { value: "Kwale", label: "Kwale" },
-        { value: "Laikipia", label: "Laikipia" },
-        { value: "Lamu", label: "Lamu" },
-        { value: "Makueni", label: "Makueni" },
-        { value: "Mandera", label: "Mandera" },
-        { value: "Marsabit", label: "Marsabit" },
-        { value: "Migori", label: "Migori" },
-        { value: "Mombasa", label: "Mombasa" },
-        { value: "Murang'a", label: "Murang'a" },
-        { value: "Nandi", label: "Nandi" },
-        { value: "Narok", label: "Narok" },
-        { value: "Nyamira", label: "Nyamira" },
-        { value: "Nyanza", label: "Nyanza" },
-        { value: "Samburu", label: "Samburu" },
-        { value: "Siaya", label: "Siaya" },
-        { value: "Taita Taveta", label: "Taita Taveta" },
-        { value: "Tana River", label: "Tana River" },
-        { value: "Tharaka Nithi", label: "Tharaka Nithi" },
-        { value: "Trans-Nzoia", label: "Trans-Nzoia" },
-        { value: "Turkana", label: "Turkana" },
-        { value: "Uasin Gishu", label: "Uasin Gishu" },
-        { value: "Vihiga", label: "Vihiga" },
-        { value: "Wajir", label: "Wajir" },
-        { value: "West Pokot", label: "West Pokot" }
-        
-        
-    ];
+  const { control, watch, getValues, reset } = useForm({});
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "teamMembers",
+  });
+  const numberOfMembers = watch("number_in_supervision_team", 0);
+  const whoAreRespondents = watch("whoAreRespondents");
 
-    useEffect(() => {
-        return () => {
-            props.setGlobalState((store) => {
-                store["superVisionTeam"] = getValues();
-                return store;
-            });
-        };
-    }, [getValues, props]);
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedSubCounties, setSelectedSubCounties] = useState<{ value: string, label: string }[]>([]);
 
-    useEffect(() => {
-        reset(store.globalState.superVisionTeam);
-    }, []);
-    
-    // input to generate fields dynamically
-    const respondentoptions = [
-        { value: "CEC", label: "CEC" },
-        { value: "COH", label: "COH" },
-        { value: "CDH", label: "CDH" },
-        { value: "CCHSFP", label: "CCHSFP" },
-        { value: "CDSC", label: "CDSC" },
-        { value: "CHRIO", label: "CHRIO" },
-        { value: "CPHCC", label: "CPHCC" },
-        { value: "CQIC", label: "CQIC" },
-        { value: "SCMOH", label: "SCMOH" },
-        { value: "SCCHSFP", label: "SCCHSFP" },
-        { value: "SCDSC", label: "SCDSC" },
-        { value: "SCHRIO", label: "SCHRIO" },
-        { value: "CHA", label: "CHA" },
-        { value: "CHC Member", label: "CHC Member" },
-        { value: "CHP", label: "CHP" },
-    ];
 
-    const durationOptions = [
-        { value: "<1", label: "Less than a year" },
-        { value: "1-3", label: "1 to 3 years" },
-        { value: "3>", label: "More than 3 years" },
-    ];
+  // Function to get subcounties for a given county
+const getSubCounties = (county) => {
+  return subCounties[county] || []; // Return the subcounties or an empty array if the county doesn't exist
+};
 
-    useEffect(() => {
-        const currentCount = fields.length;
-        if (numberOfMembers > currentCount) {
-            for (let i = currentCount; i < numberOfMembers; i++) {
-                append({ name: "", designation: "", organization: "" });
-            }
-        } else {
-            for (let i = currentCount - 1; i >= numberOfMembers; i--) {
-                remove(i);
-            }
-        }
-    }, [numberOfMembers, append, remove, fields.length]);
 
-    return (
-        <Form layout="vertical">
-            <Title level={3}>Supervision Team</Title>
-            <FormItem
-                required label="Number of members in the supervision team"
-                control={control}
-                name="number_in_supervision_team"
-            >
-                <InputNumber
-                    size="large"
-                    min={3}
-                    max={10}
-                    style={{ width: "50%" }}
-                    placeholder="Enter number of members in the supervision team"
-                />
-            </FormItem>
 
-            {fields.length > 0 && (
-                <>
-                    <Title level={5}>Enter the following details of the Supervision Team</Title>
-                    {fields.map((field, index) => (
-                        <Row key={index} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-                            <Col xs={24} sm={24} md={8} lg={8}>
-                                <FormItem
-                                    required label={`Full Names of member ${index + 1}`}
-                                    control={control}
-                                    name={`name_member_${index}`}
-                                >
-                                    <Input size="large" placeholder={`Please enter the name of member ${index + 1}`} />
-                                </FormItem>
-                            </Col>
-                            <Col xs={24} sm={24} md={8} lg={8}>
-                                <FormItem
-                                    required label={`Organisation of member ${index + 1}`}
-                                    control={control}
-                                    name={`organisation_member_${index}`}
-                                >
-                                    <Input size="large" placeholder={`Please enter the Organisation of member ${index + 1}`} />
-                                </FormItem>
-                            </Col>
-                            <Col xs={24} sm={24} md={8} lg={8}>
-                                <FormItem
-                                    required label={`Designation of member ${index + 1}`}
-                                    control={control}
-                                    name={`designation_member_${index}`}
-                                >
-                                    <Input size="large" placeholder={`Please enter the Designation of member ${index + 1}`} />
-                                </FormItem>
-                            </Col>
-                        </Row>
-                    ))}
-                </>
-            )}
 
-            <Title level={3}>Supervision Site Details</Title>
-            <FormItem
-                required label="Date of Supervision Visit"
-                control={control}
-                name="date"
-            >
-                <DatePicker
-                    size="large"
-                    style={{ width: "50%" }}
-                    format={"DD/MM/YYYY"}
-                    minDate={dayjs()}
-                    maxDate={dayjs()}
-                />
-            </FormItem>
+const handleCountyChange = (selectedValue: string) => {
+  setSelectedCounty(selectedValue);
+  const mySubcounties = getSubCounties(selectedValue);
+  setSelectedSubCounties(mySubcounties); // Ensure this contains an array of { value, label } objects
+};
 
-            {fields.length > 0 && (
+
+
+  console.log(selectedCounty)
+
+  console.log(selectedSubCounties)
+
+  useEffect(() => {
+    return () => {
+      props.setGlobalState((store) => {
+        store["superVisionTeam"] = getValues();
+        return store;
+      });
+    };
+  }, [getValues, props]);
+
+  useEffect(() => {
+    reset(store.globalState.superVisionTeam);
+  }, [store.globalState.superVisionTeam]);
+
+  useEffect(() => {
+    const currentCount = fields.length;
+    if (numberOfMembers > currentCount) {
+      for (let i = currentCount; i < numberOfMembers; i++) {
+        append({ name: "", designation: "", organization: "" });
+      }
+    } else {
+      for (let i = currentCount - 1; i >= numberOfMembers; i--) {
+        remove(i);
+      }
+    }
+  }, [numberOfMembers, append, remove, fields.length]);
+
+  return (
+    <Form layout="vertical">
+      <Title level={3}>Supervision Team</Title>
+      <FormItem
+        required
+        label="Number of members in the supervision team"
+        control={control}
+        name="number_in_supervision_team"
+      >
+        <InputNumber
+          size="large"
+          min={3}
+          max={10}
+          style={{ width: "50%" }}
+          placeholder="Enter number of members in the supervision team"
+        />
+      </FormItem>
+
+      {fields.length > 0 && (
+        <>
+          <Title level={5}>Enter the following details of the Supervision Team</Title>
+          {fields.map((field, index) => (
+            <Row key={index} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24} sm={24} md={8} lg={8}>
                 <FormItem
-                    required label="Who are your respondents?"
-                    control={control}
-                    name="whoAreRespondents"
+                  required
+                  label={`Full Names of member ${index + 1}`}
+                  control={control}
+                  name={`name_member_${index}`}
                 >
-                    <Select
-                        mode="multiple"
-                        size={"large"}
-                        placeholder="Please select"
-                        style={{ width: "100%" }}
-                        options={respondentoptions}
-                        maxCount={fields.length}
-                    />
+                  <Input size="large" placeholder={`Please enter the name of member ${index + 1}`} />
                 </FormItem>
-            )}
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8}>
+                <FormItem
+                  required
+                  label={`Organisation of member ${index + 1}`}
+                  control={control}
+                  name={`organisation_member_${index}`}
+                >
+                  <Input size="large" placeholder={`Please enter the Organisation of member ${index + 1}`} />
+                </FormItem>
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8}>
+                <FormItem
+                  required
+                  label={`Designation of member ${index + 1}`}
+                  control={control}
+                  name={`designation_member_${index}`}
+                >
+                  <Input size="large" placeholder={`Please enter the Designation of member ${index + 1}`} />
+                </FormItem>
+              </Col>
+            </Row>
+          ))}
+        </>
+      )}
 
-            {whoAreRespondents?.length > 0 && (
-                <>
-                    {whoAreRespondents.map((field, index) => (
-                        <div key={index}>
-                            <Title level={5}>{whoAreRespondents[index]}</Title>
-                            <FormItem
-                                required label={`How long have you served in your current position/station?`}
-                                control={control}
-                                name={`how_long_served_in_position_${index}`}
-                            >
-                                <Select
-                                    size={"large"}
-                                    placeholder="Please select"
-                                    style={{ width: "100%" }}
-                                    options={durationOptions}
-                                />
-                            </FormItem>
+      <Title level={3}>Supervision Site Details</Title>
+      <FormItem required label="Date of Supervision Visit" control={control} name="date">
+        <DatePicker
+          size="large"
+          style={{ width: "50%" }}
+          format={"DD/MM/YYYY"}
+          minDate={dayjs()}
+          maxDate={dayjs()}
+        />
+      </FormItem>
 
-                            {/* Add County Dropdown */}
-                            <FormItem
-                                required label="County"
-                                control={control}
-                                name={`county_${index}`}
-                            >
-                                <Select
-                                    size="large"
-                                    placeholder="Please select a county"
-                                    style={{ width: "100%" }}
-                                    options={counties}
-                                />
-                            </FormItem>
+      {fields.length > 0 && (
+        <FormItem
+          required
+          label="Who are your respondents?"
+          control={control}
+          name="whoAreRespondents"
+        >
+          <Select
+            mode="multiple"
+            size={"large"}
+            placeholder="Please select"
+            style={{ width: "100%" }}
+            options={[
+              { value: "CEC", label: "CEC" },
+              { value: "COH", label: "COH" },
+              { value: "CDH", label: "CDH" },
+              { value: "CCHSFP", label: "CCHSFP" },
+              { value: "CDSC", label: "CDSC" },
+              { value: "CHRIO", label: "CHRIO" },
+              { value: "CPHCC", label: "CPHCC" },
+              { value: "CQIC", label: "CQIC" },
+              { value: "SCMOH", label: "SCMOH" },
+              { value: "SCCHSFP", label: "SCCHSFP" },
+              { value: "SCDSC", label: "SCDSC" },
+              { value: "SCHRIO", label: "SCHRIO" },
+              { value: "CHA", label: "CHA" },
+              { value: "CHC Member", label: "CHC Member" },
+              { value: "CHP", label: "CHP" },
+            ]}
+            maxCount={fields.length}
+          />
+        </FormItem>
+      )}
 
-                            {/*logic for Sub County */}
-                            {["SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"].includes(whoAreRespondents[index]) && (
-                                <FormItem
-                                    required label="Sub County"
-                                    control={control}
-                                    name={`subcounty_${index}`}
-                                >
-                                    <Input size="large" placeholder="Please enter sub-county" />
-                                </FormItem>
-                            )}
+      {whoAreRespondents?.length > 0 && (
+        <>
+          {whoAreRespondents.map((field, index) => (
+            <div key={index}>
+              <Title level={5}>{whoAreRespondents[index]}</Title>
 
-                            {/*logic for CHU */}
-                            {["CHA", "CHC Member", "CHP"].includes(whoAreRespondents[index]) && (
-                                <FormItem
-                                    required label="CHU Name & MCHUR Code"
-                                    control={control}
-                                    name={`chu_code_${index}`}
-                                >
-                                    <Input size="large" placeholder="Please enter CHU Name & MCHUR Code" />
-                                </FormItem>
-                            )}
-                        </div>
-                    ))}
-                </>
-            )}
-        </Form>
-    );
+              <FormItem
+                required
+                label={`How long have you served in your current position/station?`}
+                control={control}
+                name={`how_long_served_in_position_${index}`}
+              >
+                <Select
+                  size={"large"}
+                  placeholder="Please select"
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "<1", label: "Less than a year" },
+                    { value: "1-3", label: "1 to 3 years" },
+                    { value: "3>", label: "More than 3 years" },
+                  ]}
+                />
+              </FormItem>
+
+              {/* County Dropdown */}
+              <FormItem
+                required
+                label="County"
+                control={control}
+                name={`county_${index}`}
+              >
+                <Select
+                  size="large"
+                  placeholder="Please select a county"
+                  style={{ width: "100%" }}
+                  options={counties}
+                  onChange={handleCountyChange}
+                />
+              </FormItem>
+
+              {/* Sub-County Dropdown */}
+              {selectedCounty && (
+  <FormItem
+    required
+    label="Sub County"
+    control={control}
+    name={`subcounty_${index}`}
+  >
+    <Select
+      size="large"
+      placeholder="Please select a sub-county"
+      style={{ width: "100%" }}
+      options={selectedSubCounties} // This must be an array of { value, label } objects
+    />
+  </FormItem>
+)}
+
+
+              {/* Add more form items for other respondents if needed */}
+            </div>
+          ))}
+        </>
+      )}
+    </Form>
+  );
 };
 
 export default SupervisionTeam;
