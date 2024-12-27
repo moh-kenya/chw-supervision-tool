@@ -16,7 +16,7 @@ const CHAsSection = () => {
       </FormItem>
 
       <FormItem required label="How many CHAs/CHOs do you have?">
-        <InputNumber required min={0} size={'large'} style={{ width: "50%" }} placeholder='Please enter No.' />
+        <InputNumber required min={0} max={15000} size={'large'} style={{ width: "50%" }} placeholder='Please enter No.' />
       </FormItem>
 
       <FormItem label="Comments/Remarks">

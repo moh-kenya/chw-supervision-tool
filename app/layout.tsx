@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import React from 'react';
+import { Providers } from "./providers";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,10 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" suppressHydrationWarning={true}>
+      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
         <AntdRegistry>
-          {children}
+          <Providers>
+            {children}
+          </Providers>
         </AntdRegistry>
       </body>
     </html >

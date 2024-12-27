@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from 'next/navigation'
-import { Menu, Layout } from 'antd';
+import { Menu, Layout, Modal, message } from 'antd';
 import MenuItem from 'antd/es/menu/MenuItem';
 import {
     HomeOutlined,
@@ -11,30 +11,98 @@ import Image from 'next/image';
 import { Logo } from './Logo';
 import { useEffect, useState } from 'react';
 const { Header } = Layout;
-const NavBar = () => {
-    const [width, setWidth] = useState(window.innerWidth);
+import { v4 as uuidv4 } from 'uuid';
+
+
+const NavBar = ({ setNotifs, id }: any) => {
+    const router = useRouter()
+    const [width, setWidth] = useState(0);
+    const [modal, contextHolder] = Modal.useModal();
+
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                setNotifs({
+                    type: 'success',
+                    title: 'Success',
+                    message: 'You are being logged out momentarily!',
+                    toggle: true
+                })
+                setTimeout(() => {
+                    router.push('/login');
+                }, 2000);
+
+            } else {
+                const data = await response.json();
+                setNotifs({
+                    type: 'error',
+                    title: 'Unable to log out',
+                    message: data.message || 'An error occurred during logout',
+                    toggle: true
+                })
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+
+        }
+    };
+
     useEffect(() => {
-        const handleResize = () => setWidth(window.innerWidth);
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
+        if (window !== undefined) {
+            setWidth(window && window.innerWidth);
+            const handleResize = () => setWidth(window.innerWidth);
+            window.addEventListener("resize", handleResize);
+            return () => window.removeEventListener("resize", handleResize);
+        }
     }, []);
-    const router = useRouter();
+
+    const config = {
+        title: 'Are you sure you want to logout?',
+        content: 'Please confirm that you want to log out. If yes, Please click okay',
+        okText: 'Yes, Logout',
+        cancelText: 'No, Keep me logged in',
+        onOk: () => handleLogout(),
+        onCancel: () => message.info('Logout cancelled!')
+    };
     const items2 = [{
         key: "hometopav-1",
         label: `Home`,
-        onClick: () => { router.push('/'); }
+        onClick: () => { router.push('/dashboard'); }
     }, {
         key: "hometopav-2",
         label: `New Supervision`,
-        onClick: () => { router.push('/new-supervision'); }
-    }, {
+        onClick: () => { router.push(`/new-supervision/${id || uuidv4()}`); }
+    },
+    {
         key: "hometopav-3",
+        label: `Users`,
+        onClick: () => { router.push('/users'); }
+    },
+    {
+        key: "hometopav-4",
         label: `Account`,
-    }]
+    },
+    {
+        key: "hometopav-5",
+        label: `Logout`,
+        onClick: () => {
+            modal.confirm(config)
+        }
+    }
+    ]
     const NavigateToPage = (key: string) => {
         switch (key) {
-            case "1": router.push("/"); break;
-            case "2": router.push("/new-supervision"); break;
+            case "1": router.push("/dashboard"); break;
+            case "2": router.push(`/new-supervision/${id || uuidv4()}`); break;
             default: return;
         }
     }
@@ -67,6 +135,7 @@ const NavBar = () => {
                     <MenuItem key="3"><UserOutlined className='menu-icons' /></MenuItem>
                 </Menu>
             </div>
+            {contextHolder}
         </>)
 }
 export default NavBar;
