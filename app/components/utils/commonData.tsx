@@ -1,8 +1,6 @@
-<<<<<<< HEAD
+
 export const counties = [
-=======
-export const kenyaCounties = [
->>>>>>> origin/main
+
     { value: 'Bomet', label: 'Bomet' },
     { value: 'Bungoma', label: 'Bungoma' },
     { value: 'Busia', label: 'Busia' },
@@ -49,11 +47,9 @@ export const kenyaCounties = [
     { value: 'Wajir', label: 'Wajir' },
     { value: 'West Pokot', label: 'West Pokot' }
 ];
-<<<<<<< HEAD
+
 export const subCounties = {
-=======
-export const kenyaSubcounties = {
->>>>>>> origin/main
+
     'Bomet': [
         { value: 'Bomet Central', label: 'Bomet Central' },
         { value: 'Bomet East', label: 'Bomet East' },

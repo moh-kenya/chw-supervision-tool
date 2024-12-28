@@ -1,109 +1,90 @@
-import React, { useState, useEffect } from "react";
-import { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Form, Input, DatePicker, InputNumber, Row, Col, Select, Typography } from "antd";
 import { useForm, useFieldArray } from "react-hook-form";
 import dayjs from "dayjs";
-import { FormItem } from "react-hook-form-antd";
-<<<<<<< HEAD
-import { AppContext } from "../new-supervision/page"; // where global state is stored
-import { counties, subCounties } from "./utils/commonData"; // Importing counties and sub-counties data
-=======
-import { useContext, useEffect } from "react";
->>>>>>> origin/main
+import { AppContext } from "../providers"; // Updated to match correct import path
 import CHUFunctionality from "./CHUFunctionality";
 import WorkplanPolicies from "./WorkplanPolicies";
 import ServiceDelivery from "./ServiceDelivery";
 import PandemicPreparedness from "./PandemicPreparedness";
-import { AppContext } from "../providers";
-import { kenyaCounties, kenyaSubcounties } from "./utils/commonData";
-
+import { counties, subCounties } from "./utils/commonData"; // Importing counties and sub-counties data
 
 const { Title } = Typography;
 
 const SupervisionTeam = (props) => {
-<<<<<<< HEAD
   const store = useContext(AppContext);
-
   const { control, watch, getValues, reset } = useForm({});
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "teamMembers",
+    name: "teamMembers", // name for the array
   });
+
   const numberOfMembers = watch("number_in_supervision_team", 0);
   const whoAreRespondents = watch("whoAreRespondents");
-=======
-    const disabled = props.disabled || false;
-    const store = useContext(AppContext);
-
-    const { control, watch, getValues, reset } = useForm({});
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "teamMembers", // name for the array
-    });
-    const numberOfMembers = watch("number_in_supervision_team", 0);
-    const whoAreRespondents = watch("whoAreRespondents");
-    const chuCode = watch("chu_code");
-    useEffect(() => {
-        return () => {
-            props.setGlobalState((store) => {
-                store["superVisionTeam"] = getValues();
-                return store;
-            });
-        };
-    }, [getValues, props]);
-    useEffect(() => {
-        reset(store?.globalState?.superVisionTeam);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    useEffect(() => {
-        // This runs when the component is mounted or updated
-        if (whoAreRespondents !== undefined && whoAreRespondents?.length > 0) {
-            let modules = store?.modules || [];
-            if (
-                ![
-                    "CEC",
-                    "COH",
-                    "CDH",
-                    "CCHSFP",
-                    "CDSC",
-                    "CHRIO",
-                    "CPHCC",
-                    "CQIC",
-                    "SCMOH",
-                    "SCCHSFP",
-                    "SCDSC",
-                    "SCHRIO",
-                ].some((value) => whoAreRespondents?.includes(value))
-            ) {
-                modules = modules.filter(
-                    (item: { title: string }) =>
-                        item.title !== "Leadership & Governance" &&
-                        item.title !== "Service Delivery" &&
-                        item.title != "Pandemic Preparedness"
-                );
-            } else {
-                const isPresent = modules.some(
-                    (existingItem) => existingItem.title === "Leadership & Governance"
-                );
-                if (!isPresent) {
-                    const leadershipItem = {
-                        title: "Leadership & Governance",
-                        content: <CHUFunctionality setGlobalState={props.setGlobalState} />,
-                    };
-                    const serviceDelivery = {
-                        title: "Service Delivery",
-                        content: <ServiceDelivery setGlobalState={props.setGlobalState} />,
-                    };
-                    const pandemicPreparedness = {
-                        title: "Pandemic Preparedness",
-                        content: (
-                            <PandemicPreparedness setGlobalState={props.setGlobalState} />
-                        ),
-                    };
->>>>>>> origin/main
+  const chuCode = watch("chu_code");
 
   const [selectedCounty, setSelectedCounty] = useState("");
   const [selectedSubCounties, setSelectedSubCounties] = useState<{ value: string, label: string }[]>([]);
+
+  useEffect(() => {
+    // Set global state for supervision team when the form data changes
+    return () => {
+      props.setGlobalState((store) => {
+        store["superVisionTeam"] = getValues();
+        return store;
+      });
+    };
+  }, [getValues, props]);
+
+  useEffect(() => {
+    reset(store?.globalState?.superVisionTeam);
+  }, [store?.globalState?.superVisionTeam, reset]);
+
+  useEffect(() => {
+    // Run this when 'whoAreRespondents' changes to adjust available modules
+    if (whoAreRespondents !== undefined && whoAreRespondents.length > 0) {
+      let modules = store?.modules || [];
+      const excludedRoles = [
+        "CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", 
+        "CQIC", "SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"
+      ];
+
+      if (!whoAreRespondents.some(role => excludedRoles.includes(role))) {
+        modules = modules.filter(
+          (item: { title: string }) =>
+            !["Leadership & Governance", "Service Delivery", "Pandemic Preparedness"].includes(item.title)
+        );
+      } else {
+        if (!modules.some((existingItem) => existingItem.title === "Leadership & Governance")) {
+          modules.push({
+            title: "Leadership & Governance",
+            content: <CHUFunctionality setGlobalState={props.setGlobalState} />,
+          });
+        }
+        modules.push(
+          {
+            title: "Service Delivery",
+            content: <ServiceDelivery setGlobalState={props.setGlobalState} />,
+          },
+          {
+            title: "Pandemic Preparedness",
+            content: <PandemicPreparedness setGlobalState={props.setGlobalState} />,
+          }
+        );
+      }
+    }
+  }, [whoAreRespondents, store?.modules, props.setGlobalState]);
+
+  return (
+    <div>
+      <Title level={2}>Supervision Team</Title>
+      {/* Additional form fields */}
+    </div>
+  );
+};
+
+export default SupervisionTeam;
+
 
 <<<<<<< HEAD
 
