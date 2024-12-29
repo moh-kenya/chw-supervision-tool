@@ -11,7 +11,7 @@ const CHAsSection = () => {
   return (
     <Form layout="vertical">
       <Title level={2}>Workforce</Title>
-      <FormItem required label="Expected No of CHAs/CHOs">
+      <FormItem required label="The expected number of CHAs/CHOs based on the established CHUs is">
         <InputNumber required min={0} size={'large'} style={{ width: "50%" }} placeholder='Please enter No.' />
       </FormItem>
 

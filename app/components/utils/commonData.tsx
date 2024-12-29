@@ -1,4 +1,6 @@
-export const kenyaCounties = [
+
+export const counties = [
+
     { value: 'Bomet', label: 'Bomet' },
     { value: 'Bungoma', label: 'Bungoma' },
     { value: 'Busia', label: 'Busia' },
@@ -45,7 +47,9 @@ export const kenyaCounties = [
     { value: 'Wajir', label: 'Wajir' },
     { value: 'West Pokot', label: 'West Pokot' }
 ];
-export const kenyaSubcounties = {
+
+export const subCounties = {
+
     'Bomet': [
         { value: 'Bomet Central', label: 'Bomet Central' },
         { value: 'Bomet East', label: 'Bomet East' },

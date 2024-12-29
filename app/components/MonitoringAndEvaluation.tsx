@@ -9,7 +9,7 @@ import { AppContext } from "../providers";
 import TextArea from 'antd/es/input/TextArea';
 
 const { Title } = Typography;
-const { Group } = Radio
+const { Group } = Radio;
 const RadioGroup = Group;
 
 const MonitoringAndEvaluation = (props) => {
@@ -34,12 +34,19 @@ const MonitoringAndEvaluation = (props) => {
     <>
       <Form layout="vertical">
         <Title level={2}>Monitoring & Evaluation</Title>
-        <FormItem disabled={disabled} control={control} name="integrated_dqa_conducted" required label="Have you conducted an integrated Community DQA in the last 6 months? (Verify with cDQA report- either external/internal)">
+
+        <FormItem disabled={disabled} control={control} name="integrated_dqa_conducted" required label="How often do you conduct data review meetings?">
+
           <RadioGroup>
-            <Radio value={'yes'}>Yes</Radio>
-            <Radio value={'no'}>No</Radio>
+            <Radio value={3}>Monthly</Radio>
+            <Radio value={2}>Quarterly</Radio>
+            <Radio value={1}>Biannually</Radio>
+            <Radio value={1}>Unscheduled</Radio>
+            <Radio value={1}>Annually</Radio>
+            <Radio value={0}>None</Radio>
           </RadioGroup>
         </FormItem>
+
         {watch('integrated_dqa_conducted') === 'yes' &&
           <FormItem disabled={disabled} control={control} name="post_cda_plan_implemented" required label="Was the post-cDQA action plan implemented? (Verify with action plan document & supporting activities minutes/reports)">
             <RadioGroup>
@@ -54,6 +61,7 @@ const MonitoringAndEvaluation = (props) => {
           control={control}
           name='post_cda_plan_implemented_comments'>
           <TextArea rows={3} size={'large'} placeholder='Comment/Remarks' />
+
         </FormItem>
       </Form>
     </>

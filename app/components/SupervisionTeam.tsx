@@ -1,111 +1,308 @@
-"use client";
-import { Form, Input, DatePicker, InputNumber, Row, Col, Select } from "antd";
+import React, { useState, useEffect, useContext } from "react";
+import { Form, Input, DatePicker, InputNumber, Row, Col, Select, Typography } from "antd";
 import { useForm, useFieldArray } from "react-hook-form";
 import dayjs from "dayjs";
-import { Typography } from "antd";
-import { FormItem } from "react-hook-form-antd";
-import { useContext, useEffect } from "react";
+import { AppContext } from "../providers"; // Updated to match correct import path
 import CHUFunctionality from "./CHUFunctionality";
 import WorkplanPolicies from "./WorkplanPolicies";
 import ServiceDelivery from "./ServiceDelivery";
 import PandemicPreparedness from "./PandemicPreparedness";
-import { AppContext } from "../providers";
-import { kenyaCounties, kenyaSubcounties } from "./utils/commonData";
+import { counties, subCounties } from "./utils/commonData"; // Importing counties and sub-counties data
 
 const { Title } = Typography;
+
 const SupervisionTeam = (props) => {
-    const disabled = props.disabled || false;
-    const store = useContext(AppContext);
+  const store = useContext(AppContext);
+  const { control, watch, getValues, reset } = useForm({});
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "teamMembers", // name for the array
+  });
 
-    const { control, watch, getValues, reset } = useForm({});
-    const { fields, append, remove } = useFieldArray({
-        control,
-        name: "teamMembers", // name for the array
-    });
-    const numberOfMembers = watch("number_in_supervision_team", 0);
-    const whoAreRespondents = watch("whoAreRespondents");
-    const chuCode = watch("chu_code");
-    useEffect(() => {
-        return () => {
-            props.setGlobalState((store) => {
-                store["superVisionTeam"] = getValues();
-                return store;
-            });
-        };
-    }, [getValues, props]);
-    useEffect(() => {
-        reset(store?.globalState?.superVisionTeam);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    useEffect(() => {
-        // This runs when the component is mounted or updated
-        if (whoAreRespondents !== undefined && whoAreRespondents?.length > 0) {
-            let modules = store?.modules || [];
-            if (
-                ![
-                    "CEC",
-                    "COH",
-                    "CDH",
-                    "CCHSFP",
-                    "CDSC",
-                    "CHRIO",
-                    "CPHCC",
-                    "CQIC",
-                    "SCMOH",
-                    "SCCHSFP",
-                    "SCDSC",
-                    "SCHRIO",
-                ].some((value) => whoAreRespondents?.includes(value))
-            ) {
-                modules = modules.filter(
-                    (item: { title: string }) =>
-                        item.title !== "Leadership & Governance" &&
-                        item.title !== "Service Delivery" &&
-                        item.title != "Pandemic Preparedness"
-                );
-            } else {
-                const isPresent = modules.some(
-                    (existingItem) => existingItem.title === "Leadership & Governance"
-                );
-                if (!isPresent) {
-                    const leadershipItem = {
-                        title: "Leadership & Governance",
-                        content: <CHUFunctionality setGlobalState={props.setGlobalState} />,
-                    };
-                    const serviceDelivery = {
-                        title: "Service Delivery",
-                        content: <ServiceDelivery setGlobalState={props.setGlobalState} />,
-                    };
-                    const pandemicPreparedness = {
-                        title: "Pandemic Preparedness",
-                        content: (
-                            <PandemicPreparedness setGlobalState={props.setGlobalState} />
-                        ),
-                    };
+  const numberOfMembers = watch("number_in_supervision_team", 0);
+  const whoAreRespondents = watch("whoAreRespondents");
+  const chuCode = watch("chu_code");
 
-                    modules.splice(0, 0, leadershipItem);
-                    modules.splice(9, 0, serviceDelivery);
-                    modules.splice(10, 0, pandemicPreparedness);
-                }
-            }
-            if (
-                !["CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", "CQIC"].some(
-                    (value) => whoAreRespondents?.includes(value)
-                )
-            ) {
-                modules = modules.filter(
-                    (item: { title: string }) => item.title !== "Workforce"
-                );
-            } else {
-                const isPresent = modules.some(
-                    (existingItem) => existingItem.title === "Workforce"
-                );
-                if (!isPresent) {
-                    const workForceItem = {
-                        title: "Workforce",
-                        content: <WorkplanPolicies setGlobalState={props.setGlobalState} />,
-                    };
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedSubCounties, setSelectedSubCounties] = useState<{ value: string, label: string }[]>([]);
 
+  useEffect(() => {
+    // Set global state for supervision team when the form data changes
+    return () => {
+      props.setGlobalState((store) => {
+        store["superVisionTeam"] = getValues();
+        return store;
+      });
+    };
+  }, [getValues, props]);
+
+  useEffect(() => {
+    reset(store?.globalState?.superVisionTeam);
+  }, [store?.globalState?.superVisionTeam, reset]);
+
+  useEffect(() => {
+    // Run this when 'whoAreRespondents' changes to adjust available modules
+    if (whoAreRespondents !== undefined && whoAreRespondents.length > 0) {
+      let modules = store?.modules || [];
+      const excludedRoles = [
+        "CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", 
+        "CQIC", "SCMOH", "SCCHSFP", "SCDSC", "SCHRIO"
+      ];
+
+      if (!whoAreRespondents.some(role => excludedRoles.includes(role))) {
+        modules = modules.filter(
+          (item: { title: string }) =>
+            !["Leadership & Governance", "Service Delivery", "Pandemic Preparedness"].includes(item.title)
+        );
+      } else {
+        if (!modules.some((existingItem) => existingItem.title === "Leadership & Governance")) {
+          modules.push({
+            title: "Leadership & Governance",
+            content: <CHUFunctionality setGlobalState={props.setGlobalState} />,
+          });
+        }
+        modules.push(
+          {
+            title: "Service Delivery",
+            content: <ServiceDelivery setGlobalState={props.setGlobalState} />,
+          },
+          {
+            title: "Pandemic Preparedness",
+            content: <PandemicPreparedness setGlobalState={props.setGlobalState} />,
+          }
+        );
+      }
+    }
+  }, [whoAreRespondents, store?.modules, props.setGlobalState]);
+
+  return (
+    <div>
+      <Title level={2}>Supervision Team</Title>
+      {/* Additional form fields */}
+    </div>
+  );
+};
+
+export default SupervisionTeam;
+
+
+<<<<<<< HEAD
+
+  // Function to get subcounties for a given county
+const getSubCounties = (county) => {
+  return subCounties[county] || []; // Return the subcounties or an empty array if the county doesn't exist
+};
+
+
+
+
+const handleCountyChange = (selectedValue: string) => {
+  setSelectedCounty(selectedValue);
+  const mySubcounties = getSubCounties(selectedValue);
+  setSelectedSubCounties(mySubcounties); // Ensure this contains an array of { value, label } objects
+};
+
+
+
+  console.log(selectedCounty)
+
+  console.log(selectedSubCounties)
+
+  useEffect(() => {
+    return () => {
+      props.setGlobalState((store) => {
+        store["superVisionTeam"] = getValues();
+        return store;
+      });
+    };
+  }, [getValues, props]);
+
+  useEffect(() => {
+    reset(store.globalState.superVisionTeam);
+  }, [store.globalState.superVisionTeam]);
+
+  useEffect(() => {
+    const currentCount = fields.length;
+    if (numberOfMembers > currentCount) {
+      for (let i = currentCount; i < numberOfMembers; i++) {
+        append({ name: "", designation: "", organization: "" });
+      }
+    } else {
+      for (let i = currentCount - 1; i >= numberOfMembers; i--) {
+        remove(i);
+      }
+    }
+  }, [numberOfMembers, append, remove, fields.length]);
+
+  return (
+    <Form layout="vertical">
+      <Title level={3}>Supervision Team</Title>
+      <FormItem
+        required
+        label="Number of members in the supervision team"
+        control={control}
+        name="number_in_supervision_team"
+      >
+        <InputNumber
+          size="large"
+          min={3}
+          max={10}
+          style={{ width: "50%" }}
+          placeholder="Enter number of members in the supervision team"
+        />
+      </FormItem>
+
+      {fields.length > 0 && (
+        <>
+          <Title level={5}>Enter the following details of the Supervision Team</Title>
+          {fields.map((field, index) => (
+            <Row key={index} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col xs={24} sm={24} md={8} lg={8}>
+                <FormItem
+                  required
+                  label={`Full Names of member ${index + 1}`}
+                  control={control}
+                  name={`name_member_${index}`}
+                >
+                  <Input size="large" placeholder={`Please enter the name of member ${index + 1}`} />
+                </FormItem>
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8}>
+                <FormItem
+                  required
+                  label={`Organisation of member ${index + 1}`}
+                  control={control}
+                  name={`organisation_member_${index}`}
+                >
+                  <Input size="large" placeholder={`Please enter the Organisation of member ${index + 1}`} />
+                </FormItem>
+              </Col>
+              <Col xs={24} sm={24} md={8} lg={8}>
+                <FormItem
+                  required
+                  label={`Designation of member ${index + 1}`}
+                  control={control}
+                  name={`designation_member_${index}`}
+                >
+                  <Input size="large" placeholder={`Please enter the Designation of member ${index + 1}`} />
+                </FormItem>
+              </Col>
+            </Row>
+          ))}
+        </>
+      )}
+
+      <Title level={3}>Supervision Site Details</Title>
+      <FormItem required label="Date of Supervision Visit" control={control} name="date">
+        <DatePicker
+          size="large"
+          style={{ width: "50%" }}
+          format={"DD/MM/YYYY"}
+          minDate={dayjs()}
+          maxDate={dayjs()}
+        />
+      </FormItem>
+
+      {fields.length > 0 && (
+        <FormItem
+          required
+          label="Who are your respondents?"
+          control={control}
+          name="whoAreRespondents"
+        >
+          <Select
+            mode="multiple"
+            size={"large"}
+            placeholder="Please select"
+            style={{ width: "100%" }}
+            options={[
+              { value: "CEC", label: "CEC" },
+              { value: "COH", label: "COH" },
+              { value: "CDH", label: "CDH" },
+              { value: "CCHSFP", label: "CCHSFP" },
+              { value: "CDSC", label: "CDSC" },
+              { value: "CHRIO", label: "CHRIO" },
+              { value: "CPHCC", label: "CPHCC" },
+              { value: "CQIC", label: "CQIC" },
+              { value: "SCMOH", label: "SCMOH" },
+              { value: "SCCHSFP", label: "SCCHSFP" },
+              { value: "SCDSC", label: "SCDSC" },
+              { value: "SCHRIO", label: "SCHRIO" },
+              { value: "CHA", label: "CHA" },
+              { value: "CHC Member", label: "CHC Member" },
+              { value: "CHP", label: "CHP" },
+            ]}
+            maxCount={fields.length}
+          />
+        </FormItem>
+      )}
+
+      {whoAreRespondents?.length > 0 && (
+        <>
+          {whoAreRespondents.map((field, index) => (
+            <div key={index}>
+              <Title level={5}>{whoAreRespondents[index]}</Title>
+
+              <FormItem
+                required
+                label={`How long have you served in your current position/station?`}
+                control={control}
+                name={`how_long_served_in_position_${index}`}
+              >
+                <Select
+                  size={"large"}
+                  placeholder="Please select"
+                  style={{ width: "100%" }}
+                  options={[
+                    { value: "<1", label: "Less than a year" },
+                    { value: "1-3", label: "1 to 3 years" },
+                    { value: "3>", label: "More than 3 years" },
+                  ]}
+                />
+              </FormItem>
+
+              {/* County Dropdown */}
+              <FormItem
+                required
+                label="County"
+                control={control}
+                name={`county_${index}`}
+              >
+                <Select
+                  size="large"
+                  placeholder="Please select a county"
+                  style={{ width: "100%" }}
+                  options={counties}
+                  onChange={handleCountyChange}
+                />
+              </FormItem>
+
+              {/* Sub-County Dropdown */}
+              {selectedCounty && (
+  <FormItem
+    required
+    label="Sub County"
+    control={control}
+    name={`subcounty_${index}`}
+  >
+    <Select
+      size="large"
+      placeholder="Please select a sub-county"
+      style={{ width: "100%" }}
+      options={selectedSubCounties} // This must be an array of { value, label } objects
+    />
+  </FormItem>
+)}
+
+
+              {/* Add more form items for other respondents if needed */}
+            </div>
+          ))}
+        </>
+      )}
+    </Form>
+  );
+=======
                     modules.splice(0, 1, workForceItem);
                 }
             }
@@ -469,6 +666,7 @@ const SupervisionTeam = (props) => {
             )}
         </Form>
     );
+>>>>>>> origin/main
 };
 
 

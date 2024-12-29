@@ -33,7 +33,9 @@ const Referral = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Referral</Title>
+
       <FormItem disabled={disabled} control={control} name="supplied_chps_with_referral_tools" required label="Have you supplied all your CHPs with referral tools?">
+
         <RadioGroup>
           <Radio value={'yes'}>Yes</Radio>
           <Radio value={'no'}>No</Radio>
