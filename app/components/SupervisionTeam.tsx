@@ -26,13 +26,13 @@ const SupervisionTeam = (props) => {
 
   // Function to get subcounties for a given county
   const getSubCounties = (county: string) => {
-    return subCounties[county] || []; // Return the subcounties or an empty array if the county doesn't exist
+    return subCounties[county] || []; 
   };
 
   const handleCountyChange = (selectedValue: string) => {
     setSelectedCounty(selectedValue);
     const mySubcounties = getSubCounties(selectedValue);
-    setSelectedSubCounties(mySubcounties); // Ensure this contains an array of { value, label } objects
+    setSelectedSubCounties(mySubcounties); 
   };
 
   useEffect(() => {
@@ -216,7 +216,7 @@ const SupervisionTeam = (props) => {
                     size="large"
                     placeholder="Please select a sub-county"
                     style={{ width: "100%" }}
-                    options={selectedSubCounties} // This must be an array of { value, label } objects
+                    options={selectedSubCounties} 
                   />
                 </FormItem>
               )}
