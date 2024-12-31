@@ -41,7 +41,7 @@ const SupervisionTeam = (props) => {
         store["superVisionTeam"] = getValues();
         return store;
       });
-    };
+    };  
   }, [getValues, props]);
 
   useEffect(() => {
