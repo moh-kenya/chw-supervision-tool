@@ -5,6 +5,8 @@ import dayjs from "dayjs";
 import { FormItem } from "react-hook-form-antd";
 import { AppContext } from "../providers"; 
 import { counties, subCounties } from "./utils/commonData"; 
+import  CHUFunctionality from "./CHUFunctionality";
+ 
 
 
 const { Title } = Typography;
@@ -25,15 +27,16 @@ const SupervisionTeam = (props) => {
   const [selectedSubCounties, setSelectedSubCounties] = useState<{ value: string, label: string }[]>([]);
 
   // Function to get subcounties for a given county
-  const getSubCounties = (county: string) => {
-    return subCounties[county] || []; 
+  const getSubCounties = (county) => {
+    return subCounties[county] || []; // Return the subcounties or an empty array if the county doesn't exist
   };
-
+  
   const handleCountyChange = (selectedValue: string) => {
     setSelectedCounty(selectedValue);
     const mySubcounties = getSubCounties(selectedValue);
-    setSelectedSubCounties(mySubcounties); 
+    setSelectedSubCounties(mySubcounties); // this contains an array of { value, label } objects
   };
+  
 
   useEffect(() => {
     return () => {

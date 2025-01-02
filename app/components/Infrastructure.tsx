@@ -3,7 +3,7 @@
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AppContext } from "../providers";
-
+import { FormItem } from "react-hook-form-antd";
 import { Form, Radio, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
@@ -29,10 +29,11 @@ const Infrastructure = (props) => {
     reset(store?.globalState?.Infrastructure);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
   const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+    // Implementing form submission logic here
   };
+  
 
   return (
     <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
@@ -112,7 +113,7 @@ const Infrastructure = (props) => {
         <TextArea rows={3} size="large" disabled={disabled} name="comments_infrastructure_3" />
       </Form.Item>
 
-      <button type="submit">Submit</button>
+     
     </Form>
   );
 };

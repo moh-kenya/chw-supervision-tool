@@ -1,10 +1,14 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
-import { Form, InputNumber, Card, Row, Col, Radio, Checkbox, Typography, Spin } from "antd";
+import { Form, InputNumber, Card, Row, Col, Radio, Checkbox, Typography, Spin} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useForm } from "react-hook-form";
 import { AppContext } from "../providers";
 import { LoadingOutlined } from "@ant-design/icons";
+import { FormItem } from "react-hook-form-antd";
+
+
+
 
 const { Title } = Typography;
 const { Group: RadioGroup } = Radio;
@@ -149,7 +153,26 @@ const CHUFunctionality = (props) => {
 
       {respondents?.length > 0 && (
         <>
+         
           <Title level={4}>WorkPlan & Performance</Title>
+<FormItem
+  disabled={disabled}
+  name='latest_chpolicies_disseminated'
+  control={control}
+  label="Have the following latest key CH policies and guidelines been disseminated? (Confirm with meeting minutes/reports)">
+  <RadioGroup>
+    <Radio value={'yes'}>Yes</Radio>
+    <Radio value={'no'}>No</Radio>
+  </RadioGroup>
+</FormItem>
+<FormItem
+  disabled={disabled}
+  name='comments_awp'
+  control={control}
+  label="Comment">
+  <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+</FormItem>
+
           {/* Additional respondent-related fields */}
         </>
       )}
