@@ -1,14 +1,17 @@
+"use client";
+import { Form, Input, DatePicker, InputNumber, Row, Col, Select } from "antd";
 import React, { useState, useEffect, useContext } from "react";
-import { Form, Input, DatePicker, InputNumber, Row, Col, Select, Typography } from "antd";
 import { useForm, useFieldArray } from "react-hook-form";
 import dayjs from "dayjs";
+import { Typography } from "antd";
 import { FormItem } from "react-hook-form-antd";
 import { AppContext } from "../providers"; 
 import { counties, subCounties } from "./utils/commonData"; 
 import  CHUFunctionality from "./CHUFunctionality";
+import WorkplanPolicies from "./WorkplanPolicies";
+import ServiceDelivery from "./ServiceDelivery";
+import PandemicPreparedness from "./PandemicPreparedness";
  
-
-
 const { Title } = Typography;
 
 const SupervisionTeam = (props) => {
@@ -27,16 +30,15 @@ const SupervisionTeam = (props) => {
   const [selectedSubCounties, setSelectedSubCounties] = useState<{ value: string, label: string }[]>([]);
 
   // Function to get subcounties for a given county
-  const getSubCounties = (county) => {
-    return subCounties[county] || []; // Return the subcounties or an empty array if the county doesn't exist
+  const getSubCounties = (county: string) => {
+    return subCounties[county] || []; 
   };
-  
+
   const handleCountyChange = (selectedValue: string) => {
     setSelectedCounty(selectedValue);
     const mySubcounties = getSubCounties(selectedValue);
-    setSelectedSubCounties(mySubcounties); // this contains an array of { value, label } objects
+    setSelectedSubCounties(mySubcounties); 
   };
-  
 
   useEffect(() => {
     return () => {

@@ -1,5 +1,4 @@
 "use client";
-
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { AppContext } from "../providers";
@@ -36,7 +35,7 @@ const Infrastructure = (props) => {
   
 
   return (
-    <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
+    <Form layout="vertical">
       <Title level={2}>Infrastructure</Title>
 
       {/* Designated Office */}
