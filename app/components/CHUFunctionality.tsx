@@ -61,7 +61,7 @@ const CHUFunctionality = (props) => {
         <Col>
           <Card title="Percentage of establishment of CHU is:">
             <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
-              {percentage}%</p>
+              {percentage.toFixed(2)}%</p>
           </Card>
         </Col>
       </Row>
@@ -136,7 +136,8 @@ const CHUFunctionality = (props) => {
 
       {respondents?.length > 0 &&
         <>
-          <Title level={4}>Annual WorkPlan & Performance  </Title>
+
+          <Title level={4}> WorkPlan & Performance  </Title>
           {["CEC", "COH", "CDH", "CCHSFP", "CDSC", "CHRIO", "CPHCC", "CQIC"].some(value => respondents?.includes(value)) &&
             <FormItem
               disabled={disabled}

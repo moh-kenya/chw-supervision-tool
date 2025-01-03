@@ -34,12 +34,27 @@ const MonitoringAndEvaluation = (props) => {
     <>
       <Form layout="vertical">
         <Title level={2}>Monitoring & Evaluation</Title>
-        <FormItem disabled={disabled} control={control} name="integrated_dqa_conducted" required label="Have you conducted an integrated Community DQA in the last 6 months? (Verify with cDQA report- either external/internal)">
-          <RadioGroup>
-            <Radio value={'yes'}>Yes</Radio>
-            <Radio value={'no'}>No</Radio>
-          </RadioGroup>
-        </FormItem>
+
+
+        <FormItem 
+  disabled={disabled} 
+  control={control} 
+  name="integrated_dqa_conducted" 
+  required 
+  label="How often do you conduct data review meetings?"
+>
+  <RadioGroup>
+    <Radio value="Monthly">Monthly</Radio>
+    <Radio value="Quarterly">Quarterly</Radio>
+    <Radio value="Biannually">Biannually</Radio>
+    <Radio value="Unscheduled">Unscheduled</Radio>
+    <Radio value="Annually">Annually</Radio>
+    <Radio value="None">None</Radio>
+  </RadioGroup>
+       </FormItem>
+
+
+
         {watch('integrated_dqa_conducted') === 'yes' &&
           <FormItem disabled={disabled} control={control} name="post_cda_plan_implemented" required label="Was the post-cDQA action plan implemented? (Verify with action plan document & supporting activities minutes/reports)">
             <RadioGroup>
