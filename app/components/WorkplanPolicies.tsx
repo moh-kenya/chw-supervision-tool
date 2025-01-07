@@ -1,15 +1,25 @@
-"use client"
-import { useContext, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { AppContext } from "../providers";
-import { FormItem } from "react-hook-form-antd";
+'use client';
 
-import { Card, Col, Form, Input, InputNumber, Radio, Row, Spin } from 'antd';
-import { Typography } from 'antd';
-import { LoadingOutlined } from "@ant-design/icons";
+import { useContext, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { FormItem } from 'react-hook-form-antd';
+
+import {
+  Card,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Row,
+  Spin,
+  Typography,
+} from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { AppContext } from '../providers';
 
 const { Title } = Typography;
-const { Group } = Radio
+const { Group } = Radio;
 const RadioGroup = Group;
 
 const WorkplanPolicies = (props) => {
@@ -22,7 +32,7 @@ const WorkplanPolicies = (props) => {
   useEffect(() => {
     return () => {
       props.setGlobalState((store) => {
-        store["workplanPolicies"] = getValues();
+        store.workplanPolicies = getValues();
         return store;
       });
     };
@@ -36,8 +46,14 @@ const WorkplanPolicies = (props) => {
       <Title level={2}>Workforce</Title>
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
-          <Card title="Expected No of CHAs/CHOs is" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
+          <Card
+            title="Expected No of CHAs/CHOs is"
+            style={{ width: 300, height: 200 }}
+          >
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+              {' '}
+              <Spin indicator={<LoadingOutlined spin />} size="large" />
+            </p>
           </Card>
         </Col>
       </Row>
@@ -45,40 +61,115 @@ const WorkplanPolicies = (props) => {
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
       </FormItem> */}
 
-      <FormItem disabled={disabled} control={control} name="how_many_chas" required label="How many CHAs/CHOs do you have?">
-        <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="how_many_chas"
+        required
+        label="How many CHAs/CHOs do you have?"
+      >
+        <InputNumber
+          required
+          min={0}
+          size="large"
+          style={{ width: '50%' }}
+          placeholder="Please enter No."
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_1" label="Comment/Remarks">
-        <Input.TextArea rows={3} size='large' placeholder='Please enter comments or remarks' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_1"
+        label="Comment/Remarks"
+      >
+        <Input.TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="number_of_chas_trained" required label="Number of CHAs/CHOs trained in community health? (at least 2 years training in certified college)">
-        <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="number_of_chas_trained"
+        required
+        label="Number of CHAs/CHOs trained in community health? (at least 2 years training in certified college)"
+      >
+        <InputNumber
+          required
+          min={0}
+          size="large"
+          style={{ width: '50%' }}
+          placeholder="Please enter No."
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_2" label="Comment/Remarks">
-        <Input.TextArea rows={3} size='large' placeholder='Please enter comments or remarks' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_2"
+        label="Comment/Remarks"
+      >
+        <Input.TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="number_of_chas_appraised" required label="Number of CHAs appraised in the last financial year? (verify with appraisal reports)">
-        <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="number_of_chas_appraised"
+        required
+        label="Number of CHAs appraised in the last financial year? (verify with appraisal reports)"
+      >
+        <InputNumber
+          required
+          min={0}
+          size="large"
+          style={{ width: '50%' }}
+          placeholder="Please enter No."
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_3" label="Comment">
-        <Input.TextArea rows={3} size='large' placeholder='Please enter comment' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_3"
+        label="Comment"
+      >
+        <Input.TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comment"
+        />
       </FormItem>
 
       {/* CHPs Section */}
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
-          <Card title="Expected No of CHPs is" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
+          <Card
+            title="Expected No of CHPs is"
+            style={{ width: 300, height: 200 }}
+          >
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+              {' '}
+              <Spin indicator={<LoadingOutlined spin />} size="large" />
+            </p>
           </Card>
         </Col>
         <Col>
-          <Card title="Number of existing CHPs" style={{ width: 300, height: 200 }}>
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}> <Spin indicator={<LoadingOutlined spin />} size="large" /></p>
+          <Card
+            title="Number of existing CHPs"
+            style={{ width: 300, height: 200 }}
+          >
+            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+              {' '}
+              <Spin indicator={<LoadingOutlined spin />} size="large" />
+            </p>
           </Card>
         </Col>
       </Row>
@@ -90,59 +181,139 @@ const WorkplanPolicies = (props) => {
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
       </FormItem> */}
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_4" label="Comment">
-        <Input.TextArea rows={3} size='large' placeholder='Please enter comment' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_4"
+        label="Comment"
+      >
+        <Input.TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comment"
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="stipends_payment_upto_date" required label="Is your CHPs stipends payment status up to date? (payments up to the last month. Both National, County)">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="stipends_payment_upto_date"
+        required
+        label="Is your CHPs stipends payment status up to date? (payments up to the last month. Both National, County)"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
-      {watch('stipends_payment_upto_date') === 'no' &&
-        <FormItem disabled={disabled} control={control} name="months_in_arrears" required label="How many months in arrears?">
-          <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
+      {watch('stipends_payment_upto_date') === 'no' && (
+        <FormItem
+          disabled={disabled}
+          control={control}
+          name="months_in_arrears"
+          required
+          label="How many months in arrears?"
+        >
+          <InputNumber
+            required
+            min={0}
+            size="large"
+            style={{ width: '50%' }}
+            placeholder="Please enter No."
+          />
         </FormItem>
-      }
+      )}
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_4" required label="Comments">
-        <Input.TextArea rows={3} size='large' placeholder='Please enter comments or remarks' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_4"
+        required
+        label="Comments"
+      >
+        <Input.TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="chp_registry_upto_date" required label="Is your CHP Registry up to date? (new ones added, removed non-existent at least once a year)">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="chp_registry_upto_date"
+        required
+        label="Is your CHP Registry up to date? (new ones added, removed non-existent at least once a year)"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_5" label="Comment">
-        <Input.TextArea rows={3} size='large' style={{ width: "50%" }} placeholder='Please enter comment' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_5"
+        label="Comment"
+      >
+        <Input.TextArea
+          rows={3}
+          size="large"
+          style={{ width: '50%' }}
+          placeholder="Please enter comment"
+        />
       </FormItem>
-      <FormItem disabled={disabled} control={control} name="chs_integrated_into_county_wp" required label="Are Community Health services integrated in the current county annual workplan?">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="chs_integrated_into_county_wp"
+        required
+        label="Are Community Health services integrated in the current county annual workplan?"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="chs_integrated_into_subcounty_wp" required label="Are Community Health services integrated in the current sub-county annual workplan?">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="chs_integrated_into_subcounty_wp"
+        required
+        label="Are Community Health services integrated in the current sub-county annual workplan?"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="5_year_costed_chs_plan" required label="Do you have a 5-year costed CHS implementation plan?">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="5_year_costed_chs_plan"
+        required
+        label="Do you have a 5-year costed CHS implementation plan?"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} control={control} name="comments_workplanpolicies_6" label="Comments/Remarks">
-        <Input.TextArea rows={4} size='large' placeholder='Please enter comments or remarks' />
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="comments_workplanpolicies_6"
+        label="Comments/Remarks"
+      >
+        <Input.TextArea
+          rows={4}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
     </Form>
   );

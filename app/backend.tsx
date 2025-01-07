@@ -2,11 +2,13 @@
 
 import { Client } from 'appwrite';
 
-export const client = new Client();
+const client = new Client();
+
+export default client;
 
 client
-    .setEndpoint('https://backend-moh.karimkkanji.com/v1')
-    .setProject('671b69380019aff6cad1');
+  .setEndpoint('https://backend-moh.karimkkanji.com/v1')
+  .setProject('671b69380019aff6cad1');
 
 // export const account = new Account(client);
 // export { ID } from 'appwrite';

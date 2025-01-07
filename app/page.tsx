@@ -1,13 +1,13 @@
-import { getLoggedInUser } from './lib/server/appwrite.js'
+import { type ReactElement } from 'react';
+import { redirect } from 'next/navigation';
+import { getLoggedInUser } from './lib/server/appwrite';
 
-import { redirect } from "next/navigation";
+export default async function Home(): Promise<ReactElement> {
+  const user = await getLoggedInUser();
 
-export default async function Home() {
-    const user = await getLoggedInUser();
+  if (user === null) redirect('/login');
 
-    if (!user) redirect("/login");
-
-    redirect("/dashboard");
+  redirect('/dashboard');
 }
 
-export const runtime = "edge"
+export const runtime = 'edge';

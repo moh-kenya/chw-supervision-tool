@@ -1,8 +1,9 @@
-"use client"
-import { useContext } from "react";
-import { AppContext } from "../providers";
+'use client';
+
+import { useContext } from 'react';
 import { Typography } from 'antd';
-import SupervisionTeam from "./SupervisionTeam";
+import { AppContext } from '../providers';
+import SupervisionTeam from './SupervisionTeam';
 import CHUFunctionality from './CHUFunctionality';
 import WorkplanPolicies from './WorkplanPolicies';
 import Infrastructure from './Infrastructure';
@@ -23,18 +24,42 @@ const ReviewAndSubmit = (props) => {
   return (
     <>
       <Title level={2}>Review and Submit</Title>
-      {store?.globalState?.superVisionTeam && <SupervisionTeam setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.chuFunctionality && <CHUFunctionality setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.workplanPolicies && <WorkplanPolicies setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.infrastructure && <Infrastructure setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.monitoringAndEvaluation && <MonitoringAndEvaluation setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.commodities && <Commodities setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.transport && <Transport setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.referral && <Referral setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.finance && <Finance setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.partnership && <Partnership setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.serviceDelivery && <ServiceDelivery setGlobalState={setGlobalState} disabled={true} />}
-      {store?.globalState?.pandemicPreparedness && <PandemicPreparedness setGlobalState={setGlobalState} disabled={true} />}
+      {store?.globalState?.superVisionTeam && (
+        <SupervisionTeam setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.chuFunctionality && (
+        <CHUFunctionality setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.workplanPolicies && (
+        <WorkplanPolicies setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.infrastructure && (
+        <Infrastructure setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.monitoringAndEvaluation && (
+        <MonitoringAndEvaluation setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.commodities && (
+        <Commodities setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.transport && (
+        <Transport setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.referral && (
+        <Referral setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.finance && (
+        <Finance setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.partnership && (
+        <Partnership setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.serviceDelivery && (
+        <ServiceDelivery setGlobalState={setGlobalState} disabled />
+      )}
+      {store?.globalState?.pandemicPreparedness && (
+        <PandemicPreparedness setGlobalState={setGlobalState} disabled />
+      )}
     </>
   );
 };

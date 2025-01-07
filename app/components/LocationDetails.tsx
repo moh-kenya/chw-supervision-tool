@@ -1,4 +1,5 @@
-"use client"
+'use client';
+
 import React from 'react';
 // import { Form, Input } from 'antd';
 // import FormItem from 'antd/es/form/FormItem';
@@ -7,12 +8,13 @@ import React from 'react';
 // const { Title } = Typography;
 
 const LocationDetails = () => {
-    return (<></>
-        // <Form layout="vertical">
-        //     <Title level={2}>Supervision Site Details</Title>
+  return (
+    <></>
+    // <Form layout="vertical">
+    //     <Title level={2}>Supervision Site Details</Title>
 
-        // </Form>
-    );
+    // </Form>
+  );
 };
 
 export default LocationDetails;

@@ -1,28 +1,25 @@
-
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import type { Metadata } from 'next';
+import localFont from 'next/font/local';
+import './globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import React from 'react';
-import { Providers } from "./providers";
+import { Providers } from './providers';
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+  src: './fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  weight: '100 900',
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+  src: './fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono',
+  weight: '100 900',
 });
 
 export const metadata: Metadata = {
-  title: "Integrated CHS Supervision Tool",
-  description: "Ministry of Health - eCHIS Integrated CHS Supervision Tool",
+  title: 'Integrated CHS Supervision Tool',
+  description: 'Ministry of Health - eCHIS Integrated CHS Supervision Tool',
 };
-
-
 
 export default function RootLayout({
   children,
@@ -30,14 +27,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
-      <body className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning={true}>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable}`}
+        suppressHydrationWarning
+      >
         <AntdRegistry>
-          <Providers>
-            {children}
-          </Providers>
+          <Providers>{children}</Providers>
         </AntdRegistry>
       </body>
-    </html >
+    </html>
   );
 }

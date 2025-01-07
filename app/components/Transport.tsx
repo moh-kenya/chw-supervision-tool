@@ -1,15 +1,15 @@
-"use client"
-import { useContext, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { AppContext } from "../providers";
-import { FormItem } from "react-hook-form-antd";
+'use client';
 
-import { Form, Radio } from 'antd';
-import { Typography } from 'antd';
+import { useContext, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { FormItem } from 'react-hook-form-antd';
+
+import { Form, Radio, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { AppContext } from '../providers';
 
 const { Title } = Typography;
-const { Group } = Radio
+const { Group } = Radio;
 const RadioGroup = Group;
 
 const Transport = (props) => {
@@ -21,7 +21,7 @@ const Transport = (props) => {
   useEffect(() => {
     return () => {
       props.setGlobalState((store) => {
-        store["transport"] = getValues();
+        store.transport = getValues();
         return store;
       });
     };
@@ -33,28 +33,59 @@ const Transport = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Transport</Title>
-      <FormItem disabled={disabled} required control={control} name="facilitated_with_transport" label="Have you facilitated your CHAs/CHOs with a means of transport (Motorbike/Bicycles)?">
+      <FormItem
+        disabled={disabled}
+        required
+        control={control}
+        name="facilitated_with_transport"
+        label="Have you facilitated your CHAs/CHOs with a means of transport (Motorbike/Bicycles)?"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} required control={control} name="comments_transport_1" label="Comment/Remarks">
-        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+      <FormItem
+        disabled={disabled}
+        required
+        control={control}
+        name="comments_transport_1"
+        label="Comment/Remarks"
+      >
+        <TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
 
-      <FormItem disabled={disabled} required control={control} name="have_budget_for_maintenance_transport" label="Do you have a budget for maintenance of the provided transport means (Servicing & fueling)? (Verify)">
+      <FormItem
+        disabled={disabled}
+        required
+        control={control}
+        name="have_budget_for_maintenance_transport"
+        label="Do you have a budget for maintenance of the provided transport means (Servicing & fueling)? (Verify)"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
-      <FormItem disabled={disabled} required control={control} name="comments_transport_2" label="Comment/Remarks">
-        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+      <FormItem
+        disabled={disabled}
+        required
+        control={control}
+        name="comments_transport_2"
+        label="Comment/Remarks"
+      >
+        <TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
-
     </Form>
   );
 };

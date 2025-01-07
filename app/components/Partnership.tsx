@@ -1,19 +1,19 @@
-"use client"
-import { useContext, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { AppContext } from "../providers";
-import { FormItem } from "react-hook-form-antd";
+'use client';
 
-import { Form, Radio } from 'antd';
-import { Typography } from 'antd';
+import { useContext, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { FormItem } from 'react-hook-form-antd';
+
+import { Form, Radio, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
+import { AppContext } from '../providers';
 
 const { Title } = Typography;
-const { Group } = Radio
+const { Group } = Radio;
 const RadioGroup = Group;
 
 const Partnership = (props) => {
-  const disabled = props.disabled;
+  const { disabled } = props;
   const store = useContext(AppContext);
 
   const { control, getValues, reset } = useForm({});
@@ -21,7 +21,7 @@ const Partnership = (props) => {
   useEffect(() => {
     return () => {
       props.setGlobalState((store) => {
-        store["partnership"] = getValues();
+        store.partnership = getValues();
         return store;
       });
     };
@@ -34,16 +34,28 @@ const Partnership = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Partnership</Title>
-      <FormItem disabled={disabled} control={control} name="have_phc_chs_stakeholder_forum" required label="Do you have a PHC/CHS stakeholder forum/TWG with clear TORs (defining the scope of work)?">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="have_phc_chs_stakeholder_forum"
+        required
+        label="Do you have a PHC/CHS stakeholder forum/TWG with clear TORs (defining the scope of work)?"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem disabled={disabled} control={control} name="convened_phc_chs_stakeholder_forum" required label="In the last quarter did you convene the PHC/CHS stakeholder forum/TWG? (Verify with reports)">
+      <FormItem
+        disabled={disabled}
+        control={control}
+        name="convened_phc_chs_stakeholder_forum"
+        required
+        label="In the last quarter did you convene the PHC/CHS stakeholder forum/TWG? (Verify with reports)"
+      >
         <RadioGroup>
-          <Radio value={'yes'}>Yes</Radio>
-          <Radio value={'no'}>No</Radio>
+          <Radio value="yes">Yes</Radio>
+          <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
 
@@ -52,8 +64,13 @@ const Partnership = (props) => {
         control={control}
         name="comments_partnership"
         required
-        label="Comment/Remarks">
-        <TextArea rows={3} size={'large'} placeholder='Please enter comments or remarks' />
+        label="Comment/Remarks"
+      >
+        <TextArea
+          rows={3}
+          size="large"
+          placeholder="Please enter comments or remarks"
+        />
       </FormItem>
     </Form>
   );
