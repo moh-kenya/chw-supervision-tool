@@ -90,7 +90,7 @@ export default function Home() {
     setModalData({
       title: 'Are you sure you want to continue with this draft?',
       message: 'This will load the saved data on this device to allow you to proceeed with supervision',
-      action: () => router.push(`/new-supervision/i${id}`),
+      action: () => router.push(`/new-supervision/${id}`),
       isOpen: true
     })
   }
