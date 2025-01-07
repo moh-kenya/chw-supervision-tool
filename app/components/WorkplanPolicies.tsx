@@ -50,10 +50,12 @@ const WorkplanPolicies = (props) => {
             title="Expected No of CHAs/CHOs is"
             style={{ width: 300, height: 200 }}
           >
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+            <div
+              style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}
+            >
               {' '}
               <Spin indicator={<LoadingOutlined spin />} size="large" />
-            </p>
+            </div>
           </Card>
         </Col>
       </Row>
@@ -155,10 +157,12 @@ const WorkplanPolicies = (props) => {
             title="Expected No of CHPs is"
             style={{ width: 300, height: 200 }}
           >
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+            <div
+              style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}
+            >
               {' '}
               <Spin indicator={<LoadingOutlined spin />} size="large" />
-            </p>
+            </div>
           </Card>
         </Col>
         <Col>
@@ -166,10 +170,12 @@ const WorkplanPolicies = (props) => {
             title="Number of existing CHPs"
             style={{ width: 300, height: 200 }}
           >
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+            <div
+              style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}
+            >
               {' '}
               <Spin indicator={<LoadingOutlined spin />} size="large" />
-            </p>
+            </div>
           </Card>
         </Col>
       </Row>

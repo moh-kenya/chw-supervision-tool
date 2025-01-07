@@ -25,7 +25,7 @@ export default function Home() {
   const [modalData, setModalData] = useState<any>({
     title: '',
     message: '',
-    action: () => {},
+    action: () => { },
     isOpen: false,
   });
 
@@ -144,7 +144,7 @@ export default function Home() {
     setModalData({
       title: '',
       message: '',
-      action: () => {},
+      action: () => { },
       isOpen: false,
     });
   };

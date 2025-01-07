@@ -7,8 +7,8 @@ import { AppContext } from '../../providers';
 import { type NotifsTypes } from '../../login/page';
 import Notifications from '../../components/utils/Notifications';
 
-export default function Home({ params }: { params: any }) {
-  const id = params?.id || '';
+const Home = ({ params }: { params: any }) => {
+  const id = params?.id ?? '';
 
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -18,7 +18,7 @@ export default function Home({ params }: { params: any }) {
   });
   const [current, setCurrent] = useState(0);
   const store = useContext(AppContext);
-  const modules = store?.modules || [];
+  const modules = store?.modules ?? [];
 
   const next = () => {
     setCurrent(current + 1);
@@ -55,7 +55,7 @@ export default function Home({ params }: { params: any }) {
         return dataRetrieved[id];
       });
     }
-  }, [id, current, store]);
+  }, [id, current]);
 
   const retrieveData = (id: string) => {
     const storedData = localStorage.getItem(id);
@@ -109,5 +109,7 @@ export default function Home({ params }: { params: any }) {
       </div>
     </>
   );
-}
+};
 export const runtime = 'edge';
+
+export default Home;
