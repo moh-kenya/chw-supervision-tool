@@ -115,10 +115,12 @@ const CHUFunctionality = (props) => {
             title="No of CHUs registered in MCHUL"
             style={{ width: 300, height: 200 }}
           >
-            <p style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}>
+            <div
+              style={{ fontSize: '50px', textAlign: 'center', marginTop: -5 }}
+            >
               {' '}
               <Spin indicator={<LoadingOutlined spin />} size="large" />
-            </p>
+            </div>
           </Card>
         </Col>
       </Row>
@@ -254,33 +256,33 @@ const CHUFunctionality = (props) => {
             'CPHCC',
             'CQIC',
           ].some((value) => respondents?.includes(value)) && (
-            <FormItem
-              disabled={disabled}
-              name="chs_integrated_cawp"
-              label="Are Community Health services integrated in the current county annual workplan? (Confirm with the AWP)"
-              control={control}
-            >
-              <RadioGroup>
-                <Radio value="yes">Yes</Radio>
-                <Radio value="no">No</Radio>
-              </RadioGroup>
-            </FormItem>
-          )}
+              <FormItem
+                disabled={disabled}
+                name="chs_integrated_cawp"
+                label="Are Community Health services integrated in the current county annual workplan? (Confirm with the AWP)"
+                control={control}
+              >
+                <RadioGroup>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              </FormItem>
+            )}
           {['SCMOH', 'SCCHSFP', 'SCDSC', 'SCHRIO'].some((value) =>
             respondents?.includes(value)
           ) && (
-            <FormItem
-              disabled={disabled}
-              name="chs_integrated_scawp"
-              control={control}
-              label="Are Community Health services integrated in the current sub-county annual workplan? (Confirm with the AWP)"
-            >
-              <RadioGroup>
-                <Radio value="yes">Yes</Radio>
-                <Radio value="no">No</Radio>
-              </RadioGroup>
-            </FormItem>
-          )}
+              <FormItem
+                disabled={disabled}
+                name="chs_integrated_scawp"
+                control={control}
+                label="Are Community Health services integrated in the current sub-county annual workplan? (Confirm with the AWP)"
+              >
+                <RadioGroup>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              </FormItem>
+            )}
           {[
             'CEC',
             'COH',
@@ -291,59 +293,59 @@ const CHUFunctionality = (props) => {
             'CPHCC',
             'CQIC',
           ].some((value) => respondents?.includes(value)) && (
-            <>
-              {' '}
-              <FormItem
-                disabled={disabled}
-                name="year5_costed_chs_ip"
-                control={control}
-                label="Do you have a 5-year costed CHS implementation plan?"
-              >
-                <RadioGroup>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </FormItem>
-              {allvalues.year5_costed_chs_ip === 'no' && (
+              <>
+                {' '}
                 <FormItem
                   disabled={disabled}
-                  name="year5_costed_chs_ip_remarks"
+                  name="year5_costed_chs_ip"
                   control={control}
-                  label="Comments/Remarks"
+                  label="Do you have a 5-year costed CHS implementation plan?"
                 >
-                  <TextArea
-                    rows={3}
-                    size="large"
-                    placeholder="Please enter comments or remarks for not having a 5-year costed CHS implementation plan"
-                  />
+                  <RadioGroup>
+                    <Radio value="yes">Yes</Radio>
+                    <Radio value="no">No</Radio>
+                  </RadioGroup>
                 </FormItem>
-              )}
-              <FormItem
-                disabled={disabled}
-                required
-                name="sentitized_latest_key_cch"
-                control={control}
-                label="Have you been sensitized on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
-              >
-                <RadioGroup>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </FormItem>
-              <FormItem
-                disabled={disabled}
-                required
-                name="sentitized_latest_key_cch_chas"
-                control={control}
-                label="Have you sensitized your CHAs on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
-              >
-                <RadioGroup>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </FormItem>
-            </>
-          )}
+                {allvalues.year5_costed_chs_ip === 'no' && (
+                  <FormItem
+                    disabled={disabled}
+                    name="year5_costed_chs_ip_remarks"
+                    control={control}
+                    label="Comments/Remarks"
+                  >
+                    <TextArea
+                      rows={3}
+                      size="large"
+                      placeholder="Please enter comments or remarks for not having a 5-year costed CHS implementation plan"
+                    />
+                  </FormItem>
+                )}
+                <FormItem
+                  disabled={disabled}
+                  required
+                  name="sentitized_latest_key_cch"
+                  control={control}
+                  label="Have you been sensitized on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
+                >
+                  <RadioGroup>
+                    <Radio value="yes">Yes</Radio>
+                    <Radio value="no">No</Radio>
+                  </RadioGroup>
+                </FormItem>
+                <FormItem
+                  disabled={disabled}
+                  required
+                  name="sentitized_latest_key_cch_chas"
+                  control={control}
+                  label="Have you sensitized your CHAs on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
+                >
+                  <RadioGroup>
+                    <Radio value="yes">Yes</Radio>
+                    <Radio value="no">No</Radio>
+                  </RadioGroup>
+                </FormItem>
+              </>
+            )}
 
           {[
             'CEC',
@@ -359,18 +361,18 @@ const CHUFunctionality = (props) => {
             'SCDSC',
             'SCHRIO',
           ].some((value) => respondents?.includes(value)) && (
-            <FormItem
-              disabled={disabled}
-              name="latest_chpolicies_disseminated"
-              control={control}
-              label="Have the following latest key CH policies and guidelines been disseminated? (Confirm with meeting minutes/reports)"
-            >
-              <RadioGroup>
-                <Radio value="yes">Yes</Radio>
-                <Radio value="no">No</Radio>
-              </RadioGroup>
-            </FormItem>
-          )}
+              <FormItem
+                disabled={disabled}
+                name="latest_chpolicies_disseminated"
+                control={control}
+                label="Have the following latest key CH policies and guidelines been disseminated? (Confirm with meeting minutes/reports)"
+              >
+                <RadioGroup>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              </FormItem>
+            )}
           <FormItem
             disabled={disabled}
             name="comments_awp"
