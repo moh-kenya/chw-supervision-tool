@@ -10,21 +10,17 @@ import {
   Select,
   Typography,
 } from 'antd';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { FormItem } from 'react-hook-form-antd';
-import { AppContext } from '../providers';
 import { kenyaCounties, kenyaSubcounties } from './utils/commonData';
-import CHUFunctionality from './CHUFunctionality';
-import WorkplanPolicies from './WorkplanPolicies';
-import ServiceDelivery from './ServiceDelivery';
-import PandemicPreparedness from './PandemicPreparedness';
+import { type SubCounty, type SupervisionTeamProps } from './utils/Types';
 
 const { Title } = Typography;
 
-const SupervisionTeam = (props) => {
-  const store = useContext(AppContext);
+const SupervisionTeam: React.FC<SupervisionTeamProps> = (props) => {
+  const { globalState, setGlobalState } = props;
 
   const { control, watch, getValues, reset } = useForm({});
   const { fields, append, remove } = useFieldArray({
@@ -35,43 +31,49 @@ const SupervisionTeam = (props) => {
   const numberOfMembers = watch('number_in_supervision_team', 0);
   const whoAreRespondents = watch('whoAreRespondents');
 
-  const [selectedCounty, setSelectedCounty] = useState('');
-  const [selectedSubCounties, setSelectedSubCounties] = useState<
-    Array<{ value: string; label: string }>
-  >([]);
+  const [selectedCounty, setSelectedCounty] = useState<string>('');
+  const [selectedSubCounties, setSelectedSubCounties] = useState<SubCounty[]>(
+    []
+  );
 
   // Function to get subcounties for a given county
-  const getSubCounties = (county: string) => {
-    return kenyaSubcounties[county] || [];
+  const getSubCounties = (
+    county: keyof typeof kenyaSubcounties
+  ): SubCounty[] => {
+    return kenyaSubcounties[county];
   };
 
-  const handleCountyChange = (selectedValue: string) => {
+  const handleCountyChange = (selectedValue: string): void => {
     setSelectedCounty(selectedValue);
-    const mySubcounties = getSubCounties(selectedValue);
+    const mySubcounties = getSubCounties(
+      selectedValue as keyof typeof kenyaSubcounties
+    );
     setSelectedSubCounties(mySubcounties);
   };
 
   useEffect(() => {
     return () => {
-      props.setGlobalState((store) => {
-        store.superVisionTeam = getValues();
-        return store;
+      setGlobalState((store) => {
+        const updatedStore = { ...store, superVisionTeam: getValues() };
+        return updatedStore;
       });
     };
-  }, [getValues, props]);
+  }, [getValues, props, setGlobalState]);
 
   useEffect(() => {
-    reset(store.globalState.superVisionTeam);
-  }, [store.globalState.superVisionTeam]);
+    if (typeof globalState?.superVisionTeam === 'object') {
+      reset(globalState.superVisionTeam);
+    }
+  }, [globalState?.superVisionTeam, reset]);
 
   useEffect(() => {
     const currentCount = fields.length;
     if (numberOfMembers > currentCount) {
-      for (let i = currentCount; i < numberOfMembers; i++) {
+      for (let i = currentCount; i < numberOfMembers; i += 1) {
         append({ name: '', designation: '', organization: '' });
       }
     } else {
-      for (let i = currentCount - 1; i >= numberOfMembers; i--) {
+      for (let i = currentCount - 1; i >= numberOfMembers; i -= 1) {
         remove(i);
       }
     }
@@ -101,7 +103,7 @@ const SupervisionTeam = (props) => {
             Enter the following details of the Supervision Team
           </Title>
           {fields.map((field, index) => (
-            <Row key={index} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+            <Row key={field.id} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
               <Col xs={24} sm={24} md={8} lg={8}>
                 <FormItem
                   required
@@ -198,8 +200,8 @@ const SupervisionTeam = (props) => {
 
       {whoAreRespondents?.length > 0 && (
         <>
-          {whoAreRespondents.map((field, index) => (
-            <div key={index}>
+          {whoAreRespondents.map((field: string, index: number) => (
+            <div key={field}>
               <Title level={5}>{whoAreRespondents[index]}</Title>
 
               <FormItem
@@ -237,7 +239,7 @@ const SupervisionTeam = (props) => {
               </FormItem>
 
               {/* Sub-County Dropdown */}
-              {selectedCounty && (
+              {selectedCounty.length > 0 && (
                 <FormItem
                   required
                   label="Sub County"

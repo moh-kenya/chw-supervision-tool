@@ -21,11 +21,7 @@ export const metadata: Metadata = {
   description: 'Ministry of Health - eCHIS Integrated CHS Supervision Tool',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -38,4 +34,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

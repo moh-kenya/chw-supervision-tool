@@ -11,18 +11,6 @@ import Notifications from '../components/utils/Notifications';
 
 const { Title, Text } = Typography;
 
-interface FormValues {
-  emailOrPhone: string;
-  password: string;
-}
-type NotificationType = 'success' | 'info' | 'warning' | 'error';
-export interface NotifsTypes {
-  type: NotificationType;
-  title: string;
-  message: string;
-  toggle: boolean;
-}
-
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const { control, handleSubmit } = useForm();

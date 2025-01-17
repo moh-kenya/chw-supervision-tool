@@ -16,16 +16,14 @@ import {
   Typography,
 } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import { AppContext } from '../providers';
 
 const { Title } = Typography;
 const { Group } = Radio;
 const RadioGroup = Group;
 
 const WorkplanPolicies = (props) => {
+  const { store } = props;
   const disabled = props.disabled || false;
-
-  const store = useContext(AppContext);
 
   const { control, getValues, reset, watch } = useForm({});
 

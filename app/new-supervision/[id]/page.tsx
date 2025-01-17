@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, message, Steps } from 'antd';
+import { Client, Databases, ID } from 'node-appwrite';
 import NavBar from '../../components/NavBar';
 import { AppContext } from '../../providers';
 import { type NotifsTypes } from '../../login/page';
@@ -32,6 +33,7 @@ const Home = ({ params }: { params: any }) => {
   };
   useEffect(() => {
     const dataRetrieved = retrieveData('chw-supervision');
+    console.log(dataRetrieved);
     if (!dataRetrieved[id]?.createdDate) {
       const data = {
         ...store?.globalState,
@@ -69,6 +71,19 @@ const Home = ({ params }: { params: any }) => {
     title: item.title,
   }));
 
+  const submitData = async () => {
+    const dataRetrieved = retrieveData('chw-supervision');
+    const response = await fetch('/api/auth/database', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataRetrieved[id]),
+    });
+    const data = await response.json();
+    console.log(data);
+  };
+
   return (
     <>
       <Notifications {...notifs} />
@@ -98,11 +113,8 @@ const Home = ({ params }: { params: any }) => {
             </Button>
           )}
           {current === modules?.length - 1 && (
-            <Button
-              type="primary"
-              onClick={() => message.success('Processing complete!')}
-            >
-              Done
+            <Button type="primary" onClick={submitData}>
+              Submit Data
             </Button>
           )}
         </div>

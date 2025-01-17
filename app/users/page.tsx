@@ -11,15 +11,9 @@ import NavBar from '../components/NavBar';
 
 const { Title } = Typography;
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
+import React from 'react';
 
-export default function Home() {
+export default function Home(): JSX.Element {
   const router = useRouter();
   const [data, setData] = useState<any>([]);
   const [modalData, setModalData] = useState<any>({
@@ -101,7 +95,7 @@ export default function Home() {
         </Space>
       ),
     },
-  ];
+  const handleResume = (id: string): void => {
 
   const handleResume = (id: string) => {
     setModalData({
@@ -112,7 +106,7 @@ export default function Home() {
         router.push(`/new-supervision/i${id}`);
       },
       isOpen: true,
-    });
+  const handleSubmit = (id: string): void => {
   };
   const handleSubmit = (id: string) => {
     setModalData({
@@ -122,7 +116,7 @@ export default function Home() {
       action: () =>
         message.success(`Successfully Submitted supervision with id: ${id}`),
       isOpen: true,
-    });
+  const handleDelete = (id: string): void => {
   };
   const handleDelete = (id: string) => {
     setModalData({
@@ -134,7 +128,7 @@ export default function Home() {
           `Successfully deleted supervision draft with id: ${id}`
         ),
       isOpen: true,
-    });
+  const handleCancel = (): void => {
   };
   const handleCancel = () => {
     setModalData({

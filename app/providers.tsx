@@ -1,12 +1,6 @@
 'use client';
 
-import React, {
-  createContext,
-  useState,
-  type ReactNode,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import React, { createContext, useState } from 'react';
 import SupervisionTeam from './components/SupervisionTeam';
 import CHUFunctionality from './components/CHUFunctionality';
 import WorkplanPolicies from './components/WorkplanPolicies';
@@ -20,93 +14,173 @@ import Partnership from './components/Partnership';
 import ServiceDelivery from './components/ServiceDelivery';
 import PandemicPreparedness from './components/PandemicPreparedness';
 import ReviewAndSubmit from './components/ReviewAndSubmit';
-
-// Define a specific type for globalState if known, otherwise replace it with a placeholder.
-type GlobalStateType = Record<string, string | number | boolean | object>;
-
-// Define the structure of each module item
-interface Module {
-  title: string;
-  content: ReactNode;
-}
-
-// Define the structure of the context value
-interface AppContextType {
-  globalState: GlobalStateType;
-  setGlobalState: Dispatch<SetStateAction<GlobalStateType>>;
-  modules: Module[];
-  setModules: Dispatch<SetStateAction<Module[]>>;
-}
+import {
+  type ProvidersProps,
+  type AppContextType,
+  type GlobalStateType,
+  type Module,
+} from './components/utils/Types';
 
 // Create the context with the appropriate type
 export const AppContext = createContext<AppContextType | null>(null);
 
-interface ProvidersProps {
-  children: ReactNode;
-}
-
-export const Providers = ({ children }: ProvidersProps) => {
-  const [globalState, setGlobalState] = useState<GlobalStateType>({});
+export const Providers = ({ children }: ProvidersProps): JSX.Element => {
+  const [globalState, setGlobalState] = useState<GlobalStateType>({
+    supervisionTeam: {},
+    chuFunctionality: {},
+    Infrastructure: {},
+    commodities: {},
+    createdDate: '',
+    finance: {},
+    monitoringAndEvalutation: {},
+    pandemicPreparedness: {},
+    partnership: {},
+    referral: {},
+    serviceDelivery: {},
+    status: 'Draft',
+    superVisionTeam: {},
+    transport: {},
+    updatedDate: '',
+  });
   const [modules, setModules] = useState<Module[]>([
     {
       title: 'Supervision Team',
-      content: <SupervisionTeam setGlobalState={setGlobalState} />,
+      content: (
+        <SupervisionTeam
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Leadership & Governance',
-      content: <CHUFunctionality setGlobalState={setGlobalState} />,
+      content: (
+        <CHUFunctionality
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Workforce',
-      content: <WorkplanPolicies setGlobalState={setGlobalState} />,
+      content: (
+        <WorkplanPolicies
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Infrastructure',
-      content: <Infrastructure setGlobalState={setGlobalState} />,
+      content: (
+        <Infrastructure
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Monitoring & Evaluation',
-      content: <MonitoringAndEvaluation setGlobalState={setGlobalState} />,
+      content: (
+        <MonitoringAndEvaluation
+          globalState={globalState}
+          setGlobalState={setGlobalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Commodities',
-      content: <Commodities setGlobalState={setGlobalState} />,
+      content: (
+        <Commodities
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Transport',
-      content: <Transport setGlobalState={setGlobalState} />,
+      content: (
+        <Transport
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Referral',
-      content: <Referral setGlobalState={setGlobalState} />,
+      content: (
+        <Referral
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Finance',
-      content: <Finance setGlobalState={setGlobalState} />,
+      content: (
+        <Finance
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Partnership',
-      content: <Partnership setGlobalState={setGlobalState} />,
+      content: (
+        <Partnership
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Service Delivery',
-      content: <ServiceDelivery setGlobalState={setGlobalState} />,
+      content: (
+        <ServiceDelivery
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Pandemic Preparedness',
-      content: <PandemicPreparedness setGlobalState={setGlobalState} />,
+      content: (
+        <PandemicPreparedness
+          globalState={globalState}
+          setGlobalState={setGlobalState}
+          store={AppContext}
+        />
+      ),
     },
     {
       title: 'Review & Submit',
-      content: <ReviewAndSubmit setGlobalState={setGlobalState} />,
+      content: (
+        <ReviewAndSubmit
+          setGlobalState={setGlobalState}
+          globalState={globalState}
+          store={AppContext}
+        />
+      ),
     },
   ]);
 
+  const contextValue = React.useMemo(
+    () => ({ globalState, setGlobalState, modules, setModules }),
+    [globalState, modules]
+  );
+
   return (
-    <AppContext.Provider
-      value={{ globalState, setGlobalState, modules, setModules }}
-    >
-      {children}
-    </AppContext.Provider>
+    <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
   );
 };

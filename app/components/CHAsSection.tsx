@@ -7,7 +7,7 @@ import TextArea from 'antd/es/input/TextArea';
 
 const { Title } = Typography;
 
-const CHAsSection = () => {
+const CHAsSection: React.FC = () => {
   return (
     <Form layout="vertical">
       <Title level={2}>Workforce</Title>

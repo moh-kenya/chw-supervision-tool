@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Form,
   InputNumber,
@@ -15,35 +15,33 @@ import { FormItem } from 'react-hook-form-antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useForm } from 'react-hook-form';
 import { LoadingOutlined } from '@ant-design/icons';
-import { AppContext } from '../providers';
+import { type CHUFunctionalityProps, type AppContextType } from './utils/Types';
 
 const { Title } = Typography;
 const { Group } = Radio;
 const RadioGroup = Group;
 
 const CHUFunctionality = (props) => {
-  const { disabled } = props;
-  const store = useContext(AppContext);
-  const { globalState } = store || {};
+  const { disabled, store, setGlobalState, globalState } = props;
   const [percentage, setPercentage] = useState(0);
-  const { superVisionTeam, chuFunctionality } = globalState || {};
-  const { whoAreRespondents } = superVisionTeam || {};
+  const { superVisionTeam, chuFunctionality } = globalState;
+  const { whoAreRespondents } = superVisionTeam;
   const [respondents, setRespondents] = useState([]);
   const { getValues, watch, reset, control } = useForm({});
   useEffect(() => {
     const established = Number(watch('no_established_chus'));
     const expected = Number(watch('expected_no_of_chus'));
     const getPercentage = (established / expected) * 100;
-    if (!isNaN(getPercentage)) {
+    if (!Number.isNaN(getPercentage)) {
       setPercentage(getPercentage);
     }
   }, [watch]);
   const allvalues = watch();
   useEffect(() => {
     return () => {
-      props.setGlobalState((store) => {
-        store.chuFunctionality = getValues();
-        return store;
+      setGlobalState((currStore: AppContextType | null) => {
+        currStore.chuFunctionality = getValues();
+        return currStore;
       });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -256,33 +254,33 @@ const CHUFunctionality = (props) => {
             'CPHCC',
             'CQIC',
           ].some((value) => respondents?.includes(value)) && (
-              <FormItem
-                disabled={disabled}
-                name="chs_integrated_cawp"
-                label="Are Community Health services integrated in the current county annual workplan? (Confirm with the AWP)"
-                control={control}
-              >
-                <RadioGroup>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </FormItem>
-            )}
+            <FormItem
+              disabled={disabled}
+              name="chs_integrated_cawp"
+              label="Are Community Health services integrated in the current county annual workplan? (Confirm with the AWP)"
+              control={control}
+            >
+              <RadioGroup>
+                <Radio value="yes">Yes</Radio>
+                <Radio value="no">No</Radio>
+              </RadioGroup>
+            </FormItem>
+          )}
           {['SCMOH', 'SCCHSFP', 'SCDSC', 'SCHRIO'].some((value) =>
             respondents?.includes(value)
           ) && (
-              <FormItem
-                disabled={disabled}
-                name="chs_integrated_scawp"
-                control={control}
-                label="Are Community Health services integrated in the current sub-county annual workplan? (Confirm with the AWP)"
-              >
-                <RadioGroup>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </FormItem>
-            )}
+            <FormItem
+              disabled={disabled}
+              name="chs_integrated_scawp"
+              control={control}
+              label="Are Community Health services integrated in the current sub-county annual workplan? (Confirm with the AWP)"
+            >
+              <RadioGroup>
+                <Radio value="yes">Yes</Radio>
+                <Radio value="no">No</Radio>
+              </RadioGroup>
+            </FormItem>
+          )}
           {[
             'CEC',
             'COH',
@@ -293,59 +291,59 @@ const CHUFunctionality = (props) => {
             'CPHCC',
             'CQIC',
           ].some((value) => respondents?.includes(value)) && (
-              <>
-                {' '}
+            <>
+              {' '}
+              <FormItem
+                disabled={disabled}
+                name="year5_costed_chs_ip"
+                control={control}
+                label="Do you have a 5-year costed CHS implementation plan?"
+              >
+                <RadioGroup>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              </FormItem>
+              {allvalues.year5_costed_chs_ip === 'no' && (
                 <FormItem
                   disabled={disabled}
-                  name="year5_costed_chs_ip"
+                  name="year5_costed_chs_ip_remarks"
                   control={control}
-                  label="Do you have a 5-year costed CHS implementation plan?"
+                  label="Comments/Remarks"
                 >
-                  <RadioGroup>
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
+                  <TextArea
+                    rows={3}
+                    size="large"
+                    placeholder="Please enter comments or remarks for not having a 5-year costed CHS implementation plan"
+                  />
                 </FormItem>
-                {allvalues.year5_costed_chs_ip === 'no' && (
-                  <FormItem
-                    disabled={disabled}
-                    name="year5_costed_chs_ip_remarks"
-                    control={control}
-                    label="Comments/Remarks"
-                  >
-                    <TextArea
-                      rows={3}
-                      size="large"
-                      placeholder="Please enter comments or remarks for not having a 5-year costed CHS implementation plan"
-                    />
-                  </FormItem>
-                )}
-                <FormItem
-                  disabled={disabled}
-                  required
-                  name="sentitized_latest_key_cch"
-                  control={control}
-                  label="Have you been sensitized on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
-                >
-                  <RadioGroup>
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                </FormItem>
-                <FormItem
-                  disabled={disabled}
-                  required
-                  name="sentitized_latest_key_cch_chas"
-                  control={control}
-                  label="Have you sensitized your CHAs on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
-                >
-                  <RadioGroup>
-                    <Radio value="yes">Yes</Radio>
-                    <Radio value="no">No</Radio>
-                  </RadioGroup>
-                </FormItem>
-              </>
-            )}
+              )}
+              <FormItem
+                disabled={disabled}
+                required
+                name="sentitized_latest_key_cch"
+                control={control}
+                label="Have you been sensitized on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
+              >
+                <RadioGroup>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              </FormItem>
+              <FormItem
+                disabled={disabled}
+                required
+                name="sentitized_latest_key_cch_chas"
+                control={control}
+                label="Have you sensitized your CHAs on the latest key CH policies and guidelines (Confirm with meeting minutes/reports)"
+              >
+                <RadioGroup>
+                  <Radio value="yes">Yes</Radio>
+                  <Radio value="no">No</Radio>
+                </RadioGroup>
+              </FormItem>
+            </>
+          )}
 
           {[
             'CEC',
@@ -361,18 +359,18 @@ const CHUFunctionality = (props) => {
             'SCDSC',
             'SCHRIO',
           ].some((value) => respondents?.includes(value)) && (
-              <FormItem
-                disabled={disabled}
-                name="latest_chpolicies_disseminated"
-                control={control}
-                label="Have the following latest key CH policies and guidelines been disseminated? (Confirm with meeting minutes/reports)"
-              >
-                <RadioGroup>
-                  <Radio value="yes">Yes</Radio>
-                  <Radio value="no">No</Radio>
-                </RadioGroup>
-              </FormItem>
-            )}
+            <FormItem
+              disabled={disabled}
+              name="latest_chpolicies_disseminated"
+              control={control}
+              label="Have the following latest key CH policies and guidelines been disseminated? (Confirm with meeting minutes/reports)"
+            >
+              <RadioGroup>
+                <Radio value="yes">Yes</Radio>
+                <Radio value="no">No</Radio>
+              </RadioGroup>
+            </FormItem>
+          )}
           <FormItem
             disabled={disabled}
             name="comments_awp"

@@ -8,14 +8,6 @@ import { type NotifsTypes } from '../login/page';
 import Notifications from '../components/utils/Notifications';
 import NavBar from '../components/NavBar';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
-
 const { Title } = Typography;
 
 export default function Home() {
@@ -25,7 +17,7 @@ export default function Home() {
   const [modalData, setModalData] = useState<any>({
     title: '',
     message: '',
-    action: () => { },
+    action: () => {},
     isOpen: false,
   });
 
@@ -144,7 +136,7 @@ export default function Home() {
     setModalData({
       title: '',
       message: '',
-      action: () => { },
+      action: () => {},
       isOpen: false,
     });
   };

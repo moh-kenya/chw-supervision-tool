@@ -1,18 +1,17 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 
 import { Card, Col, Form, InputNumber, Row, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { AppContext } from '../providers';
 
 const { Title } = Typography;
 
 const ServiceDelivery = (props: any) => {
+  const { store } = props;
   const { disabled } = props;
-  const store = useContext(AppContext);
   const [percentage, setPercentage] = useState(0);
   const [proportion, setProportion] = useState(0);
 
@@ -37,10 +36,10 @@ const ServiceDelivery = (props: any) => {
     const visited = Number(watch('no_of_hhs_visited_last_month'));
     const getPercentage = (established / expected) * 100;
     const getProportion = (visited / expected) * 100;
-    if (!isNaN(getPercentage)) {
+    if (!Number.isNaN(getPercentage)) {
       setPercentage(Number(getPercentage.toFixed(2)));
     }
-    if (!isNaN(getProportion)) {
+    if (!Number.isNaN(getProportion)) {
       setProportion(Number(getProportion.toFixed(2)));
     }
   }, [watch]);

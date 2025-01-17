@@ -1,20 +1,19 @@
 'use client';
 
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 
 import { Form, Radio, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { AppContext } from '../providers';
 
 const { Title } = Typography;
 const { Group } = Radio;
 const RadioGroup = Group;
 
 const Partnership = (props) => {
+  const { store } = props;
   const { disabled } = props;
-  const store = useContext(AppContext);
 
   const { control, getValues, reset } = useForm({});
 

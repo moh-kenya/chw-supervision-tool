@@ -1,8 +1,6 @@
 'use client';
 
-import { useContext } from 'react';
 import { Typography } from 'antd';
-import { AppContext } from '../providers';
 import SupervisionTeam from './SupervisionTeam';
 import CHUFunctionality from './CHUFunctionality';
 import WorkplanPolicies from './WorkplanPolicies';
@@ -19,46 +17,73 @@ import PandemicPreparedness from './PandemicPreparedness';
 const { Title } = Typography;
 
 const ReviewAndSubmit = (props) => {
-  const { setGlobalState } = props;
-  const store = useContext(AppContext);
+  const { setGlobalState, store } = props;
   return (
     <>
       <Title level={2}>Review and Submit</Title>
       {store?.globalState?.superVisionTeam && (
-        <SupervisionTeam setGlobalState={setGlobalState} disabled />
+        <SupervisionTeam
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
       {store?.globalState?.chuFunctionality && (
-        <CHUFunctionality setGlobalState={setGlobalState} disabled />
+        <CHUFunctionality
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
       {store?.globalState?.workplanPolicies && (
-        <WorkplanPolicies setGlobalState={setGlobalState} disabled />
+        <WorkplanPolicies
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
       {store?.globalState?.infrastructure && (
-        <Infrastructure setGlobalState={setGlobalState} disabled />
+        <Infrastructure
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
       {store?.globalState?.monitoringAndEvaluation && (
-        <MonitoringAndEvaluation setGlobalState={setGlobalState} disabled />
+        <MonitoringAndEvaluation
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
       {store?.globalState?.commodities && (
-        <Commodities setGlobalState={setGlobalState} disabled />
+        <Commodities setGlobalState={setGlobalState} store={store} disabled />
       )}
       {store?.globalState?.transport && (
-        <Transport setGlobalState={setGlobalState} disabled />
+        <Transport setGlobalState={setGlobalState} store={store} disabled />
       )}
       {store?.globalState?.referral && (
-        <Referral setGlobalState={setGlobalState} disabled />
+        <Referral setGlobalState={setGlobalState} store={store} disabled />
       )}
       {store?.globalState?.finance && (
-        <Finance setGlobalState={setGlobalState} disabled />
+        <Finance setGlobalState={setGlobalState} store={store} disabled />
       )}
       {store?.globalState?.partnership && (
-        <Partnership setGlobalState={setGlobalState} disabled />
+        <Partnership setGlobalState={setGlobalState} store={store} disabled />
       )}
       {store?.globalState?.serviceDelivery && (
-        <ServiceDelivery setGlobalState={setGlobalState} disabled />
+        <ServiceDelivery
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
       {store?.globalState?.pandemicPreparedness && (
-        <PandemicPreparedness setGlobalState={setGlobalState} disabled />
+        <PandemicPreparedness
+          setGlobalState={setGlobalState}
+          store={store}
+          disabled
+        />
       )}
     </>
   );
