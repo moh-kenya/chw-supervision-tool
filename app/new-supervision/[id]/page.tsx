@@ -33,7 +33,7 @@ const Home = ({ params }: { params: any }) => {
   };
   useEffect(() => {
     const dataRetrieved = retrieveData('chw-supervision');
-    console.log(dataRetrieved);
+    console.log(dataRetrieved[id]);
     if (!dataRetrieved[id]?.createdDate) {
       const data = {
         ...store?.globalState,
