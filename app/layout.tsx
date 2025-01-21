@@ -3,7 +3,9 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import React from 'react';
+import { initDB } from 'react-indexed-db-hook';
 import { Providers } from './providers';
+import DBConfig from './utils/DBConfig';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -20,6 +22,8 @@ export const metadata: Metadata = {
   title: 'Integrated CHS Supervision Tool',
   description: 'Ministry of Health - eCHIS Integrated CHS Supervision Tool',
 };
+
+initDB(DBConfig);
 
 const RootLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (

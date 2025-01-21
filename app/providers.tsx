@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useState } from 'react';
+import { useIndexedDB } from 'react-indexed-db-hook';
 import SupervisionTeam from './components/SupervisionTeam';
 import CHUFunctionality from './components/CHUFunctionality';
 import WorkplanPolicies from './components/WorkplanPolicies';
@@ -25,6 +26,7 @@ import {
 export const AppContext = createContext<AppContextType | null>(null);
 
 export const Providers = ({ children }: ProvidersProps): JSX.Element => {
+  const db = useIndexedDB('entries');
   const [globalState, setGlobalState] = useState<GlobalStateType>({
     supervisionTeam: {},
     chuFunctionality: {},
@@ -41,6 +43,7 @@ export const Providers = ({ children }: ProvidersProps): JSX.Element => {
     transport: {},
     updatedDate: new Date(),
   });
+
   const [modules, setModules] = useState<Module[]>([
     {
       title: 'Supervision Team',
@@ -49,6 +52,7 @@ export const Providers = ({ children }: ProvidersProps): JSX.Element => {
           setGlobalState={setGlobalState}
           globalState={globalState}
           store={AppContext}
+          db={db}
         />
       ),
     },

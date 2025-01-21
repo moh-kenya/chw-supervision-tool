@@ -20,7 +20,7 @@ import { type SubCounty, type SupervisionTeamProps } from './utils/Types';
 const { Title } = Typography;
 
 const SupervisionTeam: React.FC<SupervisionTeamProps> = (props) => {
-  const { globalState, setGlobalState } = props;
+  const { globalState, setGlobalState, db } = props;
 
   const { control, watch, getValues, reset } = useForm({});
   const { fields, append, remove } = useFieldArray({
@@ -92,6 +92,7 @@ const SupervisionTeam: React.FC<SupervisionTeamProps> = (props) => {
   return (
     <Form layout="vertical">
       <Title level={3}>Supervision Team</Title>
+      <div>{JSON.stringify(db)}</div>
       <FormItem
         required
         label="Number of members in the supervision team"
