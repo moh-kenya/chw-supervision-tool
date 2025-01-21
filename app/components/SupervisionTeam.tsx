@@ -52,19 +52,29 @@ const SupervisionTeam: React.FC<SupervisionTeamProps> = (props) => {
   };
 
   useEffect(() => {
+    reset(globalState.supervisionTeam);
     return () => {
       setGlobalState((store) => {
-        const updatedStore = { ...store, superVisionTeam: getValues() };
+        const updatedStore = {
+          ...store,
+          supervisionTeam: {
+            ...store?.supervisionTeam,
+            ...getValues(),
+          },
+        };
         return updatedStore;
       });
     };
-  }, [getValues, props, setGlobalState]);
+  }, []);
 
-  useEffect(() => {
-    if (typeof globalState?.superVisionTeam === 'object') {
-      reset(globalState.superVisionTeam);
-    }
-  }, [globalState?.superVisionTeam, reset]);
+  // useEffect(() => {
+  //   return () => {
+  //     setGlobalState((store) => {
+  //       const updatedStore = { ...store, supervisionTeam: getValues() };
+  //       return updatedStore;
+  //     });
+  //   };
+  // }, [getValues, props, setGlobalState]);
 
   useEffect(() => {
     const currentCount = fields.length;

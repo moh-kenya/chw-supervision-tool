@@ -7,9 +7,28 @@ import NavBar from '../../components/NavBar';
 import { AppContext } from '../../providers';
 import { type NotifsTypes } from '../../login/page';
 import Notifications from '../../components/utils/Notifications';
+import useLocalStorageState from '@/app/hooks/LocalStorage';
 
 const Home = ({ params }: { params: any }) => {
   const id = params?.id ?? '';
+  const [saved, setSaved] = useLocalStorageState('chw-supervision', {
+    [id]: {
+      supervisionTeam: {},
+      chuFunctionality: {},
+      Infrastructure: {},
+      commodities: {},
+      createdDate: new Date(),
+      finance: {},
+      monitoringAndEvalutation: {},
+      pandemicPreparedness: {},
+      partnership: {},
+      referral: {},
+      serviceDelivery: {},
+      status: 'Draft',
+      transport: {},
+      updatedDate: new Date(),
+    },
+  });
 
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -22,10 +41,22 @@ const Home = ({ params }: { params: any }) => {
   const modules = store?.modules ?? [];
 
   const next = () => {
+    console.log(saved);
+    setSaved((values) => {
+      return {
+        ...values,
+        [id]: {
+          ...values[id],
+          ...store?.globalState,
+          updatedDate: new Date(),
+        },
+      };
+    });
     setCurrent(current + 1);
   };
 
   const prev = () => {
+    console.log(store?.globalState);
     setCurrent(current - 1);
   };
   const onChange = (value: number) => {
@@ -33,7 +64,6 @@ const Home = ({ params }: { params: any }) => {
   };
   useEffect(() => {
     const dataRetrieved = retrieveData('chw-supervision');
-    console.log(dataRetrieved[id]);
     if (!dataRetrieved[id]?.createdDate) {
       const data = {
         ...store?.globalState,
@@ -81,7 +111,6 @@ const Home = ({ params }: { params: any }) => {
       body: JSON.stringify(dataRetrieved[id]),
     });
     const data = await response.json();
-    console.log(data);
   };
 
   return (

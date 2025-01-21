@@ -30,7 +30,7 @@ export const Providers = ({ children }: ProvidersProps): JSX.Element => {
     chuFunctionality: {},
     Infrastructure: {},
     commodities: {},
-    createdDate: '',
+    createdDate: new Date(),
     finance: {},
     monitoringAndEvalutation: {},
     pandemicPreparedness: {},
@@ -38,9 +38,8 @@ export const Providers = ({ children }: ProvidersProps): JSX.Element => {
     referral: {},
     serviceDelivery: {},
     status: 'Draft',
-    superVisionTeam: {},
     transport: {},
-    updatedDate: '',
+    updatedDate: new Date(),
   });
   const [modules, setModules] = useState<Module[]>([
     {

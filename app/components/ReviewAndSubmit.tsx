@@ -21,7 +21,7 @@ const ReviewAndSubmit = (props) => {
   return (
     <>
       <Title level={2}>Review and Submit</Title>
-      {store?.globalState?.superVisionTeam && (
+      {store?.globalState?.supervisionTeam && (
         <SupervisionTeam
           setGlobalState={setGlobalState}
           store={store}

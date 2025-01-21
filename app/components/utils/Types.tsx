@@ -4,7 +4,7 @@ export interface CHUFunctionalityProps {
   disabled: boolean;
   store: {
     globalState: {
-      superVisionTeam: {
+      supervisionTeam: {
         whoAreRespondents: unknown[];
       };
       chuFunctionality: unknown;

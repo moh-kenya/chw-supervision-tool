@@ -24,8 +24,8 @@ const RadioGroup = Group;
 const CHUFunctionality = (props) => {
   const { disabled, store, setGlobalState, globalState } = props;
   const [percentage, setPercentage] = useState(0);
-  const { superVisionTeam, chuFunctionality } = globalState;
-  const { whoAreRespondents } = superVisionTeam;
+  const { supervisionTeam, chuFunctionality } = globalState;
+  const { whoAreRespondents } = supervisionTeam;
   const [respondents, setRespondents] = useState([]);
   const { getValues, watch, reset, control } = useForm({});
   useEffect(() => {
