@@ -107,7 +107,7 @@ const SupervisionTeam = (props) => {
                   required
                   label={`Full Names of member ${index + 1}`}
                   control={control}
-                  name={`name_member_${index}`}
+                  name={`teamMembers.${index}.name`}
                 >
                   <Input
                     size="large"
@@ -120,7 +120,7 @@ const SupervisionTeam = (props) => {
                   required
                   label={`Organisation of member ${index + 1}`}
                   control={control}
-                  name={`organisation_member_${index}`}
+                  name={`teamMembers.${index}.organization`}
                 >
                   <Input
                     size="large"
@@ -133,7 +133,7 @@ const SupervisionTeam = (props) => {
                   required
                   label={`Designation of member ${index + 1}`}
                   control={control}
-                  name={`designation_member_${index}`}
+                  name={`teamMembers.${index}.designation`}
                 >
                   <Input
                     size="large"
