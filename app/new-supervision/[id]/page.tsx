@@ -41,8 +41,8 @@ const Home = ({ params }: { params: any }) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            databaseId: '6744339a0037ac630b8e',
-            collectionId: '678a033d0018a3df499e',
+            databaseId: process.env.NEXT_PUBLIC_DATABASE_ID,
+            collectionId: process.env.NEXT_PUBLIC_COLLECTION_ID,
             data: store?.globalState[id],
             id,
           }),
