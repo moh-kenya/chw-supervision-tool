@@ -2,6 +2,7 @@
 
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, message, Steps } from 'antd';
+import { useRouter } from 'next/navigation';
 import NavBar from '../../components/NavBar';
 import { AppContext } from '../../providers';
 import { type NotifsTypes } from '../../login/page';
@@ -9,6 +10,7 @@ import Notifications from '../../components/utils/Notifications';
 
 const Home = ({ params }: { params: any }) => {
   const id = params?.id ?? '';
+  const router = useRouter();
 
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -29,6 +31,34 @@ const Home = ({ params }: { params: any }) => {
   };
   const onChange = (value: number) => {
     setCurrent(value);
+  };
+  const submitDataToDB = async () => {
+    if (store?.globalState[id]) {
+      try {
+        const response = await fetch('/api/auth/db', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            databaseId: '6744339a0037ac630b8e',
+            collectionId: '678a033d0018a3df499e',
+            data: store?.globalState[id],
+            id,
+          }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          message.success('Successfully submitted data!');
+          router.push('/dashboard');
+        } else {
+          message.error(`Error: ${result.error}`);
+        }
+      } catch (error) {
+        message.error('Something went wrong!');
+      }
+    }
   };
   useEffect(() => {
     const dataRetrieved = retrieveData('chw-supervision');
@@ -100,9 +130,11 @@ const Home = ({ params }: { params: any }) => {
           {current === modules?.length - 1 && (
             <Button
               type="primary"
-              onClick={() => message.success('Processing complete!')}
+              onClick={() => {
+                submitDataToDB();
+              }}
             >
-              Done
+              Submit Data
             </Button>
           )}
         </div>
