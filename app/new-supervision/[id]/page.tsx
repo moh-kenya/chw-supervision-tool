@@ -50,14 +50,18 @@ const Home = ({ params }: { params: any }) => {
 
         const result = await response.json();
         if (response.ok) {
-          message.success('Successfully submitted data!');
+          await message.success('Successfully submitted data!');
           router.push('/dashboard');
         } else {
-          message.error(`Error: ${result.error}`);
+          await message.error(`Error: ${result.error}`);
         }
       } catch (error) {
-        message.error('Something went wrong!');
+        await message.error('Something went wrong!');
       }
+    } else {
+      await message.error(
+        'No data to submit. Please fill in the form and try again!'
+      );
     }
   };
   useEffect(() => {
