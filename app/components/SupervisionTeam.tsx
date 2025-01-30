@@ -9,6 +9,7 @@ import {
   Col,
   Select,
   Typography,
+  message,
 } from 'antd';
 import React, { useState, useEffect, useContext } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -108,6 +109,7 @@ const SupervisionTeam = (props) => {
                   label={`Full Names of member ${index + 1}`}
                   control={control}
                   name={`teamMembers.${index}.name`}
+                  rules={[{ required: true, message: 'Please input your name' },{min:10,message:"Full name must be atleast 10 characters"}]}
                 >
                   <Input
                     size="large"
@@ -121,6 +123,7 @@ const SupervisionTeam = (props) => {
                   label={`Organisation of member ${index + 1}`}
                   control={control}
                   name={`teamMembers.${index}.organization`}
+                  rules={[{ required: true, message: 'Please input your organization' },{min:4,message:"Organization should not be written with abbreviation"}]}
                 >
                   <Input
                     size="large"
@@ -134,10 +137,12 @@ const SupervisionTeam = (props) => {
                   label={`Designation of member ${index + 1}`}
                   control={control}
                   name={`teamMembers.${index}.designation`}
+                  rules={[{ required: true, message: 'Please input your designation' },{min:4,message:"Designation should not be written with abbreviation"}]}
                 >
                   <Input
                     size="large"
                     placeholder={`Please enter the Designation of member ${index + 1}`}
+                    
                   />
                 </FormItem>
               </Col>
@@ -152,6 +157,7 @@ const SupervisionTeam = (props) => {
         label="Date of Supervision Visit"
         control={control}
         name="date"
+        rules={[{ required: true, message: 'Please input date of supervision' },{min:1,message:"Use calender"}]}
       >
         <DatePicker
           size="large"
@@ -168,6 +174,7 @@ const SupervisionTeam = (props) => {
           label="Who are your respondents?"
           control={control}
           name="whoAreRespondents"
+          rules={[{ required: true, message: 'Please input respondents ' },{min:2,message:"Select from the given options"}]}
         >
           <Select
             mode="multiple"
@@ -207,6 +214,7 @@ const SupervisionTeam = (props) => {
                 label="How long have you served in your current position/station?"
                 control={control}
                 name={`how_long_served_in_position_${index}`}
+                rules={[{ required: true, message: 'Duration served' },{min:0,message:"Select from th given options"}]}
               >
                 <Select
                   size="large"
@@ -226,6 +234,7 @@ const SupervisionTeam = (props) => {
                 label="County"
                 control={control}
                 name={`county_${index}`}
+                rules={[{ required: true, message: 'Select County' },{min:3,message:"Select from the drop down"}]}
               >
                 <Select
                   size="large"
@@ -243,6 +252,7 @@ const SupervisionTeam = (props) => {
                   label="Sub County"
                   control={control}
                   name={`subcounty_${index}`}
+                  rules={[{ required: true, message: 'Select Sub County' },{min:3,message:"Select from the drop down"}]}
                 >
                   <Select
                     size="large"

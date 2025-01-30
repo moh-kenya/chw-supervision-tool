@@ -364,7 +364,7 @@ const CHUFunctionality = (props) => {
               <FormItem
                 disabled={disabled}
                 name="latest_chpolicies_disseminated"
-                control={control}
+               control={control}
                 label="Have the following latest key CH policies and guidelines been disseminated? (Confirm with meeting minutes/reports)"
               >
                 <RadioGroup>
