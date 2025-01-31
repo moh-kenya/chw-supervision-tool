@@ -37,14 +37,15 @@ const Referral = (props) => {
         disabled={disabled}
         control={control}
         name="supplied_chps_with_referral_tools"
-        required
         label="Have you supplied all your CHPs with referral tools?"
+        rules={[{ required: true, message: 'Please select an option' }]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         control={control}
         disabled={disabled}

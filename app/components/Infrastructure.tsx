@@ -15,6 +15,8 @@ const Infrastructure = (props) => {
   const store = useContext(AppContext);
 
   const { control, getValues, reset, watch, handleSubmit } = useForm({});
+  const [form] = Form.useForm();
+
 
   useEffect(() => {
     return () => {
@@ -68,10 +70,16 @@ const Infrastructure = (props) => {
       {/* ICT Infrastructure */}
       <Form.Item
         label="Do all your CHUs have access to the ICT infrastructure (Desktop/Laptop & Internet)?"
+        name="has_access_to_ict_infra"
         required
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup
-          name="has_access_to_ict_infra"
           disabled={disabled}
           onChange={(e) =>
             control.setValue('has_access_to_ict_infra', e.target.value)
@@ -96,10 +104,16 @@ const Infrastructure = (props) => {
       {watch('have_designated_office') === 'yes' && (
         <Form.Item
           label="Do you have an inventory document for CH office?"
+          name="have_inventory_document"
           required
+          rules={[
+            {
+              required: true,
+              message: 'Please select an option',
+            },
+          ]}
         >
           <RadioGroup
-            name="have_inventory_document"
             disabled={disabled}
             onChange={(e) =>
               control.setValue('have_inventory_document', e.target.value)
@@ -114,10 +128,16 @@ const Infrastructure = (props) => {
       {/* Up-to-date Inventory of CHS Equipment */}
       <Form.Item
         label="Do you have an up-to-date inventory of all the CHS equipment? (e.g., CHP kits, Mobile phones, etc.)"
+        name="upto_date_inventory_chs_equipment"
         required
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup
-          name="upto_date_inventory_chs_equipment"
           disabled={disabled}
           onChange={(e) =>
             control.setValue(

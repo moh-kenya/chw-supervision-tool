@@ -16,6 +16,7 @@ const PandemicPreparedness = (props) => {
   const { disabled } = props;
 
   const store = useContext(AppContext);
+  const [form] = Form.useForm();
 
   const { control, getValues, reset } = useForm({});
 
@@ -38,14 +39,20 @@ const PandemicPreparedness = (props) => {
         disabled={disabled}
         control={control}
         name="presence_of_functional_pandemic_preparedness"
-        required
         label="Presence of a functional pandemic preparedness and response team (verify with minutes)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
@@ -63,14 +70,20 @@ const PandemicPreparedness = (props) => {
         disabled={disabled}
         control={control}
         name="existence_of_pandemic_preparedness"
-        required
-        label="Existence of Pandemic Preparedness plan (Verify availability finance/resource mobilization plan,Risk Communication and Community Engagement (RCCE) plan)"
+        label="Existence of Pandemic Preparedness plan (Verify availability finance/resource mobilization plan, Risk Communication and Community Engagement (RCCE) plan)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
@@ -88,14 +101,20 @@ const PandemicPreparedness = (props) => {
         disabled={disabled}
         name="dedicated_budget"
         control={control}
-        required
         label="Dedicated budget for pandemic response (verify)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
@@ -113,14 +132,20 @@ const PandemicPreparedness = (props) => {
         disabled={disabled}
         name="pandemic_preparedness"
         control={control}
-        required
         label="Pandemic Preparedness Stakeholder Co-ordination mechanism in place (verify with minutes)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}

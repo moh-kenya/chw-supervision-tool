@@ -12,6 +12,8 @@ const { Title } = Typography;
 const { Group } = Radio;
 const RadioGroup = Group;
 
+
+
 const Commodities = (props) => {
   const disabled = props.disabled || false;
 
@@ -35,34 +37,34 @@ const Commodities = (props) => {
   return (
     <Form layout="vertical">
       <Title level={2}>Commodities</Title>
-      <FormItem
-        disabled={disabled}
-        control={control}
+      <Form.Item
         name="all_chps_kitted"
-        required
         label="Are all your CHPs kitted? (verify with the issuance inventory/S11)"
+        rules={[{ required: true, message: 'Please select an option!' }]}
       >
-        <RadioGroup>
+        <Radio.Group>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
-        </RadioGroup>
-      </FormItem>
+        </Radio.Group>
+      </Form.Item>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
+      <Form.Item
         name="no_not_kitted"
-        required
         label="No. of CHPs not kitted"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter the number of CHPs not kitted!',
+          },
+        ]}
       >
         <InputNumber
-          required
           min={0}
           size="large"
           style={{ width: '50%' }}
           placeholder="Please enter No."
         />
-      </FormItem>
+      </Form.Item>
 
       <FormItem
         disabled={disabled}
@@ -82,8 +84,13 @@ const Commodities = (props) => {
         disabled={disabled}
         control={control}
         name="last_mile_distribution_reached"
-        required
         label="Have you reached last mile distribution for the CHP Kits?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>

@@ -12,6 +12,8 @@ const { Title } = Typography;
 const { Group } = Radio;
 const RadioGroup = Group;
 
+
+
 const Transport = (props) => {
   const disabled = props.disabled || false;
   const store = useContext(AppContext);
@@ -39,6 +41,12 @@ const Transport = (props) => {
         control={control}
         name="facilitated_with_transport"
         label="Have you facilitated your CHAs/CHOs with a means of transport (Motorbike/Bicycles)?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
@@ -66,6 +74,12 @@ const Transport = (props) => {
         control={control}
         name="have_budget_for_maintenance_transport"
         label="Do you have a budget for maintenance of the provided transport means (Servicing & fueling)? (Verify)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>

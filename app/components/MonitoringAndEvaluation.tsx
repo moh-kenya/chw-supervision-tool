@@ -15,6 +15,7 @@ const RadioGroup = Group;
 const MonitoringAndEvaluation = (props) => {
   const disabled = props.disabled || false;
   const store = useContext(AppContext);
+  const [form] = Form.useForm();
 
   const { control, getValues, reset, watch } = useForm({});
 
@@ -38,8 +39,13 @@ const MonitoringAndEvaluation = (props) => {
         disabled={disabled}
         control={control}
         name="integrated_dqa_conducted"
-        required
         label="How often do you conduct data review meetings?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="Monthly">Monthly</Radio>
@@ -56,8 +62,13 @@ const MonitoringAndEvaluation = (props) => {
           disabled={disabled}
           control={control}
           name="post_cda_plan_implemented"
-          required
           label="Was the post-cDQA action plan implemented? (Verify with action plan document & supporting activities minutes/reports)"
+          rules={[
+            {
+              required: true,
+              message: 'Please select an option',
+            },
+          ]}
         >
           <RadioGroup>
             <Radio value="yes">Yes</Radio>

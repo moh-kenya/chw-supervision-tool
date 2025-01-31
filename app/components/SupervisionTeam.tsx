@@ -26,6 +26,8 @@ const { Title } = Typography;
 
 const SupervisionTeam = (props) => {
   const store = useContext(AppContext);
+  const [form] = Form.useForm();
+
 
   const { control, watch, getValues, reset } = useForm({});
   const { fields, append, remove } = useFieldArray({

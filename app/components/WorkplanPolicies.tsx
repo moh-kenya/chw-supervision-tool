@@ -127,6 +127,12 @@ const WorkplanPolicies = (props) => {
         name="number_of_chas_appraised"
         required
         label="Number of CHAs appraised in the last financial year? (verify with appraisal reports)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <InputNumber
           required
@@ -206,6 +212,12 @@ const WorkplanPolicies = (props) => {
         name="stipends_payment_upto_date"
         required
         label="Is your CHPs stipends payment status up to date? (payments up to the last month. Both National, County)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
@@ -219,6 +231,12 @@ const WorkplanPolicies = (props) => {
           name="months_in_arrears"
           required
           label="How many months in arrears?"
+          rules={[
+            {
+              required: true,
+              message: 'Please select an option',
+            },
+          ]}
         >
           <InputNumber
             required
@@ -250,6 +268,12 @@ const WorkplanPolicies = (props) => {
         name="chp_registry_upto_date"
         required
         label="Is your CHP Registry up to date? (new ones added, removed non-existent at least once a year)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
@@ -276,6 +300,12 @@ const WorkplanPolicies = (props) => {
         name="chs_integrated_into_county_wp"
         required
         label="Are Community Health services integrated in the current county annual workplan?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
@@ -289,6 +319,12 @@ const WorkplanPolicies = (props) => {
         name="chs_integrated_into_subcounty_wp"
         required
         label="Are Community Health services integrated in the current sub-county annual workplan?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
@@ -302,6 +338,12 @@ const WorkplanPolicies = (props) => {
         name="5_year_costed_chs_plan"
         required
         label="Do you have a 5-year costed CHS implementation plan?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>

@@ -29,6 +29,8 @@ const CHUFunctionality = (props) => {
   const { superVisionTeam, chuFunctionality } = globalState || {};
   const { whoAreRespondents } = superVisionTeam || {};
   const [respondents, setRespondents] = useState([]);
+  const [form] = Form.useForm();
+
   const { getValues, watch, reset, control } = useForm({});
   useEffect(() => {
     const established = Number(watch('no_established_chus'));
@@ -120,6 +122,13 @@ const CHUFunctionality = (props) => {
         label="Comments/Remarks"
         control={control}
         name="community_health_structures_remarks"
+        rules={[
+          { required: true, message: 'Please enter comments or remarks' },
+          {
+            pattern: /^[A-Za-z\s.,!?']+$/,
+            message: 'Only letters and punctuation are allowed, no numbers',
+          },
+        ]}
       >
         <TextArea
           rows={4}
@@ -143,26 +152,25 @@ const CHUFunctionality = (props) => {
         </Col>
       </Row>
       <FormItem
-        disabled={disabled}
-        label="Comments/Remarks"
-        control={control}
-        name="number_of_chu_remarks"
-        rules={[
-          {
-            required: true,
-            message: 'Required field',
-          },
-          {
-            min: 10,
-          },
-        ]}
-      >
-        <TextArea
-          rows={4}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+  disabled={disabled}
+  label="Comments/Remarks"
+  control={control}
+  name="number of CHU remarks"
+  rules={[
+    { required: true, message: 'Please enter comments or remarks' },
+    { 
+      pattern: /^[A-Za-z\s.,!?']+$/, 
+      message: 'Only letters and punctuation are allowed, no numbers' 
+    },
+  ]}
+>
+  <TextArea
+    rows={4}
+    size="large"
+    placeholder="Please enter comments or remarks"
+  />
+</FormItem>
+
       <Title level={4}>Functionality of CHUs </Title>
       <Title level={5}>Functionality Assessment of CHUs done:</Title>
       <FormItem

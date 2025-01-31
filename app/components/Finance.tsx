@@ -16,6 +16,7 @@ const Finance = (props) => {
   const disabled = props.disabled || false;
 
   const store = useContext(AppContext);
+  const [form] = Form.useForm();
 
   const { control, getValues, reset } = useForm({});
 
@@ -39,14 +40,20 @@ const Finance = (props) => {
         disabled={disabled}
         control={control}
         name="have_committed_financial_resources"
-        required
         label="Have you committed financial resources through budgeting process to support community health? (Verify with budgets, etc)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
@@ -64,8 +71,13 @@ const Finance = (props) => {
         disabled={disabled}
         control={control}
         name="what_portion_allocated"
-        required
         label="What proportion of the county health budget is allocated to CHS? (verify)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>

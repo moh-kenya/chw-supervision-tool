@@ -52,15 +52,21 @@ const ServiceDelivery = (props: any) => {
         label="Total Number of Households"
         control={control}
         name="total_number_of_hhs"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter the total number of households',
+          },
+          { type: 'number', min: 1, message: 'Number must be at least 1' },
+        ]}
       >
         <InputNumber
-          required
-          min={0}
           size="large"
           style={{ width: '50%' }}
           placeholder="Please enter No. of expected CHUs"
         />
       </FormItem>
+
       <FormItem
         disabled={disabled}
         label="Number of households registered in eCHIS"
@@ -123,18 +129,29 @@ const ServiceDelivery = (props: any) => {
       <FormItem
         disabled={disabled}
         control={control}
-        required
-        label="Number of community dialogues conducted in the last quarter"
         name="dialogues_conducted_in_last_quarter"
+        label="Number of community dialogues conducted in the last quarter"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter the number of dialogues conducted',
+          },
+          {
+            type: 'number',
+            min: 1,
+            message: 'Value must be a positive number',
+          },
+        ]}
       >
         <InputNumber
-          required
-          min={0}
+          min={1}
           size="large"
           style={{ width: '50%' }}
           placeholder="Please enter No."
+          parser={(value) => value.replace(/\D/g, '')} // Ensures only numbers are entered
         />
       </FormItem>
+
       {/* <FormItem disabled={disabled} control={control} name="have_functional_cmpdsr" required label="Do you have functional Community Maternal and Perinatal Deaths Surveillance and Response (cMPDSR) committee? (Verify with the latest meeting minutes)">
         <RadioGroup>
           <Radio value={'yes'}>Yes</Radio>
