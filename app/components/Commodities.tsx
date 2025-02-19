@@ -1,6 +1,6 @@
 'use client';
 
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 
@@ -11,9 +11,6 @@ import { AppContext } from '../providers';
 const { Title } = Typography;
 const { Group } = Radio;
 const RadioGroup = Group;
-
-
-
 const Commodities = (props) => {
   const disabled = props.disabled || false;
 
@@ -34,6 +31,8 @@ const Commodities = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [kitValue, setKitValue] = useState('');
+
   return (
     <Form layout="vertical">
       <Title level={2}>Commodities</Title>
@@ -42,43 +41,54 @@ const Commodities = (props) => {
         label="Are all your CHPs kitted? (verify with the issuance inventory/S11)"
         rules={[{ required: true, message: 'Please select an option!' }]}
       >
-        <Radio.Group>
+        <Radio.Group onChange={(e) => setKitValue(e.target.value)}>
           <Radio value="yes">Yes</Radio>
+          <Radio value="partly">Partly</Radio>
           <Radio value="no">No</Radio>
         </Radio.Group>
       </Form.Item>
 
-      <Form.Item
-        name="no_not_kitted"
-        label="No. of CHPs not kitted"
-        rules={[
-          {
-            required: true,
-            message: 'Please enter the number of CHPs not kitted!',
-          },
-        ]}
-      >
-        <InputNumber
-          min={0}
-          size="large"
-          style={{ width: '50%' }}
-          placeholder="Please enter No."
-        />
-      </Form.Item>
+      {kitValue === 'partly' && (
+        <Form.Item
+          name="no_kitted"
+          label="No. of CHPs kitted"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter the number of CHPs kitted!',
+            },
+          ]}
+        >
+          <InputNumber
+            min={0}
+            size="large"
+            style={{ width: '50%' }}
+            placeholder="Please enter No."
+          />
+        </Form.Item>
+      )}
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_commodities_1"
-        required
-        label="Comment/Remarks"
-      >
-        <TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+      {kitValue === 'no' && (
+        <Form.Item
+          name="no_not_kitted"
+          label="No. of CHPs not kitted"
+          rules={[
+            {
+              required: true,
+              message: 'Please enter the number of CHPs not kitted!',
+            },
+          ]}
+        >
+          <InputNumber
+            min={0}
+            size="large"
+            style={{ width: '50%' }}
+            placeholder="Please enter No."
+          />
+        </Form.Item>
+      )}
+
+  
 
       <FormItem
         disabled={disabled}
@@ -102,7 +112,7 @@ const Commodities = (props) => {
         disabled={disabled}
         control={control}
         name="comments_commodities_2"
-        required
+        
         label="Comment/Remarks"
       >
         <TextArea

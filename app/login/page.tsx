@@ -25,7 +25,7 @@ export interface NotifsTypes {
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<FormValues>();
   const router = useRouter();
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -37,6 +37,7 @@ export default function LoginPage() {
   const onSubmit: SubmitHandler<FormValues> = async (values) => {
     try {
       setLoading(true);
+      console.log('Attempting login with:', values.emailOrPhone);
 
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -50,8 +51,9 @@ export default function LoginPage() {
       });
 
       const data = await response.json();
+      console.log('Login response status:', response.status);
 
-      if (response.status === 200) {
+      if (response.ok) {
         setNotifs({
           type: 'success',
           title: 'Success',
@@ -60,20 +62,21 @@ export default function LoginPage() {
         });
         router.push('/dashboard');
       } else {
+        console.error('Login failed:', data);
         setNotifs({
           type: 'error',
           title: 'Login Failed',
-          message: data.message || 'An error occurred during login.',
+          message: data.error || data.message || 'Invalid credentials. Please try again.',
           toggle: true,
         });
         setLoading(false);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Login error:', error);
       setNotifs({
         type: 'error',
-        title: 'An unexpected error occurred',
-        message: 'Please try again later',
+        title: 'Login Error',
+        message: error instanceof Error ? error.message : 'Please try again later',
         toggle: true,
       });
       setLoading(false);

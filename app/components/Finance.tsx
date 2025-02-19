@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 
-import { Form, Radio, Typography } from 'antd';
+import { Form, InputNumber, Radio, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { AppContext } from '../providers';
 
@@ -75,14 +75,20 @@ const Finance = (props) => {
         rules={[
           {
             required: true,
-            message: 'Please select an option',
-          },
+            message: 'Please enter the proportion value',
+          }
         ]}
       >
-        <RadioGroup>
-          <Radio value="yes">Yes</Radio>
-          <Radio value="no">No</Radio>
-        </RadioGroup>
+        <InputNumber
+          min={0}
+          max={100}
+          size="large"
+          style={{ width: '50%' }}
+          placeholder="Enter percentage (0-100)"
+          formatter={(value) => `${value}%`}
+          parser={(value) => value?.toString().replace('%', '')}
+          disabled={disabled}
+        />
       </FormItem>
 
       <FormItem

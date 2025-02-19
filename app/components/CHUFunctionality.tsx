@@ -11,7 +11,7 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { FormItem } from 'react-hook-form-antd';
+import { FormItem, useWatch } from 'react-hook-form-antd';
 import TextArea from 'antd/es/input/TextArea';
 import { useForm } from 'react-hook-form';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -31,7 +31,50 @@ const CHUFunctionality = (props) => {
   const [respondents, setRespondents] = useState([]);
   const [form] = Form.useForm();
 
-  const { getValues, watch, reset, control } = useForm({});
+  const { getValues, watch, reset, control } = useForm({
+    mode: 'onChange',
+  });
+
+  // Function to validate all fields
+  const validateForm = async () => {
+    try {
+      // First validate using Ant Design form validation
+      await form.validateFields();
+      
+      // Then check react-hook-form values
+      const formValues = getValues();
+      const requiredFields = [
+        'expected_no_of_chus',
+        'no_established_chus',
+        'no_of_active_chus',
+        'no_of_active_chvs',
+        'no_of_active_chcs',
+        'chu_functionality_assessment',
+        'chu_monthly_meetings',
+        'chu_meeting_minutes'
+      ];
+
+      // Check if any required fields are empty or undefined
+      const emptyFields = requiredFields.filter(fieldName => {
+        const value = formValues[fieldName];
+        return value === undefined || value === null || value === '' || value === 0;
+      });
+
+      if (emptyFields.length > 0) {
+        // If there are empty fields, throw an error with field names
+        throw new Error(`Please fill in all required fields: ${emptyFields.join(', ')}`);
+      }
+
+      return true;
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error('Please fill in all required fields');
+      }
+      return false;
+    }
+  };
   useEffect(() => {
     const established = Number(watch('no_established_chus'));
     const expected = Number(watch('expected_no_of_chus'));
@@ -71,9 +114,6 @@ const CHUFunctionality = (props) => {
             required: true,
             message: 'Required field',
           },
-          {
-            min: 10,
-          },
         ]}
       >
         <InputNumber
@@ -84,6 +124,7 @@ const CHUFunctionality = (props) => {
           placeholder="Please enter No. of expected CHUs"
         />
       </FormItem>
+
       <FormItem
         disabled={disabled}
         label="No. of CHUs established:"
@@ -94,9 +135,19 @@ const CHUFunctionality = (props) => {
             required: true,
             message: 'Required field',
           },
-          {
-            min: 10,
-          },
+          ({ getFieldValue }) => ({
+            async validator(_, value) {
+              const expectedCHUs = getFieldValue('expected_no_of_chus');
+              if (value > expectedCHUs) {
+                return await Promise.reject(
+                  new Error(
+                    'The number of CHUs established cannot exceed the expected number'
+                  )
+                );
+              }
+              await Promise.resolve();
+            },
+          }),
         ]}
       >
         <InputNumber
@@ -107,6 +158,7 @@ const CHUFunctionality = (props) => {
           placeholder="Please enter No. of CHUs established"
         />
       </FormItem>
+
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
           <Card title="Percentage of establishment of CHU is:">
@@ -117,25 +169,6 @@ const CHUFunctionality = (props) => {
         </Col>
       </Row>
 
-      <FormItem
-        disabled={disabled}
-        label="Comments/Remarks"
-        control={control}
-        name="community_health_structures_remarks"
-        rules={[
-          { required: true, message: 'Please enter comments or remarks' },
-          {
-            pattern: /^[A-Za-z\s.,!?']+$/,
-            message: 'Only letters and punctuation are allowed, no numbers',
-          },
-        ]}
-      >
-        <TextArea
-          rows={4}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
         <Col>
           <Card
@@ -151,42 +184,17 @@ const CHUFunctionality = (props) => {
           </Card>
         </Col>
       </Row>
-      <FormItem
-  disabled={disabled}
-  label="Comments/Remarks"
-  control={control}
-  name="number of CHU remarks"
-  rules={[
-    { required: true, message: 'Please enter comments or remarks' },
-    { 
-      pattern: /^[A-Za-z\s.,!?']+$/, 
-      message: 'Only letters and punctuation are allowed, no numbers' 
-    },
-  ]}
->
-  <TextArea
-    rows={4}
-    size="large"
-    placeholder="Please enter comments or remarks"
-  />
-</FormItem>
 
       <Title level={4}>Functionality of CHUs </Title>
+      
+     
+
       <Title level={5}>Functionality Assessment of CHUs done:</Title>
       <FormItem
         control={control}
         disabled={disabled}
         name="conducted_assessment_last_12_months"
         label="Have you conducted CHU functionality assessment in the last 12 months? (Verify with reports/minutes)"
-        rules={[
-          {
-            required: true,
-            message: 'Required field',
-          },
-          {
-            min: 10,
-          },
-        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes, all CHUs assessed</Radio>
@@ -194,19 +202,7 @@ const CHUFunctionality = (props) => {
           <Radio value="no">No, No CHU assessed</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem
-        disabled={disabled}
-        required
-        label="Comment/Remarks"
-        control={control}
-        name="conducted_assessment_last_12_months_remarks"
-      >
-        <TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks for if you have conducted CHU functionality assessment in the last 12 months?"
-        />
-      </FormItem>
+
       {allvalues.conducted_assessment_last_12_months !== 'no' && (
         <>
           <Title level={5}>
@@ -226,9 +222,6 @@ const CHUFunctionality = (props) => {
                   {
                     required: true,
                     message: 'Require field',
-                  },
-                  {
-                    min: 10,
                   },
                 ]}
               >
@@ -253,9 +246,6 @@ const CHUFunctionality = (props) => {
                     required: true,
                     message: 'Required field',
                   },
-                  {
-                    min: 10,
-                  },
                 ]}
               >
                 <InputNumber
@@ -278,9 +268,6 @@ const CHUFunctionality = (props) => {
                   {
                     required: true,
                     message: 'Required field',
-                  },
-                  {
-                    min: 10,
                   },
                 ]}
               >
@@ -489,7 +476,7 @@ const CHUFunctionality = (props) => {
             <TextArea
               rows={3}
               size="large"
-              placeholder="Please enter comments or remarks"
+              placeholder="Please enter comments or remarks(Optional)"
             />
           </FormItem>
         </>

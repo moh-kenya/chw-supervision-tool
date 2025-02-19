@@ -78,7 +78,7 @@ const MonitoringAndEvaluation = (props) => {
       )}
       <FormItem
         disabled={disabled}
-        required
+        
         label="Comment/Remarks"
         control={control}
         name="post_cda_plan_implemented_comments"

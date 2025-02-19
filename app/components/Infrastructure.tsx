@@ -57,15 +57,7 @@ const Infrastructure = (props) => {
         </RadioGroup>
       </Form.Item>
 
-      <Form.Item label="Comment/Remarks" required>
-        <TextArea
-          rows={3}
-          size="large"
-          disabled={disabled}
-          placeholder="Please enter comments or remarks"
-          name="comments_infrastructure_1"
-        />
-      </Form.Item>
+     
 
       {/* ICT Infrastructure */}
       <Form.Item
@@ -90,15 +82,7 @@ const Infrastructure = (props) => {
         </RadioGroup>
       </Form.Item>
 
-      <Form.Item label="Comment/Remarks" required>
-        <TextArea
-          rows={3}
-          size="large"
-          disabled={disabled}
-          placeholder="Please enter comments or remarks"
-          name="comments_infrastructure_2"
-        />
-      </Form.Item>
+     
 
       {/* Inventory Document for CH Office */}
       {watch('have_designated_office') === 'yes' && (

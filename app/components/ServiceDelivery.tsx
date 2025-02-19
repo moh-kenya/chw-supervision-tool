@@ -63,7 +63,7 @@ const ServiceDelivery = (props: any) => {
         <InputNumber
           size="large"
           style={{ width: '50%' }}
-          placeholder="Please enter No. of expected CHUs"
+          placeholder="Enter total number of house holds"
         />
       </FormItem>
 
@@ -78,7 +78,7 @@ const ServiceDelivery = (props: any) => {
           min={0}
           size="large"
           style={{ width: '50%' }}
-          placeholder="Please enter No. of CHUs established"
+          placeholder="Number of households in eCHIS"
         />
       </FormItem>
       <FormItem
@@ -92,7 +92,7 @@ const ServiceDelivery = (props: any) => {
           min={0}
           size="large"
           style={{ width: '50%' }}
-          placeholder="Please enter No. of CHUs established"
+          placeholder="Please enter No. of house holdsvisited last month"
         />
       </FormItem>
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>

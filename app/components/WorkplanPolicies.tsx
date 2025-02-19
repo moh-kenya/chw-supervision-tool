@@ -59,9 +59,7 @@ const WorkplanPolicies = (props) => {
           </Card>
         </Col>
       </Row>
-      {/* <FormItem disabled={disabled} control={control} name="expected_no_of_chas" required label="Expected No of CHAs/CHOs is">
-        <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
-      </FormItem> */}
+     
 
       <FormItem
         disabled={disabled}
@@ -79,18 +77,7 @@ const WorkplanPolicies = (props) => {
         />
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_workplanpolicies_1"
-        label="Comment/Remarks"
-      >
-        <Input.TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+     
 
       <FormItem
         disabled={disabled}
@@ -108,18 +95,7 @@ const WorkplanPolicies = (props) => {
         />
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_workplanpolicies_2"
-        label="Comment/Remarks"
-      >
-        <Input.TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+     
 
       <FormItem
         disabled={disabled}
@@ -143,18 +119,7 @@ const WorkplanPolicies = (props) => {
         />
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_workplanpolicies_3"
-        label="Comment"
-      >
-        <Input.TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comment"
-        />
-      </FormItem>
+    
 
       {/* CHPs Section */}
       <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
@@ -193,18 +158,6 @@ const WorkplanPolicies = (props) => {
         <InputNumber required min={0} size='large' style={{ width: "50%" }} placeholder='Please enter No.' />
       </FormItem> */}
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_workplanpolicies_4"
-        label="Comment"
-      >
-        <Input.TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comment"
-        />
-      </FormItem>
 
       <FormItem
         disabled={disabled}
@@ -248,19 +201,7 @@ const WorkplanPolicies = (props) => {
         </FormItem>
       )}
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_workplanpolicies_4"
-        required
-        label="Comments"
-      >
-        <Input.TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+  
 
       <FormItem
         disabled={disabled}
@@ -281,19 +222,7 @@ const WorkplanPolicies = (props) => {
         </RadioGroup>
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="comments_workplanpolicies_5"
-        label="Comment"
-      >
-        <Input.TextArea
-          rows={3}
-          size="large"
-          style={{ width: '50%' }}
-          placeholder="Please enter comment"
-        />
-      </FormItem>
+      
       <FormItem
         disabled={disabled}
         control={control}

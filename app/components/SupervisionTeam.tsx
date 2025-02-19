@@ -27,8 +27,6 @@ const { Title } = Typography;
 const SupervisionTeam = (props) => {
   const store = useContext(AppContext);
   const [form] = Form.useForm();
-
-
   const { control, watch, getValues, reset } = useForm({});
   const { fields, append, remove } = useFieldArray({
     control,
@@ -116,10 +114,6 @@ const SupervisionTeam = (props) => {
                       required: true,
                       message: 'Please input your first, middle and last name',
                     },
-                    {
-                      min: 10,
-                      message: 'Full name must be atleast 10 characters',
-                    },
                   ]}
                 >
                   <Input
@@ -139,11 +133,6 @@ const SupervisionTeam = (props) => {
                       required: true,
                       message: 'Please input your organization',
                     },
-                    {
-                      min: 4,
-                      message:
-                        'Organization should not be written with abbreviation',
-                    },
                   ]}
                 >
                   <Input
@@ -162,11 +151,6 @@ const SupervisionTeam = (props) => {
                     {
                       required: true,
                       message: 'Please input your designation',
-                    },
-                    {
-                      min: 4,
-                      message:
-                        'Designation should not be written with abbreviation',
                     },
                   ]}
                 >
@@ -189,7 +173,6 @@ const SupervisionTeam = (props) => {
         name="date"
         rules={[
           { required: true, message: 'Please input date of supervision' },
-          { min: 1, message: 'Use calender' },
         ]}
       >
         <DatePicker
@@ -207,13 +190,8 @@ const SupervisionTeam = (props) => {
           label="Who are your respondents?"
           control={control}
           name="whoAreRespondents"
-          rules={[
-            { required: true, message: 'Please input respondents ' },
-            { min: 2, message: 'Select from the given options' },
-          ]}
         >
           <Select
-            mode="multiple"
             size="large"
             placeholder="Please select"
             style={{ width: '100%' }}
@@ -234,81 +212,73 @@ const SupervisionTeam = (props) => {
               { value: 'CHC Member', label: 'CHC Member' },
               { value: 'CHP', label: 'CHP' },
             ]}
-            maxCount={fields.length}
           />
         </FormItem>
       )}
 
-      {whoAreRespondents?.length > 0 && (
+      {whoAreRespondents && (
         <>
-          {whoAreRespondents.map((field, index) => (
-            <div key={index}>
-              <Title level={5}>{whoAreRespondents[index]}</Title>
-
-              <FormItem
-                required
-                label="How long have you served in your current position/station?"
-                control={control}
-                name={`how_long_served_in_position_${index}`}
-                rules={[
-                  { required: true, message: 'Duration served' },
-                  { min: 0, message: 'Select from th given options' },
-                ]}
-              >
-                <Select
-                  size="large"
-                  placeholder="Please select"
-                  style={{ width: '100%' }}
-                  options={[
-                    { value: '<1', label: 'Less than a year' },
-                    { value: '1-3', label: '1 to 3 years' },
-                    { value: '3>', label: 'More than 3 years' },
-                  ]}
-                />
-              </FormItem>
-
-              {/* County Dropdown */}
-              <FormItem
-                required
-                label="County"
-                control={control}
-                name={`county_${index}`}
-                rules={[
-                  { required: true, message: 'Select County' },
-                  { min: 3, message: 'Select from the drop down' },
-                ]}
-              >
-                <Select
-                  size="large"
-                  placeholder="Please select a county"
-                  style={{ width: '100%' }}
-                  options={kenyaCounties}
-                  onChange={handleCountyChange}
-                />
-              </FormItem>
-
-              {/* Sub-County Dropdown */}
-              {selectedCounty && (
-                <FormItem
-                  required
-                  label="Sub County"
-                  control={control}
-                  name={`subcounty_${index}`}
-                  rules={[
-                    { required: true, message: 'Select Sub County' },
-                    { min: 3, message: 'Select from the drop down' },
-                  ]}
-                >
-                  <Select
-                    size="large"
-                    placeholder="Please select a sub-county"
-                    style={{ width: '100%' }}
-                    options={selectedSubCounties}
-                  />
-                </FormItem>
-              )}
-            </div>
-          ))}
+          <Title level={5}>{whoAreRespondents}</Title>
+          <FormItem
+            required
+            label="How long have you served in your current position/station?"
+            control={control}
+            name="how_long_served_in_position"
+            rules={[
+              { required: true, message: 'Duration served' },
+              { min: 0, message: 'Select from the given options' },
+            ]}
+          >
+            <Select
+              size="large"
+              placeholder="Please select"
+              style={{ width: '100%' }}
+              options={[
+                { value: '<1', label: 'Less than a year' },
+                { value: '1-3', label: '1 to 3 years' },
+                { value: '3>', label: 'More than 3 years' },
+              ]}
+            />
+          </FormItem>
+          {/* County Dropdown */}
+          <FormItem
+            required
+            label="County"
+            control={control}
+            name="county"
+            rules={[
+              { required: true, message: 'Select County' },
+              { min: 3, message: 'Select from the drop down' },
+            ]}
+          >
+            <Select
+              size="large"
+              placeholder="Please select a county"
+              style={{ width: '100%' }}
+              options={kenyaCounties}
+              onChange={handleCountyChange}
+            />
+          </FormItem>
+          {/* Sub-County Dropdown */}
+          {selectedCounty && (
+            <FormItem
+              required
+              label="Sub County"
+              control={control}
+              name="subcounty"
+              rules={[
+                { required: true, message: 'Select Sub County' },
+                { min: 3, message: 'Select from the drop down' },
+              ]}
+            >
+              <Select
+                size="large"
+                placeholder="Please select a sub-county"
+                style={{ width: '100%' }}
+                options={selectedSubCounties}
+              />
+            </FormItem>
+          )}
         </>
       )}
     </Form>

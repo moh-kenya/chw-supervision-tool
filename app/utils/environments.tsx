@@ -1,8 +1,14 @@
 const environments = {
-    APP_ENDPOINT: process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ?? 'development',
-    APP_PROJECT:
-        process.env.NEXT_PUBLIC_APPWRITE_PROJECT ?? 'http://localhost:3000',
-    APP_KEY: process.env.NEXT_APPWRITE_KEY ?? 'CHW Supervision Tool',
+  APP_ENDPOINT: process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://backend-moh.karimkkanji.com/v1',
+  APP_PROJECT: process.env.NEXT_PUBLIC_APPWRITE_PROJECT || '671b69380019aff6cad1',
+  APP_KEY: process.env.NEXT_APPWRITE_KEY,
+  DATABASE_ID: process.env.NEXT_PUBLIC_DATABASE_ID,
+  COLLECTION_ID: process.env.NEXT_PUBLIC_COLLECTION_ID
 };
+
+// Validate required environment variables
+if (!environments.APP_KEY) {
+  console.error('Missing required environment variable: NEXT_APPWRITE_KEY');
+}
 
 export default environments;

@@ -54,19 +54,7 @@ const Transport = (props) => {
         </RadioGroup>
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        required
-        control={control}
-        name="comments_transport_1"
-        label="Comment/Remarks"
-      >
-        <TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+     
 
       <FormItem
         disabled={disabled}
@@ -89,7 +77,6 @@ const Transport = (props) => {
 
       <FormItem
         disabled={disabled}
-        required
         control={control}
         name="comments_transport_2"
         label="Comment/Remarks"

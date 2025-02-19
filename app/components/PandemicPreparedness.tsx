@@ -53,19 +53,7 @@ const PandemicPreparedness = (props) => {
         </RadioGroup>
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="presence_of_functional_pandemic_preparedness_comment"
-        required
-        label="Comment/Remarks"
-      >
-        <TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
@@ -84,19 +72,7 @@ const PandemicPreparedness = (props) => {
         </RadioGroup>
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="existence_of_pandemic_preparedness_comment"
-        required
-        label="Comment/Remarks"
-      >
-        <TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+      
       <FormItem
         disabled={disabled}
         name="dedicated_budget"
@@ -115,19 +91,7 @@ const PandemicPreparedness = (props) => {
         </RadioGroup>
       </FormItem>
 
-      <FormItem
-        disabled={disabled}
-        control={control}
-        name="dedicated_budget_comment"
-        required
-        label="Comment/Remarks"
-      >
-        <TextArea
-          rows={3}
-          size="large"
-          placeholder="Please enter comments or remarks"
-        />
-      </FormItem>
+      
       <FormItem
         disabled={disabled}
         name="pandemic_preparedness"
@@ -150,7 +114,6 @@ const PandemicPreparedness = (props) => {
         disabled={disabled}
         control={control}
         name="pandemic_preparedness_comment"
-        required
         label="Comment/Remarks"
       >
         <TextArea

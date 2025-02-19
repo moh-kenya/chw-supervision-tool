@@ -371,3 +371,4 @@ export const kenyaSubcounties = {
   ],
   // Add more counties and subcounties as needed...
 };
+export const kenyaChus = []
