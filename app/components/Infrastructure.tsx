@@ -21,14 +21,14 @@ const Infrastructure = (props) => {
   useEffect(() => {
     return () => {
       props.setGlobalState((store) => {
-        store.Infrastructure = getValues();
+        store.infrastructure = getValues();
         return store;
       });
     };
   }, [getValues, props]);
 
   useEffect(() => {
-    reset(store?.globalState?.Infrastructure);
+    reset(store?.globalState?.infrastructure);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

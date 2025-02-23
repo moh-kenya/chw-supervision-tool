@@ -22,13 +22,13 @@ const MonitoringAndEvaluation = (props) => {
   useEffect(() => {
     return () => {
       props.setGlobalState((store) => {
-        store.monitoringAndEvalutation = getValues();
+        store.monitoringAndEvaluation = getValues();
         return store;
       });
     };
   }, [getValues, props]);
   useEffect(() => {
-    reset(store?.globalState?.monitoringAndEvalutation);
+    reset(store?.globalState?.monitoringAndEvaluation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (

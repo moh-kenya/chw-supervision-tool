@@ -6,7 +6,7 @@ import { MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { FormItem } from 'react-hook-form-antd';
-import { Client as Appwrite, Account } from 'appwrite';
+import { Client, Account, ID } from 'appwrite';
 import { CoatOfArms } from '../components/Logo';
 import Notifications from '../components/utils/Notifications';
 import environments from '../utils/environments';
@@ -14,12 +14,15 @@ import environments from '../utils/environments';
 const { Title, Text } = Typography;
 const { APP_ENDPOINT, APP_PROJECT } = environments;
 
-// Initialize Appwrite
-const client = new Appwrite();
+// Initialize Appwrite client and account service
+const client = new Client();
+
+// Set the endpoint and project ID
 client
   .setEndpoint(APP_ENDPOINT)
   .setProject(APP_PROJECT);
 
+// Create an account instance
 const account = new Account(client);
 
 interface FormValues {
@@ -51,28 +54,69 @@ export default function LoginPage() {
       setLoading(true);
       console.log('Attempting login with:', values.emailOrPhone);
 
+      // First, check if there's an existing session
+      try {
+        const currentSession = await account.getSession('current');
+        if (currentSession) {
+          // If the session exists and it's valid, just redirect to dashboard
+          console.log('Existing valid session found');
+          router.push('/dashboard');
+          return;
+        }
+      } catch (e) {
+        // No existing session or session is invalid, proceed with login
+        console.log('No valid session found, proceeding with login');
+      }
+
       // Create email session using Appwrite
-      const session = await account.createEmailSession(
+      const session = await account.createEmailPasswordSession(
         values.emailOrPhone,
         values.password
       );
 
-      console.log('Login successful:', session);
+      // Verify the session was created successfully
+      if (!session?.$id) {
+        throw new Error('Failed to create session');
+      }
+
+      // Get the user details
+      const user = await account.get();
+      
+      if (!user?.$id) {
+        throw new Error('Failed to get user details');
+      }
+
+      console.log('Login successful:', { session, user });
 
       setNotifs({
         type: 'success',
-        title: 'Success',
-        message: 'You are being logged in momentarily!',
+        title: 'Welcome back!',
+        message: 'Login successful. Redirecting to dashboard...',
         toggle: true,
       });
       
-      router.push('/dashboard');
-    } catch (error) {
+      // Add a small delay before redirect to show the success message
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1500);
+    } catch (error: any) {
       console.error('Login error:', error);
+      
+      let errorMessage = 'Invalid credentials. Please try again.';
+      
+      // Handle specific Appwrite error codes
+      if (error?.code === 401) {
+        errorMessage = 'Invalid email or password';
+      } else if (error?.code === 429) {
+        errorMessage = 'Too many login attempts. Please try again later.';
+      } else if (error?.message) {
+        errorMessage = error.message;
+      }
+      
       setNotifs({
         type: 'error',
         title: 'Login Failed',
-        message: error instanceof Error ? error.message : 'Invalid credentials. Please try again.',
+        message: errorMessage,
         toggle: true,
       });
     } finally {
