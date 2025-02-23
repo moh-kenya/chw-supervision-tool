@@ -6,15 +6,27 @@ import { MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { FormItem } from 'react-hook-form-antd';
+import { Client as Appwrite, Account } from 'appwrite';
 import { CoatOfArms } from '../components/Logo';
 import Notifications from '../components/utils/Notifications';
+import environments from '../utils/environments';
 
 const { Title, Text } = Typography;
+const { APP_ENDPOINT, APP_PROJECT } = environments;
+
+// Initialize Appwrite
+const client = new Appwrite();
+client
+  .setEndpoint(APP_ENDPOINT)
+  .setProject(APP_PROJECT);
+
+const account = new Account(client);
 
 interface FormValues {
   emailOrPhone: string;
   password: string;
 }
+
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 export interface NotifsTypes {
   type: NotificationType;
@@ -39,46 +51,31 @@ export default function LoginPage() {
       setLoading(true);
       console.log('Attempting login with:', values.emailOrPhone);
 
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          emailOrPhone: values.emailOrPhone,
-          password: values.password,
-        }),
+      // Create email session using Appwrite
+      const session = await account.createEmailSession(
+        values.emailOrPhone,
+        values.password
+      );
+
+      console.log('Login successful:', session);
+
+      setNotifs({
+        type: 'success',
+        title: 'Success',
+        message: 'You are being logged in momentarily!',
+        toggle: true,
       });
-
-      const data = await response.json();
-      console.log('Login response status:', response.status);
-
-      if (response.ok) {
-        setNotifs({
-          type: 'success',
-          title: 'Success',
-          message: 'You are being logged in momentarily!',
-          toggle: true,
-        });
-        router.push('/dashboard');
-      } else {
-        console.error('Login failed:', data);
-        setNotifs({
-          type: 'error',
-          title: 'Login Failed',
-          message: data.error || data.message || 'Invalid credentials. Please try again.',
-          toggle: true,
-        });
-        setLoading(false);
-      }
+      
+      router.push('/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       setNotifs({
         type: 'error',
-        title: 'Login Error',
-        message: error instanceof Error ? error.message : 'Please try again later',
+        title: 'Login Failed',
+        message: error instanceof Error ? error.message : 'Invalid credentials. Please try again.',
         toggle: true,
       });
+    } finally {
       setLoading(false);
     }
   };
@@ -158,6 +155,7 @@ export default function LoginPage() {
     </>
   );
 }
+
 const styles = {
   container: {
     height: '100vh',
