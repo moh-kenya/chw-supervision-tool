@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { FormItem } from 'react-hook-form-antd';
 
-import { Form, Radio, Typography } from 'antd';
+import { Form, InputNumber, Radio, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { AppContext } from '../providers';
 
@@ -16,6 +16,7 @@ const Finance = (props) => {
   const disabled = props.disabled || false;
 
   const store = useContext(AppContext);
+  const [form] = Form.useForm();
 
   const { control, getValues, reset } = useForm({});
 
@@ -39,14 +40,20 @@ const Finance = (props) => {
         disabled={disabled}
         control={control}
         name="have_committed_financial_resources"
-        required
         label="Have you committed financial resources through budgeting process to support community health? (Verify with budgets, etc)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
@@ -64,13 +71,24 @@ const Finance = (props) => {
         disabled={disabled}
         control={control}
         name="what_portion_allocated"
-        required
         label="What proportion of the county health budget is allocated to CHS? (verify)"
+        rules={[
+          {
+            required: true,
+            message: 'Please enter the proportion value',
+          }
+        ]}
       >
-        <RadioGroup>
-          <Radio value="yes">Yes</Radio>
-          <Radio value="no">No</Radio>
-        </RadioGroup>
+        <InputNumber
+          min={0}
+          max={100}
+          size="large"
+          style={{ width: '50%' }}
+          placeholder="Enter percentage (0-100)"
+          formatter={(value) => `${value}%`}
+          parser={(value) => value?.toString().replace('%', '')}
+          disabled={disabled}
+        />
       </FormItem>
 
       <FormItem

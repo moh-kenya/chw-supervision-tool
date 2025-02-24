@@ -6,7 +6,7 @@ export async function POST(req) {
     // Create an Appwrite admin client
     const client = new Client()
       .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT)
-      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT)
+      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID)
       .setKey(process.env.NEXT_APPWRITE_KEY);
 
     const request = await req.json();
@@ -16,24 +16,39 @@ export async function POST(req) {
 
     // Validate the input
     if (!databaseId || !collectionId || !data) {
-      return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+      return NextResponse.json({ 
+        error: 'Missing required fields',
+        details: 'Database ID, Collection ID, and data are required'
+      }, { status: 400 });
     }
 
+    // Ensure data is properly structured
+    const documentData = {
+      data: JSON.stringify(data),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      status: data.status || 'Draft'
+    };
+
     // Create a new document in Appwrite
-    const values = JSON.stringify(data);
     const document = await databases.createDocument(
       databaseId,
       collectionId,
       id,
-      {
-        data: values,
-      }
+      documentData
     );
 
-    return NextResponse.json({ success: true, document }, { status: 201 });
+    return NextResponse.json({ 
+      success: true, 
+      document,
+      message: 'Document created successfully'
+    }, { status: 201 });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Failed to create document' },
+      { 
+        error: 'Failed to create document',
+        message: error.message || 'An unexpected error occurred'
+      },
       { status: 500 }
     );
   }

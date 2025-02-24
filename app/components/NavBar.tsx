@@ -11,9 +11,19 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { Client, Account } from 'appwrite';
 import { Logo } from './Logo';
+import environments from '../utils/environments';
 
 const { Header } = Layout;
+const { APP_ENDPOINT, APP_PROJECT } = environments;
+
+// Initialize Appwrite
+const client = new Client()
+  .setEndpoint(APP_ENDPOINT)
+  .setProject(APP_PROJECT);
+
+const account = new Account(client);
 
 const NavBar = ({ setNotifs, id }: any) => {
   const router = useRouter();
@@ -22,35 +32,29 @@ const NavBar = ({ setNotifs, id }: any) => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      // Delete the current session
+      await account.deleteSession('current');
+
+      setNotifs({
+        type: 'success',
+        title: 'Success',
+        message: 'You are being logged out momentarily!',
+        toggle: true,
       });
 
-      if (response.ok) {
-        setNotifs({
-          type: 'success',
-          title: 'Success',
-          message: 'You are being logged out momentarily!',
-          toggle: true,
-        });
-        setTimeout(() => {
-          router.push('/login');
-        }, 2000);
-      } else {
-        const data = await response.json();
-        setNotifs({
-          type: 'error',
-          title: 'Unable to log out',
-          message: data.message || 'An error occurred during logout',
-          toggle: true,
-        });
-      }
+      // Add a small delay before redirect to show the success message
+      setTimeout(() => {
+        router.push('/login');
+      }, 1500);
+
     } catch (error) {
-      console.error(error);
-    } finally {
+      console.error('Logout error:', error);
+      setNotifs({
+        type: 'error',
+        title: 'Unable to log out',
+        message: error instanceof Error ? error.message : 'An error occurred during logout',
+        toggle: true,
+      });
     }
   };
 

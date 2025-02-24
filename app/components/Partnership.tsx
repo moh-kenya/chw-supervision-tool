@@ -15,6 +15,7 @@ const RadioGroup = Group;
 const Partnership = (props) => {
   const { disabled } = props;
   const store = useContext(AppContext);
+  const [form] = Form.useForm();
 
   const { control, getValues, reset } = useForm({});
 
@@ -38,20 +39,31 @@ const Partnership = (props) => {
         disabled={disabled}
         control={control}
         name="have_phc_chs_stakeholder_forum"
-        required
         label="Do you have a PHC/CHS stakeholder forum/TWG with clear TORs (defining the scope of work)?"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>
           <Radio value="no">No</Radio>
         </RadioGroup>
       </FormItem>
+
       <FormItem
         disabled={disabled}
         control={control}
         name="convened_phc_chs_stakeholder_forum"
-        required
         label="In the last quarter did you convene the PHC/CHS stakeholder forum/TWG? (Verify with reports)"
+        rules={[
+          {
+            required: true,
+            message: 'Please select an option',
+          },
+        ]}
       >
         <RadioGroup>
           <Radio value="yes">Yes</Radio>

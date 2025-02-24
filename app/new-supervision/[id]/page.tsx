@@ -22,11 +22,58 @@ const Home = ({ params }: { params: any }) => {
   const store = useContext(AppContext);
   const modules = store?.modules ?? [];
 
-  const next = () => {
-    setCurrent(current + 1);
+  const next = async () => {
+    try {
+      const currentModule = modules[current];
+      if (!currentModule) {
+        message.error('Module not found');
+        return;
+      }
+
+      const currentState = store?.globalState;
+      let isValid = true;
+      let errorMessage = '';
+
+      // Validate based on current module
+      switch (currentModule.title) {
+        case 'Supervision Team':
+          const supervisionData = currentState?.superVisionTeam;
+          if (!supervisionData?.number_in_supervision_team) {
+            isValid = false;
+            errorMessage = 'Please fill in the number of supervision team members';
+          }
+          break;
+
+        case 'CHU Functionality':
+          const chuData = currentState?.chuFunctionality;
+          if (!chuData?.expected_no_of_chus || !chuData?.no_established_chus) {
+            isValid = false;
+            errorMessage = 'Please fill in all required CHU fields';
+          }
+          break;
+
+        // Add cases for other modules as needed
+      }
+
+      if (!isValid) {
+        message.error(errorMessage);
+        return;
+      }
+
+      // If validation passes, proceed to next page
+      if (current < modules.length - 1) {
+        setCurrent(current + 1);
+        message.success('Page validated successfully');
+      } else {
+        message.success('All pages completed!');
+      }
+    } catch (error) {
+      message.error('Please ensure all required fields are filled correctly');
+      console.error('Validation error:', error);
+    }
   };
 
-  const prev = () => {
+  const prev = () => {setCurrent(current + 1);
     setCurrent(current - 1);
   };
   const onChange = (value: number) => {
@@ -35,6 +82,13 @@ const Home = ({ params }: { params: any }) => {
   const submitDataToDB = async () => {
     if (store?.globalState[id]) {
       try {
+        // Prepare the data for submission
+        const dataToSubmit = {
+          ...store.globalState[id],
+          updatedDate: new Date().toISOString(),
+          status: 'Submitted'
+        };
+
         const response = await fetch('/api/auth/db', {
           method: 'POST',
           headers: {
@@ -43,7 +97,7 @@ const Home = ({ params }: { params: any }) => {
           body: JSON.stringify({
             databaseId: process.env.NEXT_PUBLIC_DATABASE_ID,
             collectionId: process.env.NEXT_PUBLIC_COLLECTION_ID,
-            data: store?.globalState[id],
+            data: dataToSubmit,
             id,
           }),
         });
@@ -56,7 +110,7 @@ const Home = ({ params }: { params: any }) => {
           await message.error(`Error: ${result.error}`);
         }
       } catch (error) {
-        await message.error('Something went wrong!');
+        await message.error('Something went wrong with the submission. Please try again.');
       }
     } else {
       await message.error(
