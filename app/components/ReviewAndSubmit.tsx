@@ -92,10 +92,20 @@ const ReviewAndSubmit = (props) => {
         throw new Error('No form data available');
       }
 
-      // Prepare the form data
+      
       const formData = {
-        ...store.globalState
+        ...store.globalState,
+        
+        locationDetails: {
+          county: store.globalState.superVisionTeam?.county || '',
+          subCounty: store.globalState.superVisionTeam?.subCounty || '',
+          chu: store.globalState.superVisionTeam?.chu || ''
+        },
+        status: 'completed',
+        submittedAt: new Date().toISOString()
       };
+      
+      console.log('Submitting form data:', formData);
       
       // Create a new document in the database
       const response = await createSupervisionData(formData);

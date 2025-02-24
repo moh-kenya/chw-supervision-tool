@@ -27,7 +27,17 @@ const { Title } = Typography;
 const SupervisionTeam = (props) => {
   const store = useContext(AppContext);
   const [form] = Form.useForm();
-  const { control, watch, getValues, reset } = useForm({});
+  const { control, watch, getValues, reset } = useForm({
+    defaultValues: {
+      county: '',
+      subCounty: '',
+      chu: '',
+      date: '',
+      number_in_supervision_team: 0,
+      whoAreRespondents: [],
+      teamMembers: []
+    }
+  });
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'teamMembers',
@@ -85,8 +95,23 @@ const SupervisionTeam = (props) => {
   }, [getValues, props]);
 
   useEffect(() => {
-    reset(store.globalState.superVisionTeam);
-  }, [store.globalState.superVisionTeam]);
+    if (store.globalState.superVisionTeam) {
+      reset(store.globalState.superVisionTeam);
+      // Also set the location states if they exist
+      const values = store.globalState.superVisionTeam;
+      if (values.county) {
+        setSelectedCounty(values.county);
+        const subcounties = getSubCounties(values.county);
+        setSelectedSubCounties(subcounties);
+        
+        if (values.subCounty) {
+          setSelectedSubCounty(values.subCounty);
+          const chus = getChus(values.county, values.subCounty);
+          setSelectedChus(chus);
+        }
+      }
+    }
+  }, [store.globalState.superVisionTeam, reset]);
 
   useEffect(() => {
     const currentCount = fields.length;
