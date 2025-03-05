@@ -1,12 +1,29 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, Row, Col, Spin, Button, Empty, Statistic, Tabs, Typography } from 'antd';
-import { DataImport } from '../components/DataImport';
-import { ArrowLeftOutlined, RiseOutlined, FallOutlined } from '@ant-design/icons';
-import { listSupervisionData, getSubmissionStats } from '../lib/server/database';
+import {
+  Card,
+  Row,
+  Col,
+  Spin,
+  Button,
+  Empty,
+  Statistic,
+  Tabs,
+  Typography,
+} from 'antd';
+import {
+  ArrowLeftOutlined,
+  RiseOutlined,
+  FallOutlined,
+} from '@ant-design/icons';
 import { Bar, Pie, Line } from '@ant-design/plots';
 import dayjs from 'dayjs';
+import {
+  listSupervisionData,
+  getSubmissionStats,
+} from '../lib/server/database';
+import { DataImport } from '../components/DataImport';
 
 export default function VisualizationsPage() {
   const [loading, setLoading] = useState(true);
@@ -22,7 +39,7 @@ export default function VisualizationsPage() {
         // Get all records for visualizations
         const [response, statistics] = await Promise.all([
           listSupervisionData(), // No pagination to get all records
-          getSubmissionStats()
+          getSubmissionStats(),
         ]);
 
         const submissions = response?.documents || [];
@@ -31,26 +48,32 @@ export default function VisualizationsPage() {
         const countyStats = new Map();
         const statusStats = new Map();
         const timelineStats = new Map();
-        
+
         submissions.forEach((submission: any) => {
           try {
             const formData = JSON.parse(submission.formData);
             // County stats
-            let county = formData.locationDetails?.county || formData.superVisionTeam?.county;
+            let county =
+              formData.locationDetails?.county ||
+              formData.superVisionTeam?.county;
             if (county) {
               // Format county name
               county = county.toLowerCase();
-              const countyName = county.charAt(0).toUpperCase() + county.slice(1);
-              countyStats.set(countyName, (countyStats.get(countyName) || 0) + 1);
+              const countyName =
+                county.charAt(0).toUpperCase() + county.slice(1);
+              countyStats.set(
+                countyName,
+                (countyStats.get(countyName) || 0) + 1
+              );
               console.log('Processing county:', countyName);
             } else {
               console.log('No county found in submission:', submission.$id);
             }
-            
+
             // Status stats
             const status = submission.status || 'unknown';
             statusStats.set(status, (statusStats.get(status) || 0) + 1);
-            
+
             // Timeline stats (by month)
             const date = dayjs(submission.$createdAt).format('YYYY-MM');
             timelineStats.set(date, (timelineStats.get(date) || 0) + 1);
@@ -59,16 +82,24 @@ export default function VisualizationsPage() {
           }
         });
 
-        setCountyData(Array.from(countyStats.entries())
-          .map(([county, count]) => ({ county, count }))
-          .sort((a, b) => b.count - a.count));
+        setCountyData(
+          Array.from(countyStats.entries())
+            .map(([county, count]) => ({ county, count }))
+            .sort((a, b) => b.count - a.count)
+        );
 
-        setStatusData(Array.from(statusStats.entries())
-          .map(([status, count]) => ({ status, count })));
+        setStatusData(
+          Array.from(statusStats.entries()).map(([status, count]) => ({
+            status,
+            count,
+          }))
+        );
 
-        setTimelineData(Array.from(timelineStats.entries())
-          .map(([date, count]) => ({ date, count }))
-          .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf()));
+        setTimelineData(
+          Array.from(timelineStats.entries())
+            .map(([date, count]) => ({ date, count }))
+            .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf())
+        );
 
         setStats(statistics);
       } catch (error) {
@@ -81,8 +112,6 @@ export default function VisualizationsPage() {
 
     fetchData();
   }, []);
-
-
 
   if (loading) {
     return (
@@ -97,8 +126,11 @@ export default function VisualizationsPage() {
       <div style={{ padding: '24px', textAlign: 'center' }}>
         <h1>No Data Available</h1>
         <p>Please submit some supervision forms first.</p>
-        <Button type="primary" onClick={() => window.location.href = '/dashboard'}>
-          Back to Dashboard
+        <Button
+          type="primary"
+          onClick={() => (window.location.href = '/suprecord')}
+        >
+          Back to suprecord
         </Button>
       </div>
     );
@@ -106,13 +138,20 @@ export default function VisualizationsPage() {
 
   return (
     <div style={{ padding: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1>Supervision Analytics Dashboard</h1>
-        <Button 
-          onClick={() => window.location.href = '/dashboard'}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '24px',
+        }}
+      >
+        <h1>Supervision Analytics suprecord</h1>
+        <Button
+          onClick={() => (window.location.href = '/suprecord')}
           icon={<ArrowLeftOutlined />}
         >
-          Back to Dashboard
+          Back to suprecord
         </Button>
       </div>
 
@@ -120,7 +159,7 @@ export default function VisualizationsPage() {
       <Row gutter={[16, 16]} style={{ marginBottom: '24px' }}>
         <Col span={6}>
           <Card>
-            <Statistic 
+            <Statistic
               title="Total Submissions"
               value={stats?.totalSubmissions || 0}
               valueStyle={{ color: '#1890ff' }}
@@ -140,7 +179,9 @@ export default function VisualizationsPage() {
           <Card>
             <Statistic
               title="Completed Forms"
-              value={statusData.find(s => s.status === 'completed')?.count || 0}
+              value={
+                statusData.find((s) => s.status === 'completed')?.count || 0
+              }
               valueStyle={{ color: '#52c41a' }}
               prefix={<RiseOutlined />}
             />
@@ -150,7 +191,7 @@ export default function VisualizationsPage() {
           <Card>
             <Statistic
               title="Draft Forms"
-              value={statusData.find(s => s.status === 'draft')?.count || 0}
+              value={statusData.find((s) => s.status === 'draft')?.count || 0}
               valueStyle={{ color: '#faad14' }}
               prefix={<FallOutlined />}
             />
@@ -171,10 +212,10 @@ export default function VisualizationsPage() {
                     yField="count"
                     label={{
                       position: 'middle',
-                      style: { fill: '#fff' }
+                      style: { fill: '#fff' },
                     }}
                     xAxis={{
-                      label: { autoRotate: true, style: { fontSize: 12 } }
+                      label: { autoRotate: true, style: { fontSize: 12 } },
                     }}
                     color="#1890ff"
                   />
@@ -198,7 +239,7 @@ export default function VisualizationsPage() {
                     radius={0.8}
                     label={{
                       type: 'spider',
-                      content: '{name}: {percentage}'
+                      content: '{name}: {percentage}',
                     }}
                     interactions={[{ type: 'element-active' }]}
                   />
@@ -215,10 +256,10 @@ export default function VisualizationsPage() {
                     xField="date"
                     yField="count"
                     point={{ size: 5 }}
-                    smooth={true}
+                    smooth
                     label={{
                       formatter: (v) => `${v.count}`,
-                      style: { fill: '#aaa' }
+                      style: { fill: '#aaa' },
                     }}
                   />
                 ) : (

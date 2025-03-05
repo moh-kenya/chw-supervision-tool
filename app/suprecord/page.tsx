@@ -20,7 +20,8 @@ export default function Home() {
     <main className="min-h-screen">
       <NavBar setNotifs={setNotifs} />
       <div style={{ padding: '24px' }}>
-        <Title level={2}>Supervision dashboard</Title>
+        <Title level={2}>Supervision record</Title>
+        <SubmissionsTable />
       </div>
       <Notifications
         type={notifs.type}

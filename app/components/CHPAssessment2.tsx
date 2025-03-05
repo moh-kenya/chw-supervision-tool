@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Card } from 'antd';
 
-const CHPAssessment = () => {
+const CHPAssessment2 = () => {
   return (
     <Card title="CHP Assessment Questions">
       <Form layout="vertical">
@@ -11,4 +11,4 @@ const CHPAssessment = () => {
   );
 };
 
-export default CHPAssessment;
+export default CHPAssessment2;
