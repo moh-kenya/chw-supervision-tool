@@ -17,7 +17,12 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import dayjs from 'dayjs';
 import { FormItem } from 'react-hook-form-antd';
 import { AppContext } from '../providers';
-import { getCounties, getSubCounties, getWards, getCHUs } from '../services/locationData';
+import {
+  getCounties,
+  getSubCounties,
+  getWards,
+  getCHUs,
+} from '../services/locationData';
 import CHUFunctionality from './CHUFunctionality';
 import WorkplanPolicies from './WorkplanPolicies';
 import ServiceDelivery from './ServiceDelivery';
@@ -34,21 +39,12 @@ const COUNTY_LEVEL_ROLES = [
   'CDSC',
   'CHRIO',
   'CPHCC',
-  'CQIC'
+  'CQIC',
 ];
 
-const SUBCOUNTY_LEVEL_ROLES = [
-  'SCMOH',
-  'SCCHSFP',
-  'SCDSC',
-  'SCHRIO'
-];
+const SUBCOUNTY_LEVEL_ROLES = ['SCMOH', 'SCCHSFP', 'SCDSC', 'SCHRIO'];
 
-const CHU_LEVEL_ROLES = [
-  'CHA',
-  'CHC Member',
-  'CHP'
-];
+const CHU_LEVEL_ROLES = ['CHA', 'CHC Member', 'CHP'];
 
 const SupervisionTeam = (props) => {
   const store = useContext(AppContext);
@@ -63,8 +59,8 @@ const SupervisionTeam = (props) => {
       date: '',
       number_in_supervision_team: 0,
       whoAreRespondents: [] as string[],
-      teamMembers: []
-    }
+      teamMembers: [],
+    },
   });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -74,7 +70,7 @@ const SupervisionTeam = (props) => {
   const numberOfMembers = watch('number_in_supervision_team', 0);
   const whoAreRespondents = watch('whoAreRespondents');
   const selectedRole = watch('whoAreRespondents')?.[0] || null;
-  
+
   // Reset location fields when role changes
   useEffect(() => {
     if (selectedRole) {
@@ -106,7 +102,7 @@ const SupervisionTeam = (props) => {
     Array<{ value: string; label: string }>
   >([]);
 
-  //Debug logging for form values
+  // Debug logging for form values
   useEffect(() => {
     const values = getValues();
     console.log('Supervision Team current Values:', values);
@@ -120,12 +116,12 @@ const SupervisionTeam = (props) => {
         console.log('Starting to load counties...');
         console.log('Current environment:', {
           // Using mock data for now, will be replaced with PostgreSQL later
-          mockData: true
+          mockData: true,
         });
-        
+
         const countiesList = await getCounties();
         console.log('Counties loaded successfully:', countiesList);
-        
+
         if (countiesList.length === 0) {
           console.warn('No counties found in database');
           message.warning('No counties found in the database');
@@ -141,15 +137,19 @@ const SupervisionTeam = (props) => {
           message: error.message,
           code: error.code,
           type: error.type,
-          response: error.response
+          response: error.response,
         });
-        message.error('Failed to load counties. Please try refreshing the page.');
+        message.error(
+          'Failed to load counties. Please try refreshing the page.'
+        );
       }
     };
-    
+
     console.log('Counties useEffect triggered');
     loadCounties();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Load sub-counties when county or role changes
@@ -159,7 +159,9 @@ const SupervisionTeam = (props) => {
         try {
           const subCountiesList = await getSubCounties(selectedCounty);
           setSubCounties(subCountiesList);
-          setSelectedSubCounties(subCountiesList.map(sc => ({ value: sc, label: sc })));
+          setSelectedSubCounties(
+            subCountiesList.map((sc) => ({ value: sc, label: sc }))
+          );
         } catch (error) {
           console.error('Error loading sub-counties:', error);
           message.error('Failed to load sub-counties');
@@ -193,11 +195,20 @@ const SupervisionTeam = (props) => {
   // Load CHUs when ward changes or role changes
   useEffect(() => {
     const loadCHUs = async () => {
-      if (selectedCounty && selectedSubCounty && selectedWard && hasCHULevelRole) {
+      if (
+        selectedCounty &&
+        selectedSubCounty &&
+        selectedWard &&
+        hasCHULevelRole
+      ) {
         try {
-          const chusList = await getCHUs(selectedCounty, selectedSubCounty, selectedWard);
+          const chusList = await getCHUs(
+            selectedCounty,
+            selectedSubCounty,
+            selectedWard
+          );
           setCHUs(chusList);
-          setSelectedChus(chusList.map(chu => ({ value: chu, label: chu })));
+          setSelectedChus(chusList.map((chu) => ({ value: chu, label: chu })));
         } catch (error) {
           console.error('Error loading CHUs:', error);
           message.error('Failed to load CHUs');
@@ -216,13 +227,13 @@ const SupervisionTeam = (props) => {
       setSelectedCounty(selectedValue);
       setSelectedSubCounty('');
       setSelectedWard('');
-      form.setFieldsValue({ 
+      form.setFieldsValue({
         county: selectedValue,
-        subCounty: undefined, 
-        ward: undefined, 
-        chu: undefined 
+        subCounty: undefined,
+        ward: undefined,
+        chu: undefined,
       });
-      
+
       // Only load sub-counties if role requires it
       if (hasSubCountyLevelRole || hasCHULevelRole) {
         const subcounties = await getSubCounties(selectedValue);
@@ -231,7 +242,7 @@ const SupervisionTeam = (props) => {
       } else {
         setSubCounties([]);
       }
-      
+
       // Clear dependent fields
       setSelectedSubCounties([]);
       setWards([]);
@@ -247,10 +258,10 @@ const SupervisionTeam = (props) => {
       console.log('SubCounty selected:', selectedValue);
       setSelectedSubCounty(selectedValue);
       setSelectedWard('');
-      form.setFieldsValue({ 
+      form.setFieldsValue({
         subCounty: selectedValue,
-        ward: undefined, 
-        chu: undefined 
+        ward: undefined,
+        chu: undefined,
       });
 
       // Only load wards if role is CHU level
@@ -274,14 +285,18 @@ const SupervisionTeam = (props) => {
     try {
       console.log('Ward selected:', selectedValue);
       setSelectedWard(selectedValue);
-      form.setFieldsValue({ 
+      form.setFieldsValue({
         ward: selectedValue,
-        chu: undefined 
+        chu: undefined,
       });
 
       // Only load CHUs if role is CHU level
       if (hasCHULevelRole) {
-        const chusList = await getCHUs(selectedCounty, selectedSubCounty, selectedValue);
+        const chusList = await getCHUs(
+          selectedCounty,
+          selectedSubCounty,
+          selectedValue
+        );
         console.log('Loaded CHUs:', chusList);
         setCHUs(chusList);
       } else {
@@ -322,10 +337,14 @@ const SupervisionTeam = (props) => {
           setSelectedCounty(values.county);
           const subcounties = await getSubCounties(values.county);
           setSelectedSubCounties(subcounties);
-          
+
           if (values.subCounty && values.ward) {
             setSelectedSubCounty(values.subCounty);
-            const chus = await getCHUs(values.county, values.subCounty, values.ward);
+            const chus = await getCHUs(
+              values.county,
+              values.subCounty,
+              values.ward
+            );
             setSelectedChus(chus);
           }
         }
@@ -361,18 +380,18 @@ const SupervisionTeam = (props) => {
         teamMembers: fields.map((field, index) => ({
           name: data.teamMembers?.[index]?.name || '',
           organization: data.teamMembers?.[index]?.organization || '',
-          designation: data.teamMembers?.[index]?.designation || ''
-        }))
+          designation: data.teamMembers?.[index]?.designation || '',
+        })),
       };
 
       console.log('Form data to submit:', allData);
-      
+
       // Save to global state
       props.setGlobalState((store) => {
         store.superVisionTeam = allData;
         return store;
       });
-      
+
       message.success('Form submitted successfully');
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -386,38 +405,56 @@ const SupervisionTeam = (props) => {
 
   // Show CHA Assessment if CHA is selected and all required fields are filled
   if (showCHAAssessment && selectedCHU) {
-    return <CHAAssessment 
-      initialData={{
-        timeInPosition: watch('how_long_served_in_position'),
-        county: selectedCounty,
-        subCounty: selectedSubCounty,
-        ward: selectedWard,
-        chu: selectedCHU
-      }}
-      onBack={() => setShowCHAAssessment(false)}
-    />;
+    return (
+      <CHAAssessment
+        initialData={{
+          timeInPosition: watch('how_long_served_in_position'),
+          county: selectedCounty,
+          subCounty: selectedSubCounty,
+          ward: selectedWard,
+          chu: selectedCHU,
+        }}
+        onBack={() => {
+          setShowCHAAssessment(false);
+        }}
+      />
+    );
   }
 
   // Show Official Assessment if county/sub-county official is selected and required fields are filled
-  if (showOfficialAssessment && watch('how_long_served_in_position') && 
-      ((hasCountyLevelRole && selectedCounty) || 
-       (hasSubCountyLevelRole && selectedCounty && selectedSubCounty))) {
+  if (
+    showOfficialAssessment &&
+    watch('how_long_served_in_position') &&
+    ((hasCountyLevelRole && selectedCounty) ||
+      (hasSubCountyLevelRole && selectedCounty && selectedSubCounty))
+  ) {
     return (
       <div className="container mx-auto px-4">
         <Card className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <Title level={3}>Official Assessment</Title>
-            <Button type="default" onClick={() => setShowOfficialAssessment(false)}>
+            <Button
+              type="default"
+              onClick={() => {
+                setShowOfficialAssessment(false);
+              }}
+            >
               Back to Supervision Form
             </Button>
           </div>
-          
+
           <Descriptions bordered column={2}>
             <Descriptions.Item label="Role">{selectedRole}</Descriptions.Item>
-            <Descriptions.Item label="Time in Position">{watch('how_long_served_in_position')}</Descriptions.Item>
-            <Descriptions.Item label="County">{selectedCounty}</Descriptions.Item>
+            <Descriptions.Item label="Time in Position">
+              {watch('how_long_served_in_position')}
+            </Descriptions.Item>
+            <Descriptions.Item label="County">
+              {selectedCounty}
+            </Descriptions.Item>
             {hasSubCountyLevelRole && (
-              <Descriptions.Item label="Sub-County">{selectedSubCounty}</Descriptions.Item>
+              <Descriptions.Item label="Sub-County">
+                {selectedSubCounty}
+              </Descriptions.Item>
             )}
           </Descriptions>
         </Card>
@@ -434,20 +471,19 @@ const SupervisionTeam = (props) => {
     <Form layout="vertical" onFinish={handleFormFinish}>
       <Title level={3}>Supervision Team</Title>
 
-
       <FormItem
         required
         label="Number of members in the supervision team"
         control={control}
         name="number_in_supervision_team"
         rules={[
-          { 
+          {
             required: true,
             type: 'number',
             min: 3,
             max: 10,
-            message: 'Number of members should be between 3 and 10'
-          }
+            message: 'Number of members should be between 3 and 10',
+          },
         ]}
       >
         <InputNumber
@@ -554,7 +590,37 @@ const SupervisionTeam = (props) => {
           maxDate={dayjs()}
         />
       </FormItem>
-
+      <FormItem
+        required
+        label="Level of supervision"
+        control={control}
+        name="Levelofsupervision"
+        rules={[{ required: true, message: 'Please select respondent' }]}
+      >
+        <Select
+          size="large"
+          placeholder="Please select"
+          style={{ width: '100%' }}
+          onChange={(value) => {
+            // Update form state
+            form.setFieldsValue({
+              Levelofsupervision: value,
+              whoAreRespondents: [],
+            });
+            // Reset React Hook Form
+            reset({
+              ...getValues(),
+              Levelofsupervision: value,
+              whoAreRespondents: [],
+            });
+          }}
+          options={[
+            { value: 'county', label: 'County' },
+            { value: 'sub-county', label: 'Sub-County' },
+            { value: 'CHU', label: 'CHU' },
+          ]}
+        />
+</FormItem>
       <FormItem
         required
         label="Who are your respondents?"
@@ -574,17 +640,20 @@ const SupervisionTeam = (props) => {
             // Set appropriate assessment type
             if (value === 'CHA') {
               setShowCHAAssessment(true);
-            } else if (COUNTY_LEVEL_ROLES.includes(value) || SUBCOUNTY_LEVEL_ROLES.includes(value)) {
+            } else if (
+              COUNTY_LEVEL_ROLES.includes(value) ||
+              SUBCOUNTY_LEVEL_ROLES.includes(value)
+            ) {
               setShowOfficialAssessment(true);
             }
-            
+
             // Update form state
             form.setFieldsValue({
               whoAreRespondents: value ? [value] : [],
               county: undefined,
               subCounty: undefined,
               ward: undefined,
-              chu: undefined
+              chu: undefined,
             });
 
             // Clear all location states
@@ -603,27 +672,41 @@ const SupervisionTeam = (props) => {
               county: undefined,
               subCounty: undefined,
               ward: undefined,
-              chu: undefined
+              chu: undefined,
             });
           }}
           value={whoAreRespondents?.[0]}
-          options={[
-            { value: 'CEC', label: 'CEC' },
-            { value: 'COH', label: 'COH' },
-            { value: 'CDH', label: 'CDH' },
-            { value: 'CCHSFP', label: 'CCHSFP' },
-            { value: 'CDSC', label: 'CDSC' },
-            { value: 'CHRIO', label: 'CHRIO' },
-            { value: 'CPHCC', label: 'CPHCC' },
-            { value: 'CQIC', label: 'CQIC' },
-            { value: 'SCMOH', label: 'SCMOH' },
-            { value: 'SCCHSFP', label: 'SCCHSFP' },
-            { value: 'SCDSC', label: 'SCDSC' },
-            { value: 'SCHRIO', label: 'SCHRIO' },
-            { value: 'CHA', label: 'CHA' },
-            { value: 'CHC Member', label: 'CHC Member' },
-            { value: 'CHP', label: 'CHP' },
-          ]}
+          options={(() => {
+            const level = form.getFieldValue('Levelofsupervision');
+            switch (level) {
+              case 'county':
+                return [
+                  { value: 'CEC', label: 'CEC' },
+                  { value: 'COH', label: 'COH' },
+                  { value: 'CDH', label: 'CDH' },
+                  { value: 'CCHSFP', label: 'CCHSFP' },
+                  { value: 'CDSC', label: 'CDSC' },
+                  { value: 'CHRIO', label: 'CHRIO' },
+                  { value: 'CPHCC', label: 'CPHCC' },
+                  { value: 'CQIC', label: 'CQIC' },
+                ];
+              case 'sub-county':
+                return [
+                  { value: 'SCMOH', label: 'SCMOH' },
+                  { value: 'SCCHSFP', label: 'SCCHSFP' },
+                  { value: 'SCDSC', label: 'SCDSC' },
+                  { value: 'SCHRIO', label: 'SCHRIO' },
+                ];
+              case 'CHU':
+                return [
+                  { value: 'CHA', label: 'CHA' },
+                  { value: 'CHC Member', label: 'CHC Member' },
+                  { value: 'CHP', label: 'CHP' },
+                ];
+              default:
+                return [];
+            }
+          })()}
         />
       </FormItem>
 
@@ -673,7 +756,7 @@ const SupervisionTeam = (props) => {
                       county: value,
                       subCounty: undefined,
                       ward: undefined,
-                      chu: undefined
+                      chu: undefined,
                     });
                     setSelectedSubCounty('');
                     setSelectedWard('');
@@ -681,16 +764,19 @@ const SupervisionTeam = (props) => {
                     setSubCounties([]);
                     setWards([]);
                     setCHUs([]);
-                    
+
                     if (value) {
-                      getSubCounties(value).then(data => {
+                      getSubCounties(value).then((data) => {
                         if (hasSubCountyLevelRole || hasCHULevelRole) {
                           setSubCounties(data);
                         }
                       });
                     }
                   }}
-                  options={counties.map(county => ({ value: county, label: county }))}
+                  options={counties.map((county) => ({
+                    value: county,
+                    label: county,
+                  }))}
                 />
               </FormItem>
             </Col>
@@ -715,7 +801,7 @@ const SupervisionTeam = (props) => {
                       form.setFieldsValue({
                         subCounty: value,
                         ward: undefined,
-                        chu: undefined
+                        chu: undefined,
                       });
                       setSelectedWard('');
                       setSelectedCHU('');
@@ -723,12 +809,15 @@ const SupervisionTeam = (props) => {
                       setCHUs([]);
 
                       if (value && hasCHULevelRole) {
-                        getWards(selectedCounty, value).then(data => {
+                        getWards(selectedCounty, value).then((data) => {
                           setWards(data);
                         });
                       }
                     }}
-                    options={subCounties.map(sc => ({ value: sc, label: sc }))}
+                    options={subCounties.map((sc) => ({
+                      value: sc,
+                      label: sc,
+                    }))}
                     disabled={!selectedCounty}
                   />
                 </FormItem>
@@ -756,18 +845,23 @@ const SupervisionTeam = (props) => {
                       setSelectedWard(value);
                       form.setFieldsValue({
                         ward: value,
-                        chu: undefined
+                        chu: undefined,
                       });
                       setSelectedCHU('');
                       setCHUs([]);
 
                       if (value) {
-                        getCHUs(selectedCounty, selectedSubCounty, value).then(data => {
-                          setCHUs(data);
-                        });
+                        getCHUs(selectedCounty, selectedSubCounty, value).then(
+                          (data) => {
+                            setCHUs(data);
+                          }
+                        );
                       }
                     }}
-                    options={wards.map(ward => ({ value: ward, label: ward }))}
+                    options={wards.map((ward) => ({
+                      value: ward,
+                      label: ward,
+                    }))}
                     disabled={!selectedSubCounty}
                   />
                 </FormItem>
@@ -788,7 +882,7 @@ const SupervisionTeam = (props) => {
                     onChange={(value) => {
                       setSelectedCHU(value);
                       form.setFieldsValue({ chu: value });
-                      
+
                       // Redirect based on role when CHU is selected
                       if (value) {
                         const role = whoAreRespondents?.[0];
@@ -805,15 +899,13 @@ const SupervisionTeam = (props) => {
                         }
                       }
                     }}
-                    options={chus.map(chu => ({ value: chu, label: chu }))}
+                    options={chus.map((chu) => ({ value: chu, label: chu }))}
                     disabled={!selectedWard}
                   />
                 </FormItem>
               </Col>
             </Row>
           )}
-
-
         </>
       )}
     </Form>
