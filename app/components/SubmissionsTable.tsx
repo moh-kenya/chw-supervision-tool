@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { Table, Card, DatePicker, Select, Button, Row, Col, Statistic, Space } from 'antd';
 import type { TableProps } from 'antd';
 import { FilterOptions, SortOptions, listSupervisionData, getSubmissionStats } from '../lib/server/database';
-import { kenyaCounties, kenyaSubcounties, kenyaChus } from './utils/commonData';
 import { BarChartOutlined } from '@ant-design/icons';
 const { RangePicker } = DatePicker;
 
@@ -25,13 +24,27 @@ interface ParsedFormData {
 }
 
 export default function SubmissionsTable() {
+  // Location data states
+  const [counties, setCounties] = useState<Array<{ value: string; label: string }>>([]);
+  const [subCounties, setSubCounties] = useState<Array<{ value: string; label: string }>>([]);
+  const [wards, setWards] = useState<Array<{ value: string; label: string }>>([]);
+  const [chus, setCHUs] = useState<Array<{ value: string; label: string }>>([]);
+
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<SubmissionData[]>([]);
   const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [stats, setStats] = useState<any>(null);
-  const [filters, setFilters] = useState<FilterOptions>({});
+  const [filters, setFilters] = useState<FilterOptions>({
+    county: '',
+    subCounty: '',
+    ward: '',
+    chu: '',
+    status: '',
+    startDate: '',
+    endDate: ''
+  });
 
 
   // Sort configuration
@@ -80,6 +93,98 @@ export default function SubmissionsTable() {
       mounted.current = false;
     };
   }, []);
+
+  // Fetch counties on component mount
+  useEffect(() => {
+    const fetchCounties = async () => {
+      try {
+        const response = await fetch('/api/locations');
+        const data = await response.json();
+        if (data.counties) {
+          setCounties(data.counties.map((county: string) => ({
+            value: county,
+            label: county
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching counties:', error);
+      }
+    };
+    fetchCounties();
+  }, []);
+
+  // Fetch sub-counties when county changes
+  useEffect(() => {
+    const fetchSubCounties = async () => {
+      if (!filters.county) {
+        setSubCounties([]);
+        return;
+      }
+      try {
+        const response = await fetch(`/api/locations?county=${encodeURIComponent(filters.county)}`);
+        const data = await response.json();
+        if (data.subCounties) {
+          setSubCounties(data.subCounties.map((subCounty: string) => ({
+            value: subCounty,
+            label: subCounty
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching sub-counties:', error);
+      }
+    };
+    fetchSubCounties();
+  }, [filters.county]);
+
+  // Fetch wards when sub-county changes
+  useEffect(() => {
+    const fetchWards = async () => {
+      if (!filters.county || !filters.subCounty) {
+        setWards([]);
+        return;
+      }
+      try {
+        const response = await fetch(
+          `/api/locations?county=${encodeURIComponent(filters.county)}&subCounty=${encodeURIComponent(filters.subCounty)}`
+        );
+        const data = await response.json();
+        if (data.wards) {
+          setWards(data.wards.map((ward: string) => ({
+            value: ward,
+            label: ward
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching wards:', error);
+      }
+    };
+    fetchWards();
+  }, [filters.county, filters.subCounty]);
+
+  // Fetch CHUs when ward changes
+  useEffect(() => {
+    const fetchCHUs = async () => {
+      if (!filters.county || !filters.subCounty || !filters.ward) {
+        setCHUs([]);
+        return;
+      }
+      try {
+        const response = await fetch(
+          `/api/locations?county=${encodeURIComponent(filters.county)}&subCounty=${encodeURIComponent(filters.subCounty)}&ward=${encodeURIComponent(filters.ward)}`
+        );
+        const data = await response.json();
+        if (data.chus) {
+          setCHUs(data.chus.map((chu: string) => ({
+            value: chu,
+            label: chu
+          })));
+        }
+      } catch (error) {
+        console.error('Error fetching CHUs:', error);
+      }
+    };
+    fetchCHUs();
+  }, [filters.county, filters.subCounty, filters.ward]);
 
   // Fetch data when filters or pagination changes
   useEffect(() => {
@@ -281,7 +386,7 @@ export default function SubmissionsTable() {
               onChange={(value) => setFilters({ ...filters, county: value, subCounty: undefined, chu: undefined })}
               allowClear
             >
-              {kenyaCounties.map(county => (
+              {counties.map(county => (
                 <Select.Option key={county.value} value={county.value}>{county.label}</Select.Option>
               ))}
             </Select>
@@ -293,12 +398,9 @@ export default function SubmissionsTable() {
               onChange={(value) => setFilters({ ...filters, subCounty: value, chu: undefined })}
               allowClear
             >
-              {filters.county && kenyaSubcounties[filters.county] ? 
-                kenyaSubcounties[filters.county].map(subCounty => (
-                  <Select.Option key={subCounty.value} value={subCounty.value}>{subCounty.label}</Select.Option>
-                )) : 
-                <Select.Option disabled>Select a county first</Select.Option>
-              }
+              {subCounties.map(subCounty => (
+                <Select.Option key={subCounty.value} value={subCounty.value}>{subCounty.label}</Select.Option>
+              ))}
             </Select>
           </Col>
           <Col>
@@ -308,12 +410,9 @@ export default function SubmissionsTable() {
               onChange={(value) => setFilters({ ...filters, chu: value })}
               allowClear
             >
-              {filters.county && filters.subCounty && kenyaChus[filters.county]?.[filters.subCounty] ? 
-                kenyaChus[filters.county][filters.subCounty].map(chu => (
-                  <Select.Option key={chu.value} value={chu.value}>{chu.label}</Select.Option>
-                )) : 
-                <Select.Option disabled>Select a county and sub-county first</Select.Option>
-              }
+              {chus.map(chu => (
+                <Select.Option key={chu.value} value={chu.value}>{chu.label}</Select.Option>
+              ))}
             </Select>
           </Col>
           <Col>

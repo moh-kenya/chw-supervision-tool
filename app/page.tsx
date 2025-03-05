@@ -30,7 +30,7 @@ export default function Home(): ReactElement {
         <div className={styles.content}>
           <h1 className={styles.title}>
             Ministry of Health Kenya
-            <span className={styles.highlight}>Integrated Supervision Tool</span>
+            <span className={styles.highlight}>CHS Integrated Supervision Tool</span>
           </h1>
           <p className={styles.description}>
             Empowering community health workers through effective supervision and support

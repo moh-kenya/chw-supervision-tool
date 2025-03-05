@@ -72,6 +72,7 @@ const ReviewAndSubmit = (props) => {
   };
 
   const handleSubmit = async () => {
+    console.log('Starting form submission...');
     try {
       // Check if we have the required data
       if (!store?.globalState) {
@@ -95,15 +96,21 @@ const ReviewAndSubmit = (props) => {
       
       const formData = {
         ...store.globalState,
-        
         locationDetails: {
           county: store.globalState.superVisionTeam?.county || '',
           subCounty: store.globalState.superVisionTeam?.subCounty || '',
-          chu: store.globalState.superVisionTeam?.chu || ''
+          chu: store.globalState.superVisionTeam?.chu || '',
+          ward: store.globalState.superVisionTeam?.ward || ''
         },
         status: 'completed',
-        submittedAt: new Date().toISOString()
+        submittedAt: new Date().toISOString(),
+        supervisionTeam: {
+          ...store.globalState.superVisionTeam,
+          userId: 'anonymous' // You can replace this with actual user ID if available
+        }
       };
+      
+      console.log('Prepared form data:', formData);
       
       console.log('Submitting form data:', formData);
       

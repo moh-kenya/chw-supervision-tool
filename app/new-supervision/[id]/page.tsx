@@ -73,49 +73,44 @@ const Home = ({ params }: { params: any }) => {
     }
   };
 
-  const prev = () => {setCurrent(current + 1);
+  const prev = () => {
     setCurrent(current - 1);
   };
   const onChange = (value: number) => {
     setCurrent(value);
   };
   const submitDataToDB = async () => {
-    if (store?.globalState[id]) {
-      try {
-        // Prepare the data for submission
-        const dataToSubmit = {
-          ...store.globalState[id],
-          updatedDate: new Date().toISOString(),
-          status: 'Submitted'
-        };
+    if (!store?.globalState[id]) {
+      message.error('No data to submit');
+      return;
+    }
 
-        const response = await fetch('/api/auth/db', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            databaseId: process.env.NEXT_PUBLIC_DATABASE_ID,
-            collectionId: process.env.NEXT_PUBLIC_COLLECTION_ID,
-            data: dataToSubmit,
-            id,
-          }),
-        });
+    try {
+      // Prepare the data for submission
+      const dataToSubmit = {
+        ...store.globalState[id],
+        updatedDate: new Date().toISOString(),
+        status: 'Submitted'
+      };
 
-        const result = await response.json();
-        if (response.ok) {
-          await message.success('Successfully submitted data!');
-          router.push('/dashboard');
-        } else {
-          await message.error(`Error: ${result.error}`);
-        }
-      } catch (error) {
-        await message.error('Something went wrong with the submission. Please try again.');
+      // TODO: Replace with your actual API endpoint
+      const response = await fetch('/api/supervision', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSubmit)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        message.success('Successfully submitted data!');
+        router.push('/dashboard');
+      } else {
+        message.error(`Error: ${result.error}`);
       }
-    } else {
-      await message.error(
-        'No data to submit. Please fill in the form and try again!'
-      );
+    } catch (error) {
+      message.error('Something went wrong with the submission. Please try again.');
     }
   };
   useEffect(() => {
@@ -200,6 +195,4 @@ const Home = ({ params }: { params: any }) => {
     </>
   );
 };
-export const runtime = 'edge';
-
 export default Home;

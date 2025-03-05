@@ -11,19 +11,10 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { Client, Account } from 'appwrite';
+import { signOut } from 'next-auth/react';
 import { Logo } from './Logo';
-import environments from '../utils/environments';
 
 const { Header } = Layout;
-const { APP_ENDPOINT, APP_PROJECT } = environments;
-
-// Initialize Appwrite
-const client = new Client()
-  .setEndpoint(APP_ENDPOINT)
-  .setProject(APP_PROJECT);
-
-const account = new Account(client);
 
 const NavBar = ({ setNotifs, id }: any) => {
   const router = useRouter();
@@ -32,15 +23,15 @@ const NavBar = ({ setNotifs, id }: any) => {
 
   const handleLogout = async () => {
     try {
-      // Delete the current session
-      await account.deleteSession('current');
-
       setNotifs({
         type: 'success',
         title: 'Success',
         message: 'You are being logged out momentarily!',
         toggle: true,
       });
+
+      // Sign out using NextAuth
+      await signOut({ redirect: false });
 
       // Add a small delay before redirect to show the success message
       setTimeout(() => {
@@ -125,6 +116,7 @@ const NavBar = ({ setNotifs, id }: any) => {
         router.push(`/new-supervision/${id || uuidv4()}`);
         break;
       default:
+        break;
     }
   };
   return (

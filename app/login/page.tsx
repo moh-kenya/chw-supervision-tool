@@ -1,34 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Form, Input, Typography, Image, Spin } from 'antd';
-import { MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { Button, Form, Input, Typography, Image } from 'antd';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
-import { FormItem } from 'react-hook-form-antd';
-import { Client, Account, ID } from 'appwrite';
+import { signIn } from 'next-auth/react';
 import { CoatOfArms } from '../components/Logo';
 import Notifications from '../components/utils/Notifications';
-import environments from '../utils/environments';
 
 const { Title, Text } = Typography;
-const { APP_ENDPOINT, APP_PROJECT } = environments;
-
-// Initialize Appwrite client and account service
-const client = new Client();
-
-// Set the endpoint and project ID
-client
-  .setEndpoint(APP_ENDPOINT)
-  .setProject(APP_PROJECT);
-
-// Create an account instance
-const account = new Account(client);
-
-interface FormValues {
-  emailOrPhone: string;
-  password: string;
-}
 
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 export interface NotifsTypes {
@@ -40,7 +20,6 @@ export interface NotifsTypes {
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit } = useForm<FormValues>();
   const router = useRouter();
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -49,74 +28,46 @@ export default function LoginPage() {
     toggle: false,
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (values) => {
+  const onFinish = async (values: { email: string; password: string }) => {
     try {
       setLoading(true);
-      console.log('Attempting login with:', values.emailOrPhone);
+      console.log('Attempting login with:', values.email);
 
-      // First, check if there's an existing session
-      try {
-        const currentSession = await account.getSession('current');
-        if (currentSession) {
-          // If the session exists and it's valid, just redirect to dashboard
-          console.log('Existing valid session found');
-          router.push('/dashboard');
-          return;
-        }
-      } catch (e) {
-        // No existing session or session is invalid, proceed with login
-        console.log('No valid session found, proceeding with login');
+      const result = await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setNotifs({
+          type: 'error',
+          title: 'Login Failed',
+          message: result.error,
+          toggle: true,
+        });
+        return;
       }
 
-      // Create email session using Appwrite
-      const session = await account.createEmailPasswordSession(
-        values.emailOrPhone,
-        values.password
-      );
-
-      // Verify the session was created successfully
-      if (!session?.$id) {
-        throw new Error('Failed to create session');
-      }
-
-      // Get the user details
-      const user = await account.get();
-      
-      if (!user?.$id) {
-        throw new Error('Failed to get user details');
-      }
-
-      console.log('Login successful:', { session, user });
-
+      // Show success message
       setNotifs({
         type: 'success',
-        title: 'Welcome back!',
-        message: 'Login successful. Redirecting to dashboard...',
+        title: 'Welcome back! 👋',
+        message: `Successfully logged in as ${values.email}`,
         toggle: true,
       });
-      
-      // Add a small delay before redirect to show the success message
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1500);
+
+      // Wait for notification to show
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
     } catch (error: any) {
       console.error('Login error:', error);
-      
-      let errorMessage = 'Invalid credentials. Please try again.';
-      
-      // Handle specific Appwrite error codes
-      if (error?.code === 401) {
-        errorMessage = 'Invalid email or password';
-      } else if (error?.code === 429) {
-        errorMessage = 'Too many login attempts. Please try again later.';
-      } else if (error?.message) {
-        errorMessage = error.message;
-      }
-      
       setNotifs({
         type: 'error',
         title: 'Login Failed',
-        message: errorMessage,
+        message: error.message || 'An error occurred during login. Please try again.',
         toggle: true,
       });
     } finally {
@@ -137,60 +88,45 @@ export default function LoginPage() {
             preview={false}
           />
           <Title level={3}>CHS Integrated Supervision Tool Login</Title>
-
-          <Text>Hey, Enter your details to get signed in to your account</Text>
+          <Text>Enter your credentials to access the system</Text>
+          
           <Form
             name="login"
             style={styles.form}
-            onFinish={handleSubmit(onSubmit)}
+            onFinish={onFinish}
+            layout="vertical"
           >
-            <FormItem
-              name="emailOrPhone"
-              control={control}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter your email or phone!',
-                },
-              ]}
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: 'Please enter your email!' }]}
             >
               <Input
                 prefix={<MailOutlined />}
                 size="large"
                 placeholder="Enter Email"
               />
-            </FormItem>
+            </Form.Item>
 
-            <FormItem
+            <Form.Item
               name="password"
-              control={control}
-              rules={[
-                { required: true, message: 'Please input your password!' },
-              ]}
+              rules={[{ required: true, message: 'Please enter your password!' }]}
             >
               <Input.Password
                 size="large"
                 prefix={<LockOutlined />}
                 placeholder="Password"
               />
-            </FormItem>
+            </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 block
+                loading={loading}
                 style={styles.signInButton}
               >
-                {loading ? (
-                  <Spin
-                    indicator={
-                      <LoadingOutlined spin style={{ color: '#fff' }} />
-                    }
-                    size="small"
-                  />
-                ) : (
-                  <>Sign In</>
-                )}
+                {loading ? 'Signing in...' : 'Sign In'}
               </Button>
             </Form.Item>
           </Form>
@@ -202,37 +138,26 @@ export default function LoginPage() {
 
 const styles = {
   container: {
-    height: '100vh',
+    minHeight: '100vh',
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F6F5FA',
-    padding: '20px',
-  },
-  header: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
+    justifyContent: 'center',
+    background: '#f0f2f5',
   },
   formContainer: {
-    backgroundColor: '#fff',
-    padding: '40px',
-    borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    maxWidth: '400px',
+    padding: '2rem',
+    background: '#fff',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     width: '100%',
-    textAlign: 'center',
+    maxWidth: '400px',
+    textAlign: 'center' as const,
   },
   form: {
-    marginTop: '20px',
+    marginTop: '2rem',
   },
   signInButton: {
-    backgroundColor: '#433878',
-  },
-  orSignInWith: {
-    marginTop: '20px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: '1rem',
+    height: '40px',
   },
 };

@@ -7,17 +7,23 @@ type NotificationPlacement = NotificationArgsProps['placement'];
 
 const Notifications = (props: NotifsTypes) => {
   const { type, title, message, toggle } = props;
-  const placement: NotificationPlacement = 'topRight';
   const [api, contextHolder] = notification.useNotification();
+
   useEffect(() => {
     if (toggle) {
       api[type]({
-        message: `${title}`,
-        description: `${message}`,
-        placement,
+        message: title,
+        description: message,
+        placement: 'top',
+        duration: 3,
+        style: {
+          position: 'relative', // Change from fixed to relative
+          zIndex: 1000
+        }
       });
     }
   }, [api, message, title, toggle, type]);
+
   return contextHolder;
 };
 

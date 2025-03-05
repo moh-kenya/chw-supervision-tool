@@ -1,15 +1,72 @@
-import { Client, Databases, ID, Query } from 'appwrite';
-import environments from '../../utils/environments';
-
-const { APP_ENDPOINT, APP_PROJECT, DATABASE_ID, COLLECTION_ID } = environments;
-
-// Initialize Appwrite
-const client = new Client()
-  .setEndpoint(APP_ENDPOINT)
-  .setProject(APP_PROJECT);
-
-// Initialize the databases service
-const databases = new Databases(client);
+// Mock supervision records stored in memory
+let mockSupervisionData = [
+  {
+    id: '1',
+    status: 'completed',
+    submittedAt: '2024-03-01T10:00:00Z',
+    userId: 'admin',
+    formData: JSON.stringify({
+      locationDetails: {
+        county: 'Nairobi',
+        subCounty: 'Westlands',
+        ward: 'Parklands',
+        chu: 'CHU-001'
+      },
+      supervisionTeam: {
+        userId: 'admin',
+        name: 'MOH Admin'
+      },
+      scores: {
+        leadership: 8,
+        workforce: 7,
+        infrastructure: 9,
+        monitoring: 8,
+        commodities: 7,
+        transport: 6,
+        referral: 8,
+        finance: 7,
+        partnership: 8,
+        serviceDelivery: 9,
+        pandemicPreparedness: 8
+      },
+      submissionDate: '2024-03-01T10:00:00Z',
+      submittedBy: 'admin'
+    })
+  },
+  {
+    id: '2',
+    status: 'completed',
+    submittedAt: '2024-03-02T15:30:00Z',
+    userId: 'supervisor',
+    formData: JSON.stringify({
+      locationDetails: {
+        county: 'Mombasa',
+        subCounty: 'Nyali',
+        ward: 'Frere Town',
+        chu: 'CHU-002'
+      },
+      supervisionTeam: {
+        userId: 'supervisor',
+        name: 'MOH Supervisor'
+      },
+      scores: {
+        leadership: 7,
+        workforce: 8,
+        infrastructure: 6,
+        monitoring: 7,
+        commodities: 8,
+        transport: 7,
+        referral: 9,
+        finance: 8,
+        partnership: 7,
+        serviceDelivery: 8,
+        pandemicPreparedness: 7
+      },
+      submissionDate: '2024-03-02T15:30:00Z',
+      submittedBy: 'supervisor'
+    })
+  }
+];
 
 // Types for filtering and sorting
 export interface FilterOptions {
@@ -29,41 +86,11 @@ export interface SortOptions {
 // Function to fetch all supervision data with filtering and sorting
 export const listSupervisionData = async (filters?: FilterOptions, sort?: SortOptions, page?: number, limit?: number) => {
   try {
-    let query: string[] = [];
-
-    // Add pagination if specified
-    if (page !== undefined && limit !== undefined) {
-      const offset = (page - 1) * limit;
-      query.push(Query.limit(limit));
-      query.push(Query.offset(offset));
-    } else {
-      // If no pagination, get all records (max 1000)
-      query.push(Query.limit(1000));
-    }
-
-    // Add filters if provided
-    if (filters) {
-      if (filters.startDate && filters.endDate) {
-        query.push(Query.greaterThanEqual('$createdAt', filters.startDate));
-        query.push(Query.lessThanEqual('$createdAt', filters.endDate));
-      }
-      if (filters.status) {
-        query.push(Query.equal('status', filters.status));
-      }
-    }
-
-    // Add sorting
-    query.push(Query.orderDesc('$createdAt')); // Always sort by creation date desc
-
-    const response = await databases.listDocuments(
-      DATABASE_ID,
-      COLLECTION_ID,
-      query
-    );
-
+    // For now, return mock data
+    // In the future, this would be replaced with actual database queries
     return {
-      documents: response.documents,
-      total: response.total
+      documents: mockSupervisionData,
+      total: mockSupervisionData.length
     };
   } catch (error: any) {
     console.error('Error fetching supervision data:', error);
@@ -74,19 +101,11 @@ export const listSupervisionData = async (filters?: FilterOptions, sort?: SortOp
 // Function to get submission statistics
 export const getSubmissionStats = async () => {
   try {
-    // Get only the latest 100 documents for stats
-    const response = await databases.listDocuments(
-      DATABASE_ID,
-      COLLECTION_ID,
-      [Query.limit(100), Query.orderDesc('$createdAt')]
-    );
-    const documents = response.documents;
-
-    // Calculate stats from the documents
+    // Calculate stats from mock data
     const countyStats = new Map();
     const statusStats = new Map();
 
-    documents.forEach(doc => {
+    mockSupervisionData.forEach(doc => {
       try {
         const formData = JSON.parse(doc.formData);
         const county = formData.locationDetails?.county;
@@ -115,7 +134,7 @@ export const getSubmissionStats = async () => {
     }));
 
     return {
-      totalSubmissions: documents.length,
+      totalSubmissions: mockSupervisionData.length,
       submissionsByCounty,
       submissionsByStatus
     };
@@ -125,62 +144,67 @@ export const getSubmissionStats = async () => {
   }
 };
 
+// Function to create new supervision data
 export const createSupervisionData = async (data: any) => {
-
   try {
-
-    // Debug the incoming data
-    console.log('Creating supervision data with:', data);
+    const now = new Date().toISOString();
+    const userId = data.supervisionTeam?.userId || 'anonymous';
     
-    // Prepare the data according to the schema
-    // Only include fields that are defined in the Appwrite collection schema
-
-    const documentData = {
-      status: data.status || 'completed',
-      formData: JSON.stringify(data), // Store all form data as JSON string
-      submittedAt: new Date().toISOString(), // Required field
-      userId: data.supervisionTeam?.userId || 'anonymous' // Required field
+    const newDocument = {
+      id: String(mockSupervisionData.length + 1),
+      status: 'completed',
+      submittedAt: now,
+      userId: userId,
+      formData: JSON.stringify({
+        locationDetails: {
+          county: data.locationDetails?.county || '',
+          subCounty: data.locationDetails?.subCounty || '',
+          ward: data.locationDetails?.ward || '',
+          chu: data.locationDetails?.chu || ''
+        },
+        supervisionTeam: {
+          userId: userId,
+          name: data.supervisionTeam?.name || 'Unknown'
+        },
+        scores: {
+          leadership: data.leadership || 0,
+          workforce: data.workforce || 0,
+          infrastructure: data.infrastructure || 0,
+          monitoring: data.monitoring || 0,
+          commodities: data.commodities || 0,
+          transport: data.transport || 0,
+          referral: data.referral || 0,
+          finance: data.finance || 0,
+          partnership: data.partnership || 0,
+          serviceDelivery: data.serviceDelivery || 0,
+          pandemicPreparedness: data.pandemicPreparedness || 0
+        },
+        submissionDate: now,
+        submittedBy: userId,
+        comments: data.comments || {}
+      })
     };
 
-    const documentId = ID.unique();
+    // In a real implementation, this would save to a database
+    mockSupervisionData.push(newDocument);
     
-    const response = await databases.createDocument(
-      DATABASE_ID,
-      COLLECTION_ID,
-      documentId,
-      documentData
-    );
-    
-
-    return response;
+    return newDocument;
   } catch (error: any) {
     console.error('Error creating supervision data:', error);
-    
-    // Handle specific Appwrite errors
-    if (error?.code === 401) {
-      throw new Error('You must be logged in to submit the form');
-    } else if (error?.code === 403) {
-      throw new Error('You do not have permission to submit forms. Please contact your administrator.');
-    } else if (error?.message) {
-      throw new Error(error.message);
-    } else {
-      throw new Error('Failed to submit form. Please try again.');
-    }
+    throw new Error(error.message || 'Failed to create supervision data');
   }
 };
 
+// Function to get supervision by ID
 export const getSupervisionById = async (documentId: string) => {
   try {
-    const response = await databases.getDocument(
-      DATABASE_ID,
-      COLLECTION_ID,
-      documentId
-    );
-    return response;
-  } catch (error) {
-    console.error('Error getting supervision data:', error);
-    throw error;
+    const document = mockSupervisionData.find(doc => doc.id === documentId);
+    if (!document) {
+      throw new Error('Document not found');
+    }
+    return document;
+  } catch (error: any) {
+    console.error('Error fetching supervision by ID:', error);
+    throw new Error(error.message || 'Failed to fetch supervision data');
   }
 };
-
-

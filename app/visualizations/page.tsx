@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Card, Row, Col, Spin, Button, Empty, Statistic, Tabs } from 'antd';
+import { Card, Row, Col, Spin, Button, Empty, Statistic, Tabs, Typography } from 'antd';
+import { DataImport } from '../components/DataImport';
 import { ArrowLeftOutlined, RiseOutlined, FallOutlined } from '@ant-design/icons';
 import { listSupervisionData, getSubmissionStats } from '../lib/server/database';
 import { Bar, Pie, Line } from '@ant-design/plots';
