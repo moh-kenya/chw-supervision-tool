@@ -28,6 +28,7 @@ import WorkplanPolicies from './WorkplanPolicies';
 import ServiceDelivery from './ServiceDelivery';
 import PandemicPreparedness from './PandemicPreparedness';
 import CHAAssessment from './CHAAssessment';
+import CHPAssessment from './CHPAssessment';
 
 const { Title } = Typography;
 
@@ -50,6 +51,7 @@ const SupervisionTeam = (props) => {
   const store = useContext(AppContext);
   const [form] = Form.useForm();
   const [showCHAAssessment, setShowCHAAssessment] = useState(false);
+  const [showCHPAssessment, setShowCHPAssessment] = useState(false);
   const [showOfficialAssessment, setShowOfficialAssessment] = useState(false);
   const { control, watch, getValues, reset, handleSubmit } = useForm({
     defaultValues: {
@@ -404,6 +406,23 @@ const SupervisionTeam = (props) => {
   };
 
   // Show CHA Assessment if CHA is selected and all required fields are filled
+  if (showCHPAssessment && selectedCHU) {
+    return (
+      <CHPAssessment
+        initialData={{
+          timeInPosition: watch('how_long_served_in_position'),
+          county: selectedCounty,
+          subCounty: selectedSubCounty,
+          ward: selectedWard,
+          chu: selectedCHU,
+        }}
+        onBack={() => {
+          setShowCHPAssessment(false);
+        }}
+      />
+    );
+  }
+
   if (showCHAAssessment && selectedCHU) {
     return (
       <CHAAssessment
@@ -635,11 +654,14 @@ const SupervisionTeam = (props) => {
           onChange={(value) => {
             // Reset assessment states
             setShowCHAAssessment(false);
+            setShowCHPAssessment(false);
             setShowOfficialAssessment(false);
 
             // Set appropriate assessment type
             if (value === 'CHA') {
               setShowCHAAssessment(true);
+            } else if (value === 'CHP') {
+              setShowCHPAssessment(true);
             } else if (
               COUNTY_LEVEL_ROLES.includes(value) ||
               SUBCOUNTY_LEVEL_ROLES.includes(value)
