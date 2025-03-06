@@ -1,20 +1,15 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, Form, Input, Typography, Image, Spin } from 'antd';
-import { MailOutlined, LockOutlined, LoadingOutlined } from '@ant-design/icons';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { Button, Form, Input, Typography, Image } from 'antd';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
-import { FormItem } from 'react-hook-form-antd';
+import { signIn } from 'next-auth/react';
 import { CoatOfArms } from '../components/Logo';
 import Notifications from '../components/utils/Notifications';
 
 const { Title, Text } = Typography;
 
-interface FormValues {
-  emailOrPhone: string;
-  password: string;
-}
 type NotificationType = 'success' | 'info' | 'warning' | 'error';
 export interface NotifsTypes {
   type: NotificationType;
@@ -25,7 +20,6 @@ export interface NotifsTypes {
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
-  const { control, handleSubmit } = useForm();
   const router = useRouter();
   const [notifs, setNotifs] = useState<NotifsTypes>({
     type: 'success',
@@ -34,48 +28,49 @@ export default function LoginPage() {
     toggle: false,
   });
 
-  const onSubmit: SubmitHandler<FormValues> = async (values) => {
+  const onFinish = async (values: { email: string; password: string }) => {
     try {
       setLoading(true);
+      console.log('Attempting login with:', values.email);
 
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          emailOrPhone: values.emailOrPhone,
-          password: values.password,
-        }),
+      const result = await signIn('credentials', {
+        email: values.email,
+        password: values.password,
+        redirect: false,
       });
 
-      const data = await response.json();
-
-      if (response.status === 200) {
-        setNotifs({
-          type: 'success',
-          title: 'Success',
-          message: 'You are being logged in momentarily!',
-          toggle: true,
-        });
-        router.push('/dashboard');
-      } else {
+      if (result?.error) {
         setNotifs({
           type: 'error',
           title: 'Login Failed',
-          message: data.message || 'An error occurred during login.',
+          message: result.error,
           toggle: true,
         });
-        setLoading(false);
+        return;
       }
-    } catch (error) {
-      console.error(error);
+
+      // Show success message
       setNotifs({
-        type: 'error',
-        title: 'An unexpected error occurred',
-        message: 'Please try again later',
+        type: 'success',
+        title: 'Welcome back! 👋',
+        message: `Successfully logged in as ${values.email}`,
         toggle: true,
       });
+
+      // Wait for notification to show
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
+    } catch (error: any) {
+      console.error('Login error:', error);
+      setNotifs({
+        type: 'error',
+        title: 'Login Failed',
+        message: error.message || 'An error occurred during login. Please try again.',
+        toggle: true,
+      });
+    } finally {
       setLoading(false);
     }
   };
@@ -93,60 +88,45 @@ export default function LoginPage() {
             preview={false}
           />
           <Title level={3}>CHS Integrated Supervision Tool Login</Title>
-
-          <Text>Hey, Enter your details to get signed in to your account</Text>
+          <Text>Enter your credentials to access the system</Text>
+          
           <Form
             name="login"
             style={styles.form}
-            onFinish={handleSubmit(onSubmit)}
+            onFinish={onFinish}
+            layout="vertical"
           >
-            <FormItem
-              name="emailOrPhone"
-              control={control}
-              rules={[
-                {
-                  required: true,
-                  message: 'Please enter your email or phone!',
-                },
-              ]}
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: 'Please enter your email!' }]}
             >
               <Input
                 prefix={<MailOutlined />}
                 size="large"
                 placeholder="Enter Email"
               />
-            </FormItem>
+            </Form.Item>
 
-            <FormItem
+            <Form.Item
               name="password"
-              control={control}
-              rules={[
-                { required: true, message: 'Please input your password!' },
-              ]}
+              rules={[{ required: true, message: 'Please enter your password!' }]}
             >
               <Input.Password
                 size="large"
                 prefix={<LockOutlined />}
                 placeholder="Password"
               />
-            </FormItem>
+            </Form.Item>
+
             <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
                 block
+                loading={loading}
                 style={styles.signInButton}
               >
-                {loading ? (
-                  <Spin
-                    indicator={
-                      <LoadingOutlined spin style={{ color: '#fff' }} />
-                    }
-                    size="small"
-                  />
-                ) : (
-                  <>Sign In</>
-                )}
+                {loading ? 'Signing in...' : 'Sign In'}
               </Button>
             </Form.Item>
           </Form>
@@ -155,39 +135,29 @@ export default function LoginPage() {
     </>
   );
 }
+
 const styles = {
   container: {
-    height: '100vh',
+    minHeight: '100vh',
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F6F5FA',
-    padding: '20px',
-  },
-  header: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
+    justifyContent: 'center',
+    background: '#f0f2f5',
   },
   formContainer: {
-    backgroundColor: '#fff',
-    padding: '40px',
-    borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    maxWidth: '400px',
+    padding: '2rem',
+    background: '#fff',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     width: '100%',
-    textAlign: 'center',
+    maxWidth: '400px',
+    textAlign: 'center' as const,
   },
   form: {
-    marginTop: '20px',
+    marginTop: '2rem',
   },
   signInButton: {
-    backgroundColor: '#433878',
-  },
-  orSignInWith: {
-    marginTop: '20px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: '1rem',
+    height: '40px',
   },
 };

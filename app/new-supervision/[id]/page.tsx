@@ -22,8 +22,55 @@ const Home = ({ params }: { params: any }) => {
   const store = useContext(AppContext);
   const modules = store?.modules ?? [];
 
-  const next = () => {
-    setCurrent(current + 1);
+  const next = async () => {
+    try {
+      const currentModule = modules[current];
+      if (!currentModule) {
+        message.error('Module not found');
+        return;
+      }
+
+      const currentState = store?.globalState;
+      let isValid = true;
+      let errorMessage = '';
+
+      // Validate based on current module
+      switch (currentModule.title) {
+        case 'Supervision Team':
+          const supervisionData = currentState?.superVisionTeam;
+          if (!supervisionData?.number_in_supervision_team) {
+            isValid = false;
+            errorMessage = 'Please fill in the number of supervision team members';
+          }
+          break;
+
+        case 'CHU Functionality':
+          const chuData = currentState?.chuFunctionality;
+          if (!chuData?.expected_no_of_chus || !chuData?.no_established_chus) {
+            isValid = false;
+            errorMessage = 'Please fill in all required CHU fields';
+          }
+          break;
+
+        // Add cases for other modules as needed
+      }
+
+      if (!isValid) {
+        message.error(errorMessage);
+        return;
+      }
+
+      // If validation passes, proceed to next page
+      if (current < modules.length - 1) {
+        setCurrent(current + 1);
+        message.success('Page validated successfully');
+      } else {
+        message.success('All pages completed!');
+      }
+    } catch (error) {
+      message.error('Please ensure all required fields are filled correctly');
+      console.error('Validation error:', error);
+    }
   };
 
   const prev = () => {
@@ -33,35 +80,37 @@ const Home = ({ params }: { params: any }) => {
     setCurrent(value);
   };
   const submitDataToDB = async () => {
-    if (store?.globalState[id]) {
-      try {
-        const response = await fetch('/api/auth/db', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            databaseId: process.env.NEXT_PUBLIC_DATABASE_ID,
-            collectionId: process.env.NEXT_PUBLIC_COLLECTION_ID,
-            data: store?.globalState[id],
-            id,
-          }),
-        });
+    if (!store?.globalState[id]) {
+      message.error('No data to submit');
+      return;
+    }
 
-        const result = await response.json();
-        if (response.ok) {
-          await message.success('Successfully submitted data!');
-          router.push('/dashboard');
-        } else {
-          await message.error(`Error: ${result.error}`);
-        }
-      } catch (error) {
-        await message.error('Something went wrong!');
+    try {
+      // Prepare the data for submission
+      const dataToSubmit = {
+        ...store.globalState[id],
+        updatedDate: new Date().toISOString(),
+        status: 'Submitted'
+      };
+
+      // TODO: Replace with your actual API endpoint
+      const response = await fetch('/api/supervision', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSubmit)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        message.success('Successfully submitted data!');
+        router.push('/dashboard');
+      } else {
+        message.error(`Error: ${result.error}`);
       }
-    } else {
-      await message.error(
-        'No data to submit. Please fill in the form and try again!'
-      );
+    } catch (error) {
+      message.error('Something went wrong with the submission. Please try again.');
     }
   };
   useEffect(() => {
@@ -146,6 +195,4 @@ const Home = ({ params }: { params: any }) => {
     </>
   );
 };
-export const runtime = 'edge';
-
 export default Home;

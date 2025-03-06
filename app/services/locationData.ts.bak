@@ -1,0 +1,215 @@
+'use client';
+
+import { Query } from 'appwrite';
+import { DATABASE_ID, COLLECTION_ID } from '../config';
+import { databases, ensureSession } from './appwriteDb';  // Import shared services
+
+// Interface for hierarchical data
+interface LocationHierarchy {
+  counties: {
+    [county: string]: {
+      subCounties: {
+        [subCounty: string]: {
+          wards: {
+            [ward: string]: {
+              chus: string[];
+            };
+          };
+        };
+      };
+    };
+  };
+}
+
+let cachedHierarchy: LocationHierarchy | null = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+export const getLocationHierarchy = async (): Promise<LocationHierarchy> => {
+  const hierarchy: LocationHierarchy = { counties: {} };
+  try {
+    // Validate configuration
+    if (!DATABASE_ID || !COLLECTION_ID) {
+      throw new Error(`Invalid configuration: DATABASE_ID=${DATABASE_ID}, COLLECTION_ID=${COLLECTION_ID}`);
+    }
+    console.log('Starting getLocationHierarchy...');
+    
+    // Ensure we have a valid session
+    await ensureSession();
+    console.log('Session ensured');
+    
+    // Check cache first
+    const now = Date.now();
+    if (cachedHierarchy && (now - lastFetchTime) < CACHE_DURATION) {
+      console.log('Using cached hierarchy data');
+      return cachedHierarchy;
+    }
+
+    console.log('Fetching fresh location hierarchy...');
+    console.log('Configuration:', {
+      DATABASE_ID,
+      COLLECTION_ID,
+      endpoint: process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT,
+      projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID
+    });
+
+    let offset = 0;
+    const limit = 100; // Process in smaller chunks
+    let hasMore = true;
+    let totalProcessed = 0;
+
+    while (hasMore) {
+      try {
+        console.log(`Fetching records from offset ${offset}`);
+        const response = await databases.listDocuments(
+          DATABASE_ID,
+          COLLECTION_ID,
+          [
+            Query.limit(limit),
+            Query.offset(offset)
+          ]
+        );
+
+        if (!response || !response.documents) {
+          console.error('Invalid response structure:', response);
+          throw new Error('Invalid response from Appwrite');
+        }
+
+        console.log(`Received ${response.documents.length} documents`);
+        
+        if (response.documents.length === 0) {
+          console.log('No more documents to process');
+          hasMore = false;
+          break;
+        }
+
+        // Log the first document as a sample
+        if (offset === 0) {
+          console.log('Sample document:', JSON.stringify(response.documents[0], null, 2));
+        }
+
+        // Process each record to build the hierarchy
+        response.documents.forEach((doc: any) => {
+          totalProcessed++;
+          
+          // Log raw document
+          console.log('Raw document:', doc);
+          
+          // Extract and clean fields
+          const county = doc.county?.toString().trim();
+          const subCounty = doc.sub_county?.toString().trim();
+          const ward = doc.ward?.toString().trim();
+          const chu = doc.chu?.toString().trim();
+
+          console.log('Processed fields:', { county, subCounty, ward, chu });
+
+          if (!county || !subCounty || !ward || !chu) {
+            console.log('Skipping incomplete record:', { county, subCounty, ward, chu });
+            return;
+          }
+
+          // Build county level
+          if (!hierarchy.counties[county]) {
+            hierarchy.counties[county] = { subCounties: {} };
+          }
+
+          // Build sub-county level
+          if (!hierarchy.counties[county].subCounties[subCounty]) {
+            hierarchy.counties[county].subCounties[subCounty] = { wards: {} };
+          }
+
+          // Build ward level
+          if (!hierarchy.counties[county].subCounties[subCounty].wards[ward]) {
+            hierarchy.counties[county].subCounties[subCounty].wards[ward] = { chus: [] };
+          }
+
+          // Add CHU if not already present
+          if (!hierarchy.counties[county].subCounties[subCounty].wards[ward].chus.includes(chu)) {
+            hierarchy.counties[county].subCounties[subCounty].wards[ward].chus.push(chu);
+          }
+        });
+
+        offset += limit;
+    }
+
+      } catch (error) {
+        console.error('Error processing batch:', error);
+        break;
+      }
+    }
+
+    // Log the hierarchy structure
+    console.log(`Total records processed: ${totalProcessed}`);
+    console.log('Counties found:', Object.keys(hierarchy.counties));
+    
+    for (const county in hierarchy.counties) {
+      const subCounties = Object.keys(hierarchy.counties[county].subCounties);
+      console.log(`${county} (${subCounties.length} sub-counties):`, subCounties);
+      
+      // Log wards for each sub-county
+      for (const subCounty of subCounties) {
+        const wards = Object.keys(hierarchy.counties[county].subCounties[subCounty].wards);
+        console.log(`  ${subCounty} (${wards.length} wards):`, wards);
+      }
+    }
+
+    // Cache the result
+    cachedHierarchy = hierarchy;
+    lastFetchTime = Date.now();
+    return hierarchy;
+
+  } catch (error: any) {
+    console.error('Error fetching location hierarchy:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      type: error.type,
+      response: error.response
+    });
+    
+    // Check if we have any data loaded
+    if (Object.keys(hierarchy.counties).length > 0) {
+      console.log('Returning partial data that was loaded');
+      return hierarchy;
+    }
+    
+    // If we have cached data and encounter an error, return cached data
+    if (cachedHierarchy) {
+      console.log('Returning cached data due to error');
+      return cachedHierarchy;
+    }
+    
+    throw error;
+  }
+};
+
+// Helper functions to get specific data
+export const getCounties = async (): Promise<string[]> => {
+  console.log('Getting counties...');
+  const hierarchy = await getLocationHierarchy();
+  const counties = Object.keys(hierarchy.counties).sort();
+  console.log('Found counties:', counties);
+  return counties;
+};
+
+export const getSubCounties = async (county: string): Promise<string[]> => {
+  const hierarchy = await getLocationHierarchy();
+  return county && hierarchy.counties[county]
+    ? Object.keys(hierarchy.counties[county].subCounties).sort()
+    : [];
+};
+
+export const getWards = async (county: string, subCounty: string): Promise<string[]> => {
+  const hierarchy = await getLocationHierarchy();
+  return county && subCounty && hierarchy.counties[county]?.subCounties[subCounty]
+    ? Object.keys(hierarchy.counties[county].subCounties[subCounty].wards).sort()
+    : [];
+};
+
+export const getCHUs = async (county: string, subCounty: string, ward: string): Promise<string[]> => {
+  const hierarchy = await getLocationHierarchy();
+  return county && subCounty && ward && 
+    hierarchy.counties[county]?.subCounties[subCounty]?.wards[ward]
+    ? hierarchy.counties[county].subCounties[subCounty].wards[ward].chus.sort()
+    : [];
+};

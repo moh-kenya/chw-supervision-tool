@@ -45,6 +45,8 @@ interface ProvidersProps {
   children: ReactNode;
 }
 
+import { SessionProvider } from 'next-auth/react';
+
 export const Providers = ({ children }: ProvidersProps) => {
   const [globalState, setGlobalState] = useState<GlobalStateType>({});
   const [modules, setModules] = useState<Module[]>([
@@ -103,10 +105,12 @@ export const Providers = ({ children }: ProvidersProps) => {
   ]);
 
   return (
-    <AppContext.Provider
-      value={{ globalState, setGlobalState, modules, setModules }}
-    >
-      {children}
-    </AppContext.Provider>
+    <SessionProvider>
+      <AppContext.Provider
+        value={{ globalState, setGlobalState, modules, setModules }}
+      >
+        {children}
+      </AppContext.Provider>
+    </SessionProvider>
   );
 };

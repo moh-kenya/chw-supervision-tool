@@ -371,3 +371,41 @@ export const kenyaSubcounties = {
   ],
   // Add more counties and subcounties as needed...
 };
+export const kenyaChus = {
+  Bomet: {
+    'Bomet Central': [
+      { value: 'Kapkoros CHU', label: 'Kapkoros CHU' },
+      { value: 'Tegat CHU', label: 'Tegat CHU' },
+      { value: 'Kimulot CHU', label: 'Kimulot CHU' }
+    ],
+    'Bomet East': [
+      { value: 'Longisa CHU', label: 'Longisa CHU' },
+      { value: 'Kembu CHU', label: 'Kembu CHU' }
+    ],
+    'Bomet West': [
+      { value: 'Sigor CHU', label: 'Sigor CHU' },
+      { value: 'Merigi CHU', label: 'Merigi CHU' }
+    ]
+  },
+  Bungoma: {
+    'Bungoma Central': [
+      { value: 'Musikoma CHU', label: 'Musikoma CHU' },
+      { value: 'Mabanga CHU', label: 'Mabanga CHU' }
+    ],
+    'Bumula': [
+      { value: 'Kimaeti CHU', label: 'Kimaeti CHU' },
+      { value: 'Siboti CHU', label: 'Siboti CHU' }
+    ]
+  },
+  Kisumu: {
+    'Kisumu Central': [
+      { value: 'Nyalenda CHU', label: 'Nyalenda CHU' },
+      { value: 'Manyatta CHU', label: 'Manyatta CHU' },
+      { value: 'Kondele CHU', label: 'Kondele CHU' }
+    ],
+    'Kisumu East': [
+      { value: 'Nyamasaria CHU', label: 'Nyamasaria CHU' },
+      { value: 'Chiga CHU', label: 'Chiga CHU' }
+    ]
+  }
+};

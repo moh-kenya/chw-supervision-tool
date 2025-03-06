@@ -1,8 +1,7 @@
 const environments = {
-    APP_ENDPOINT: process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT ?? 'development',
-    APP_PROJECT:
-        process.env.NEXT_PUBLIC_APPWRITE_PROJECT ?? 'http://localhost:3000',
-    APP_KEY: process.env.NEXT_APPWRITE_KEY ?? 'CHW Supervision Tool',
+  // Add any environment variables needed for the application here
+  NODE_ENV: process.env.NODE_ENV || 'development',
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000'
 };
 
 export default environments;

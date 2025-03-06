@@ -11,6 +11,7 @@ import {
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { signOut } from 'next-auth/react';
 import { Logo } from './Logo';
 
 const { Header } = Layout;
@@ -22,35 +23,29 @@ const NavBar = ({ setNotifs, id }: any) => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      setNotifs({
+        type: 'success',
+        title: 'Success',
+        message: 'You are being logged out momentarily!',
+        toggle: true,
       });
 
-      if (response.ok) {
-        setNotifs({
-          type: 'success',
-          title: 'Success',
-          message: 'You are being logged out momentarily!',
-          toggle: true,
-        });
-        setTimeout(() => {
-          router.push('/login');
-        }, 2000);
-      } else {
-        const data = await response.json();
-        setNotifs({
-          type: 'error',
-          title: 'Unable to log out',
-          message: data.message || 'An error occurred during logout',
-          toggle: true,
-        });
-      }
+      // Sign out using NextAuth
+      await signOut({ redirect: false });
+
+      // Add a small delay before redirect to show the success message
+      setTimeout(() => {
+        router.push('/login');
+      }, 1500);
+
     } catch (error) {
-      console.error(error);
-    } finally {
+      console.error('Logout error:', error);
+      setNotifs({
+        type: 'error',
+        title: 'Unable to log out',
+        message: error instanceof Error ? error.message : 'An error occurred during logout',
+        toggle: true,
+      });
     }
   };
 
@@ -121,6 +116,7 @@ const NavBar = ({ setNotifs, id }: any) => {
         router.push(`/new-supervision/${id || uuidv4()}`);
         break;
       default:
+        break;
     }
   };
   return (
